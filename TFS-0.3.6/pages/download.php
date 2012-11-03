@@ -2,4 +2,4 @@
 if(!isset($initialized))
 	exit;
 
-$main_content .= 'Edit this text.';
+$main_content .= 'Edit this text in pages/download.php.';

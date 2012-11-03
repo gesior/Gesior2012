@@ -409,5 +409,5 @@ if($config['site']['shop_system'])
 else
 	$main_content .= '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
 	<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" ALIGN=center CLASS=white ><B>Shop Information</B></TD></TR>
-	<TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><center>Cerberia\'s Shop is currently closed.</TD></TR>
+	<TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><center>Shop is currently closed. [to admin: edit it in \'config/config.php\']</TD></TR>
 	</table>';

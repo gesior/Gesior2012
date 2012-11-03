@@ -778,6 +778,9 @@ function NameStateChanged()
 				    $char_to_copy->setAccount($account_logged);
 				    $char_to_copy->setSex($newchar_sex);
 				    $char_to_copy->setTown($newchar_town);
+					$char_to_copy->setPosX(0);
+					$char_to_copy->setPosY(0);
+					$char_to_copy->setPosZ(0);
 					$char_to_copy->setWorldID((int) $world_id);
 					$char_to_copy->setCreateIP(Visitor::getIP());
 					$char_to_copy->setCreateDate(time());

@@ -2,8 +2,9 @@
 # Account Maker Config
 $config['site']['serverPath'] = "C:/ots/";
 $config['site']['useServerConfigCache'] = false;
-$config['site']['worlds'] = array(0 => 'Acc. Maker Test World');
+$config['site']['worlds'] = array(0 => 'Acc. Maker Test World 1', 1 => 'Acc. Maker Test World 2');
 $towns_list[0] = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
+$towns_list[1] = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
 
 # Create Account Options
 $config['site']['one_email'] = false;
@@ -15,7 +16,9 @@ $config['site']['send_register_email'] = false;
 
 # Create Character Options
 $config['site']['newchar_vocations'][0] = array(1 => 'Sorcerer Sample', 2 => 'Druid Sample', 3 => 'Paladin Sample', 4 => 'Knight Sample');
+$config['site']['newchar_vocations'][1] = array(1 => 'Sorcerer Sample', 2 => 'Druid Sample', 3 => 'Paladin Sample', 4 => 'Knight Sample');
 $config['site']['newchar_towns'][0] = array(1);
+$config['site']['newchar_towns'][1] = array(1);
 $config['site']['max_players_per_account'] = 7;
 
 
