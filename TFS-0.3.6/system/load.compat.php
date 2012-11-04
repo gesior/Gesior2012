@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 // DEFINE VARIABLES FOR SCRIPTS AND LAYOUTS (no more notices 'undefinied variable'!)
@@ -27,16 +27,21 @@ if(isset($_REQUEST['action']))
 	$action = (string) $_REQUEST['action'];
 else
 	$action = '';
-// logged boolean value: true/false
-$logged = Visitor::isLogged();
-// Account object with account of logged player or empty Account
-$account_logged = Visitor::getAccount();
-// group of acc. logged
-if(Visitor::isLogged())
-	$group_id_of_acc_logged = Visitor::getAccount()->getPageAccess();
-else
-	$group_id_of_acc_logged = 0;
 
+$logged = false;
+$account_logged = new Account();
+$group_id_of_acc_logged = 0;
+// with ONLY_PAGE option we want disable useless SQL queries
+if(!ONLY_PAGE)
+{
+	// logged boolean value: true/false
+	$logged = Visitor::isLogged();
+	// Account object with account of logged player or empty Account
+	$account_logged = Visitor::getAccount();
+	// group of acc. logged
+	if(Visitor::isLogged())
+		$group_id_of_acc_logged = Visitor::getAccount()->getPageAccess();
+}
 $layout_name = './layouts/' . Website::getWebsiteConfig()->getValue('layout');
 
 $title = ucwords($subtopic) . ' - ' . Website::getServerConfig()->getValue('serverName');
@@ -216,38 +221,7 @@ function short_text($text, $chars_limit)
 //return text to news msg
 function news_place()
 {
-	$news = '';
-	if($GLOBALS['subtopic'] == "latestnews")
-	{
-	//add tickers to site - without it tickers will not be showed
-	//$news .= $GLOBALS['news_content'];
-	/*
-	//featured article
-	$layout_name = $GLOBALS['layout_name'];
-	$news .= '  <div id="featuredarticle" class="Box">
-		<div class="Corner-tl" style="background-image:url('.$layout_name.'/images/content/corner-tl.gif);"></div>
-		<div class="Corner-tr" style="background-image:url('.$layout_name.'/images/content/corner-tr.gif);"></div>
-		<div class="Border_1" style="background-image:url('.$layout_name.'/images/content/border-1.gif);"></div>
-		<div class="BorderTitleText" style="background-image:url('.$layout_name.'/images/content/title-background-green.gif);"></div>
-		<img class="Title" src="'.$layout_name.'/images/strings/headline-featuredarticle.gif" alt="Contentbox headline" />
-		<div class="Border_2">
-		  <div class="Border_3">
-			<div class="BoxContent" style="background-image:url('.$layout_name.'/images/content/scroll.gif);">
-	<div id=\'TeaserThumbnail\'><img src="'.$layout_name.'/images/news/features.jpg" width=150 height=100 border=0 alt="" /></div><div id=\'TeaserText\'><div style="position: relative; top: -2px; margin-bottom: 2px;" >
-	<b>Tutaj wpisz tytul</b></div>
-	tutaj wpisz tresc newsa<br>
-	zdjecie laduje sie w <i>tibiacom/images/news/features.jpg</i><br>
-	skad sie laduje mozesz zmienic linijke ponad komentarzem
-	</div>        </div>
-		  </div>
-		</div>
-		<div class="Border_1" style="background-image:url('.$layout_name.'/images/content/border-1.gif);"></div>
-		<div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url('.$layout_name.'/images/content/corner-bl.gif);"></div></div>
-		<div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url('.$layout_name.'/images/content/corner-br.gif);"></div></div>
-	  </div>';
-	 */
-	}
-	return $news;
+	return '';
 }
 //set monster of week
 function logo_monster()
@@ -255,65 +229,66 @@ function logo_monster()
 	new Error_Critic('', 'function <i>logo_monster</i> is deprecated. Do not use it!');
 }
 
-
-
-// STATUS CHECKER
-$statustimeout = 1;
-foreach(explode("*", str_replace(" ", "", $config['server']['statusTimeout'])) as $status_var)
-	if($status_var > 0)
-		$statustimeout = $statustimeout * $status_var;
-$statustimeout = $statustimeout / 1000;
-$config['status'] = parse_ini_file('cache/DONT_EDIT_serverstatus.txt');
-if($config['status']['serverStatus_lastCheck']+$statustimeout < time())
+// we don't want to count AJAX scripts/guild images as page views, we also don't need status
+if(!ONLY_PAGE)
 {
-	$config['status']['serverStatus_checkInterval'] = $statustimeout+3;
-	$config['status']['serverStatus_lastCheck'] = time();
-	$statusInfo = new ServerStatus($config['server']['ip'], $config['server']['statusPort'], 1);
-	if($statusInfo->isOnline())
+	// STATUS CHECKER
+	$statustimeout = 1;
+	foreach(explode("*", str_replace(" ", "", $config['server']['statusTimeout'])) as $status_var)
+		if($status_var > 0)
+			$statustimeout = $statustimeout * $status_var;
+	$statustimeout = $statustimeout / 1000;
+	$config['status'] = parse_ini_file('cache/DONT_EDIT_serverstatus.txt');
+	if($config['status']['serverStatus_lastCheck']+$statustimeout < time())
 	{
-		$config['status']['serverStatus_online'] = 1;
-		$config['status']['serverStatus_players'] = $statusInfo->getPlayersCount();
-		$config['status']['serverStatus_playersMax'] = $statusInfo->getPlayersMaxCount();
-		$h = floor($statusInfo->getUptime() / 3600);
-		$m = floor(($statusInfo->getUptime() - $h*3600) / 60);
-		$config['status']['serverStatus_uptime'] = $h.'h '.$m.'m';
-		$config['status']['serverStatus_monsters'] = $statusInfo->getMonsters();
+		$config['status']['serverStatus_checkInterval'] = $statustimeout+3;
+		$config['status']['serverStatus_lastCheck'] = time();
+		$statusInfo = new ServerStatus($config['server']['ip'], $config['server']['statusPort'], 1);
+		if($statusInfo->isOnline())
+		{
+			$config['status']['serverStatus_online'] = 1;
+			$config['status']['serverStatus_players'] = $statusInfo->getPlayersCount();
+			$config['status']['serverStatus_playersMax'] = $statusInfo->getPlayersMaxCount();
+			$h = floor($statusInfo->getUptime() / 3600);
+			$m = floor(($statusInfo->getUptime() - $h*3600) / 60);
+			$config['status']['serverStatus_uptime'] = $h.'h '.$m.'m';
+			$config['status']['serverStatus_monsters'] = $statusInfo->getMonsters();
+		}
+		else
+		{
+			$config['status']['serverStatus_online'] = 0;
+			$config['status']['serverStatus_players'] = 0;
+			$config['status']['serverStatus_playersMax'] = 0;
+		}
+		$file = fopen("cache/DONT_EDIT_serverstatus.txt", "w");
+		$file_data = '';
+		foreach($config['status'] as $param => $data)
+		{
+	$file_data .= $param.' = "'.str_replace('"', '', $data).'"
+	';
+		}
+		rewind($file);
+		fwrite($file, $file_data);
+		fclose($file);
+	}
+	//PAGE VIEWS COUNTER
+	$views_counter = "cache/DONT_EDIT_usercounter.txt";
+	// checking if the file exists
+	if (file_exists($views_counter))
+	{
+		$actie = fopen($views_counter, "r+"); 
+		$page_views = fgets($actie, 9); 
+		$page_views++; 
+		rewind($actie); 
+		fputs($actie, $page_views, 9); 
+		fclose($actie); 
 	}
 	else
-	{
-		$config['status']['serverStatus_online'] = 0;
-		$config['status']['serverStatus_players'] = 0;
-		$config['status']['serverStatus_playersMax'] = 0;
+	{ 
+		// the file doesn't exist, creating a new one with value 1
+		$actie = fopen($views_counter, "w"); 
+		$page_views = 1; 
+		fputs($actie, $page_views, 9); 
+		fclose($actie); 
 	}
-	$file = fopen("cache/DONT_EDIT_serverstatus.txt", "w");
-	$file_data = '';
-	foreach($config['status'] as $param => $data)
-	{
-$file_data .= $param.' = "'.str_replace('"', '', $data).'"
-';
-	}
-	rewind($file);
-	fwrite($file, $file_data);
-	fclose($file);
-}
-
-//PAGE VIEWS COUNTER
-$views_counter = "cache/DONT_EDIT_usercounter.txt";
-// checking if the file exists
-if (file_exists($views_counter))
-{
-    $actie = fopen($views_counter, "r+"); 
-    $page_views = fgets($actie, 9); 
-    $page_views++; 
-    rewind($actie); 
-    fputs($actie, $page_views, 9); 
-    fclose($actie); 
-}
-else
-{ 
-    // the file doesn't exist, creating a new one with value 1
-    $actie = fopen($views_counter, "w"); 
-    $page_views = 1; 
-    fputs($actie, $page_views, 9); 
-    fclose($actie); 
 }

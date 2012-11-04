@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 require_once('./custom_scripts/zaypay/config.php');

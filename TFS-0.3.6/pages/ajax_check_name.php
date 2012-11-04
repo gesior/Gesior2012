@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>';

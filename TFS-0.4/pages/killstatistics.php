@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 $players_deaths = $SQL->query('SELECT ' . $SQL->tableName('player_deaths') . '.' . $SQL->fieldName('id') . ', ' . $SQL->tableName('player_deaths') . '.' . $SQL->fieldName('date') . ', ' . $SQL->tableName('player_deaths') . '.' . $SQL->fieldName('level') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('world_id') . ' FROM ' . $SQL->tableName('player_deaths') . ' LEFT JOIN ' . $SQL->tableName('players') . ' ON ' . $SQL->tableName('player_deaths') . '.' . $SQL->fieldName('player_id') . ' = ' . $SQL->tableName('players') . '.' . $SQL->fieldName('id') . ' ORDER BY ' . $SQL->fieldName('date') . ' DESC LIMIT '.$config['site']['last_deaths_limit']);

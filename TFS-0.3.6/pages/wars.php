@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 $main_content = "<h1 align=\"center\">Guild Wars</h1>
@@ -44,7 +44,7 @@ foreach($SQL->query('SELECT * FROM ' . $SQL->tableName('guild_wars') . ' WHERE '
  
         $count++;
         $main_content .= "<tr style=\"background: " . (is_int($count / 2) ? $config['site']['darkborder'] : $config['site']['lightborder']) . ";\">
-<td align=\"center\"><a href=\"?subtopic=guilds&action=show&guild=".$a->getId()."\"><img src=\"" . $a->getGuildLogo() . "\" width=\"64\" height=\"64\" border=\"0\"/><br />".htmlspecialchars($a->getName())."</a></td>
+<td align=\"center\"><a href=\"?subtopic=guilds&action=show&guild=".$a->getId()."\"><img src=\"" . $a->getGuildLogoLink() . "\" width=\"64\" height=\"64\" border=\"0\"/><br />".htmlspecialchars($a->getName())."</a></td>
 <td class=\"white\" align=\"center\">";
         switch($war['status'])
         {
@@ -92,7 +92,7 @@ foreach($SQL->query('SELECT * FROM ' . $SQL->tableName('guild_wars') . ' WHERE '
         }
  
         $main_content .= "<br /><br /><a onclick=\"show_hide('war-details:" . $war['id'] . "'); return false;\" style=\"cursor: pointer;\">&raquo; Details &laquo;</a></td>
-<td align=\"center\"><a href=\"?subtopic=guilds&action=show&guild=".$e->getId()."\"><img src=\"" . $a->getGuildLogo() . "\" width=\"64\" height=\"64\" border=\"0\"/><br />".htmlspecialchars($e->getName())."</a></td>
+<td align=\"center\"><a href=\"?subtopic=guilds&action=show&guild=".$e->getId()."\"><img src=\"" . $a->getGuildLogoLink() . "\" width=\"64\" height=\"64\" border=\"0\"/><br />".htmlspecialchars($e->getName())."</a></td>
 </tr>
 <tr id=\"war-details:" . $war['id'] . "\" style=\"display: none; background: " . (is_int($count / 2) ? $config['site']['darkborder'] : $config['site']['lightborder']) . ";\">
 <td colspan=\"3\">";

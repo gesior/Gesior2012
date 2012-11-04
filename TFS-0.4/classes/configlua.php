@@ -1,5 +1,5 @@
 <?php
-if(!isset($GLOBALS['initialized']))
+if(!defined('INITIALIZED'))
 	exit;
 
 class ConfigLUA extends Errors // NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS PHP CODE

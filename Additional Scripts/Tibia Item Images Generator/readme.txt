@@ -1,0 +1,1 @@
+These scripts can be also a good tutorial how to read .dat, .otb and .spr files in PHP.

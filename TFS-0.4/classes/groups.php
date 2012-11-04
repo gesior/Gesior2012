@@ -1,5 +1,5 @@
 <?php
-if(!isset($GLOBALS['initialized']))
+if(!defined('INITIALIZED'))
 	exit;
 
 class Groups implements Iterator, Countable

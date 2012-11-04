@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 if(Website::getServerConfig()->isSetKey('mysqlHost'))

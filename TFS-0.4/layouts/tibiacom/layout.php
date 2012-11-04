@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">

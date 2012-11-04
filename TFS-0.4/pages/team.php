@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 $list = $SQL->query('SELECT ' . $SQL->fieldName('name') . ', ' . $SQL->fieldName('online') . ', ' . $SQL->fieldName('group_id') . ', ' . $SQL->fieldName('world_id') . ' FROM ' . $SQL->tableName('players') . ' WHERE ' . $SQL->fieldName('group_id') . ' IN (' . implode(',', $config['site']['groups_support']) . ') ORDER BY ' . $SQL->fieldName('group_id') . ' DESC');

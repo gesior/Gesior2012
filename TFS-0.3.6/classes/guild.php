@@ -1,5 +1,5 @@
 <?php
-if(!isset($GLOBALS['initialized']))
+if(!defined('INITIALIZED'))
 	exit;
 
 class Guild extends ObjectData
@@ -174,14 +174,9 @@ class Guild extends ObjectData
 		$this->setOwnerID($owner->getID());
 	}
 
-	public function getGuildLogo()
+	public function getGuildLogoLink()
 	{
-		return $this->data['guild_logo'];
-	}
-
-	public function setGuildLogo($mimeType, $fileData)
-	{
-		$this->data['guild_logo'] = 'data:' . $mimeType . ';base64,' . base64_encode($fileData);
+		return 'guild_image.php?id=' . $this->getID();
 	}
 
 	public function getID(){return $this->data['id'];}
@@ -197,22 +192,29 @@ class Guild extends ObjectData
 	public function getMOTD(){return $this->data['motd'];}
 	public function setMOTD($value){$this->data['motd'] = $value;}
 /*
- * Custom AAC fields, compatible with other AAC tables
-*/
-	public function setCreateDate($value){$this->data['creationdata'] = $value;}
-	public function getCreateDate(){return $this->data['creationdata'];}
-/*
  * Custom AAC fields
  * create_ip , INT, default 0
  * description , TEXT, default ''
+ * guild_logo, MEDIUMBLOB, default NULL
 */
 	public function setCreateIP($value){$this->data['create_ip'] = $value;}
 	public function getCreateIP(){return $this->data['create_ip'];}
 	public function getDescription(){return $this->data['description'];}
 	public function setDescription($value){$this->data['description'] = $value;}
+	public function getGuildLogo()
+	{
+		return $this->data['guild_logo'];
+	}
+
+	public function setGuildLogo($mimeType, $fileData)
+	{
+		$this->data['guild_logo'] = time() . ';data:' . $mimeType . ';base64,' . base64_encode($fileData);
+	}
 /*
  * for compability with old scripts
 */
+	public function setCreateDate($value){$this->data['creationdata'] = $value;}
+	public function getCreateDate(){return $this->data['creationdata'];}
 	public function getGuildRanksList(){return $this->getRanks();}
 	public function getGuildRanks(){return $this->getRanks();}
 	public function listInvites(){return $this->getInvitations();}
@@ -223,6 +225,7 @@ class Guild extends ObjectData
 		$ranks = new DatabaseList('GuildRank');
 		$ranks->setFilter(new SQL_Filter(new SQL_Field('guild_id'), SQL_Filter::EQUAL, $this->getID()));
 		$ranks->addOrder(new SQL_Order(new SQL_Field('level'), SQL_Order::ASC));
+		// load rank with lowest access level
 		if($rank = $ranks->getResult(0))
 		{
 			$player->setRank($rank);

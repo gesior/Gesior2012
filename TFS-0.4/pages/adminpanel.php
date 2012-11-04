@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 if($group_id_of_acc_logged >= $config['site']['access_admin_panel'])

@@ -1,5 +1,5 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 if($action == 'login')
@@ -83,7 +83,7 @@ if($action == '')
 			$description_with_lines = str_replace($newlines, '<br />', $description, $count);
 			if($count < $config['site']['guild_description_lines_limit'])
 				$description = $description_with_lines;
-			$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD><IMG SRC="'. $guild->getGuildLogo() .'" WIDTH=64 HEIGHT=64></TD>
+			$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD><IMG SRC="'. $guild->getGuildLogoLink() .'" WIDTH=64 HEIGHT=64></TD>
 			<TD valign="top"><B>'.htmlspecialchars($guild->getName()).'</B><BR/>'.$description.'';
 			if($group_id_of_acc_logged >= $config['site']['access_admin_panel'])
 				$main_content .= '<br /><a href="?subtopic=guilds&action=deletebyadmin&guild='.$guild->getId().'">Delete this guild (for ADMIN only!)</a>';
@@ -176,9 +176,9 @@ if($action == 'show')
 		$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR>
 		<TD><IMG SRC="'.$layout_name.'/images/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD><TD>
 		<TABLE BORDER=0 WIDTH=100%>
-		<TR><TD WIDTH=64><IMG SRC="' . $guild->getGuildLogo() . '" WIDTH=64 HEIGHT=64></TD>
+		<TR><TD WIDTH=64><IMG SRC="' . $guild->getGuildLogoLink() . '" WIDTH=64 HEIGHT=64></TD>
 		<TD ALIGN=center WIDTH=100%><H1>'.htmlspecialchars($guild->getName()).'</H1></TD>
-		<TD WIDTH=64><IMG SRC="' . $guild->getGuildLogo() . '" WIDTH=64 HEIGHT=64></TD></TR>
+		<TD WIDTH=64><IMG SRC="' . $guild->getGuildLogoLink() . '" WIDTH=64 HEIGHT=64></TD></TR>
 		</TABLE><BR>'.$description.'<BR><BR><a href="?subtopic=characters&name='.urlencode($guild_owner).'"><b>'.htmlspecialchars($guild_owner).'</b></a> is guild leader of <b>'.htmlspecialchars($guild->getName()).'</b>.<BR>The guild was founded on '.htmlspecialchars($config['server']['serverName']).' on '.date("j F Y", $guild->getCreationData()).'.';
 		if($guild_leader)
 			$main_content .= '&nbsp;&nbsp;&nbsp;<a href="?subtopic=guilds&action=manager&guild='.$guild_id.'"><IMG SRC="'.$layout_name.'/images/buttons/sbutton_manageguild.png" BORDER=0 WIDTH=120 HEIGHT=18 alt="Manage Guild"></a>';
@@ -1285,7 +1285,7 @@ if($action == 'changelogo')
 						$guild->save();
 					}
 				}
-				$main_content .= '<center><h2>Change guild logo</h2></center>Here you can change logo of your guild.<BR>Current logo: <img src="' . $guild->getGuildLogo() . '" HEIGHT="64" WIDTH="64"><BR><BR>';
+				$main_content .= '<center><h2>Change guild logo</h2></center>Here you can change logo of your guild.<BR>Current logo: <img src="' . $guild->getGuildLogoLink() . '" HEIGHT="64" WIDTH="64"><BR><BR>';
 				$main_content .= '<form enctype="multipart/form-data" action="?subtopic=guilds&guild='.$guild_id.'&action=changelogo" method="POST">
 				<input type="hidden" name="todo" value="save" />
 				<input type="hidden" name="MAX_FILE_SIZE" value="'.$max_image_size_b.'" />

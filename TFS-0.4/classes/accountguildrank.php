@@ -1,5 +1,5 @@
 <?php
-if(!isset($GLOBALS['initialized']))
+if(!defined('INITIALIZED'))
 	exit;
 
 // special class to load ranks of X account by one query

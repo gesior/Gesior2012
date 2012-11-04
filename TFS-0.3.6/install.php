@@ -1,5 +1,5 @@
 <?PHP
-$initialized = true;
+define('INITIALIZED', true);
 if(!file_exists('install.txt'))
 {
 	echo('AAC installation is disabled. To enable it make file <b>install.php</b> in main AAC directory and put there your IP.');
@@ -8,7 +8,7 @@ if(!file_exists('install.txt'))
 $installIP = trim(file_get_contents('install.txt'));
 if($installIP != $_SERVER['REMOTE_ADDR'])
 {
-	echo('In file <b>install.txt</b> must be your IP!<br />In file is:<br /><b>' . $installIP . '</b><br />Your IP is:<br /><b>' . $_SERVER['REMOTE_ADDR'] . '</b>');
+	echo('In file <b>install.php</b> must be your IP!<br />In file is:<br /><b>' . $installIP . '</b><br />Your IP is:<br /><b>' . $_SERVER['REMOTE_ADDR'] . '</b>');
 	exit;
 }
 

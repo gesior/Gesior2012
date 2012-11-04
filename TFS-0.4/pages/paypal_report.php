@@ -1,10 +1,10 @@
 <?php
-if(!isset($initialized))
+if(!defined('INITIALIZED'))
 	exit;
 
 require_once('./custom_scripts/paypal/config.php');
 /*
- * PayPal IPN IPs
+ * PayPal IPN IPs (it can change in future)
  * https://ppmts.custhelp.com/app/answers/detail/a_id/92
  * search: notify.paypal.com (IPN delivery) 
 */
@@ -15,7 +15,7 @@ if(!in_array($_SERVER['REMOTE_ADDR'], array('173.0.81.1','173.0.81.33','66.211.1
 }
 $receiverMail = $_REQUEST['receiver_email']; // ots admin mail
 $status = $_REQUEST['payment_status']; // payment status, we add only when is 'Completed'
-$currency = $_REQUEST['mc_currency'];
+$currency = $_REQUEST['mc_currency']; // money currency, like USD or EUR
 $gross = $_REQUEST['mc_gross']; // amount of money, like: 10.00
 $payerMail = $_REQUEST['payer_email']; // player mail
 $accountID = $_REQUEST['custom']; // user account ID
