@@ -1,5 +1,6 @@
 <?PHP
 define('INITIALIZED', true);
+define('ONLY_PAGE', false);
 if(!file_exists('install.txt'))
 {
 	echo('AAC installation is disabled. To enable it make file <b>install.php</b> in main AAC directory and put there your IP.');
