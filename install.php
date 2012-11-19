@@ -109,7 +109,7 @@ elseif($page == 'menu')
 	<a href="install.php?page=step&step=5" target="step">5. Set Admin Account</a><br>
 	<b>Author:</b><br>
 	Gesior<br>
-	Compatible with TFS 0.3.6</a>';
+	Compatible with TFS 0.4 rev. 3703+</a>';
 }
 elseif($page == 'step')
 {
