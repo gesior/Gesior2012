@@ -1,0 +1,263 @@
+Version with colors/bold text:
+http://otland.net/f479/configuration-gesior2012-config-php-file-description-172012/
+
+# Account Maker Config
+
+$config['site']['serverPath'] = "C:/ots/";
+That line definies where are OTS files. It loads from there config.lua [database password etc.], data/XML/groups.xml [groups names], data/XML/vocations.xml [vocations names].
+Format: string, MUST ENDS WITH /
+
+$config['site']['useServerConfigCache'] = false;
+It definies if you want use server config cache. If it's 'true' then after first open of website it will load informations from config.lua and save to './config/server.config.php' file.
+Format: true / false
+
+[EXAMPLE] Multiworld enabled:
+$config['site']['worlds'] = array(0 => 'Acc. Maker Test World 1', 1 => 'Acc. Maker Test World 2');
+[EXAMPLE] Multiworld disabled [when you run just one OTS]:
+$config['site']['worlds'] = array(0 => 'Acc. Maker Test World');
+It definies names of worlds and [b]ENABLE/DISABLE MULTIWORLD[/b]. Account maker support 'multiworld' like RL Tibia. If you run more then one server list their names in that line to ENABLE multiworld. You must also know how to run few TFS servers proper way [login server etc.].
+Format: (Array) ID_OF_WORLD => 'world name'
+
+[EXAMPLE] Few towns on map on World ID 0:
+$towns_list[0] = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
+[EXAMPLE] One town [noob evo] on World ID 0:
+$towns_list[0] = array(1 => 'Thais');
+[EXAMPLE] Few towns on map on World ID 1:
+$towns_list[1] = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
+Names of towns in account maker should be same as in map editor. Set config for every world [multiworld].
+Format: $towns_list[WORLD_ID] = array(TOWN_ID => 'town name', OTHER_TOWN_ID => 'other town name')
+
+In options below you set from where account maker should load images:
+$config['site']['outfit_images_url'] = 'http://outfit-images.ots.me/outfit.php';
+$config['site']['item_images_url'] = 'http://item-images.ots.me/960/';
+$config['site']['item_images_extension'] = '.gif';
+$config['site']['flag_images_url'] = 'http://flag-images.ots.me/';
+$config['site']['flag_images_extension'] = '.png';
+
+# Create Account Options
+
+$config['site']['one_email'] = false;
+Only one account on server can use one e-mail? If you set it to true then account maker will not allow users to make account with e-mail that already exists in database.
+Format: true / false
+
+$config['site']['create_account_verify_mail'] = false;
+Like on RL Tibia. After registration you receive e-mail with random password, so you cannot login [dont know password] to your account if you use not valid e-mail.
+Format: true / false
+
+$config['site']['verify_code'] = true;
+Show image with code to rewrite? It will not block all people that want make maany accounts, but it will block 'noob-haxors' with scripts to auto-make accounts.
+Format: true / false
+
+$config['site']['email_days_to_change'] = 3;
+After how many days user can change e-mail to account? It is to block hackers. Even if you get password to someones account you cannot change e-mail to it in few seconds. You can 'set new e-mail', but it will work after you press 'Set to xx@xx.com' and button 'Set to xx@xx.com' will work after X days [config here].
+Everytime when user login on website it shows to him 'You will change e-mail to account to xx@xx.com in X days', so he got time to find out that someone is trying to hack his account.
+Format: number
+
+$config['site']['newaccount_premdays'] = 999;
+How many premium days (PACC days) will receive all new accounts.
+Format: number
+
+$config['site']['send_register_email'] = true;
+Should account maker send e-mail with login and password to e-mail used in Create Account form?
+Format: true / false
+
+
+# Create Character Options
+
+[EXAMPLE] Four typical vocations on World ID 0:
+$config['site']['newchar_vocations'][0] = array(1 => 'Sorcerer Sample', 2 => 'Druid Sample', 3 => 'Paladin Sample', 4 => 'Knight Sample');
+[EXAMPLE] Four typical vocations on World ID 1:
+$config['site']['newchar_vocations'][1] = array(1 => 'Sorcerer Sample', 2 => 'Druid Sample', 3 => 'Paladin Sample', 4 => 'Knight Sample');
+[EXAMPLE] One vocation [starts from rook] on World ID 0:
+$config['site']['newchar_vocations'][0] = array(0 => 'Rook Sample');
+[EXAMPLE] Three custom vocations [RPG OTS] on World ID 0 (you must make these sample characters in database in table 'players' to make it work):
+$config['site']['newchar_vocations'][0] = array(2 => 'Wizzard Sample Character', 6 => 'Barbarian Sample Character', 21 => 'Archer Sample Character');
+Name of vocation (to show player 'vocations to choose' names) it loads from OTS file 'data/XML/vocations.xml'.
+If you set it 1, it will load 'Sorcerer'
+If you set it 5, it will load 'Master Sorcerer' etc.,
+but 'vocation ID' and 'promotion level' it will copy FROM SAMPLE CHARACTER to new character, so check what vocation ID and promotion have sample characters in database.
+Parameters:
+vocation_ID_of_character - it's used to load name of vocation that user see on website
+'Character To Copy Name' - it loads that character from table `players` in database and copys to 'new' player [it's items and skills too!], change only: name, account (owner of character), town, sex, outfit, world id, create IP, create date and moves it to temple
+Format: array(vocation_ID_of_character [number] => 'Character To Copy Name' [string], vocation_ID_2_of_character [number] => 'Character To Copy 2 Name' [string])
+
+[EXAMPLE] One town (all players go to that town) on World ID 0:
+$config['site']['newchar_towns'][0] = array(1);
+[EXAMPLE] One town (all players go to that town) on World ID 1:
+$config['site']['newchar_towns'][1] = array(1);
+[EXAMPLE] Three towns (player can choose) on World ID 1:
+$config['site']['newchar_towns'][1] = array(1, 3, 5);
+Town IDs that player can choose. It loads names of towns from '$towns_list' (config.php, above in that file).
+Format: array(town_to_choose_id_1, town_to_choose_id_2, ...)
+
+$config['site']['max_players_per_account'] = 7;
+Limit of players on one account.
+Format: number
+
+
+# Emails Config
+
+$config['site']['send_emails'] = false;
+Enable/disable e-mail sending from account maker.
+Format: true / false
+
+$config['site']['mail_address'] = "xxxx@gmx.com";
+'Author' mail address.
+Format: string
+
+$config['site']['smtp_enabled'] = true;
+Use SMTP server [true] or mail() function [false] (you must configure it in PHP to make function mail() work).
+If you set it false you can ignore SMTP config below.
+Format: true / false
+
+$config['site']['smtp_host'] = "mail.gmx.com";
+IP/domain of SMTP server.
+Format: string
+
+$config['site']['smtp_port'] = 25;
+Port of SMTP server.
+Format: number
+
+$config['site']['smtp_auth'] = false;
+Enable/disable SMTP authorization.
+Format: true / false
+
+$config['site']['smtp_user'] = "xxx@gmx.com";
+Login to SMTP server.
+Format: string
+
+$config['site']['smtp_pass'] = "xxxx";
+Password to SMTP server.
+Format: string
+
+
+# PAGE: whoisonline.php
+
+$config['site']['private-servlist.com_server_id'] = 1;
+Server id on 'private-servlist.com' to show Players Online Chart (whoisonline.php page), set 0 to disable Chart feature.
+To use this feature you must register on 'private-servlist.com' and add your server.
+Format: number, 0 [disable] or higher
+
+
+# PAGE: characters.php
+
+[EXAMPLE] Show quests on characters.php page:
+$config['site']['quests'] = array('Annihilator' => 100,'Demon Helmet' => 2645,'Pits of Inferno' => 5550);
+[EXAMPLE] Do not show quests on characters.php page:
+$config['site']['quests'] = array();
+List of quest that you want show on page 'characters.php'. If storage with that key is set for X player it shows that he done quest.
+Format: (Array) 'name of quest' => STORAGE_ID
+
+$config['site']['show_skills_info'] = true;
+Should it show skills?
+Format: true / false
+
+$config['site']['show_vip_storage'] = 0;
+The storage key of VIP status, set 0 to hide it on page. If value higher then 0 and player has that storage it will show on page [VIP].
+Format: number
+
+
+# PAGE: accountmanagement.php
+
+$config['site']['send_mail_when_change_password'] = true;
+Send e-mail with new password to account when user change password on www?
+Format: true / false
+
+$config['site']['send_mail_when_generate_reckey'] = true;
+Send e-mail with recovery key when player generate it on site? It will show generated recovery key on site anyway if he generate it first time (not for premium points).
+Format: true / false
+
+$config['site']['generate_new_reckey'] = false;
+Let player generate new recovery key for premium points, he will receive e-mail with new recovery key (not display on page, hacker cannot generate new rec key and take full control over account without X days of access to account [to change e-mail])
+Format: true / false
+
+$config['site']['generate_new_reckey_price'] = 500;
+Set how much Premium Points costs new recovery key.
+Format: number
+
+
+# PAGE: guilds.php
+$config['site']['guild_need_level'] = 15;
+Minimum level needed to create guild.
+Format: number
+
+$config['site']['guild_need_pacc'] = false;
+Player must be on Premium Account (PACC) to make guild?
+Format: true / false
+
+$config['site']['guild_image_size_kb'] = 50;
+Maximum size of guild image in KB. High value can increase connection use by www.
+Format: number
+
+$config['site']['guild_description_chars_limit'] = 2000;
+Guild description length limit.
+Format: number
+
+$config['site']['guild_description_lines_limit'] = 6;
+Guild description lines limit ('enters'). Block too long descriptions on Guilds List.
+Format: number
+
+$config['site']['guild_motd_chars_limit'] = 250;
+MOTD [Message Of The Day] length limit. That message appears in game on Guild channel when guild member login. Do NOT set it higher then 255 letters.
+Format: number, 0 - 255
+
+
+# PAGE: adminpanel.php
+$config['site']['access_admin_panel'] = 3;
+Page Access level needed to open Admin Panel and Write 'News' on forum.
+Format: number, higher then 0
+
+
+# PAGE: latestnews.php
+$config['site']['news_limit'] = 6;
+Number of news visible on 'Latest News'.
+Format: number
+
+
+# PAGE: killstatistics.php
+$config['site']['last_deaths_limit'] = 40;
+Maximum number of kills visible on site 'Latest Kills'.
+Format: number
+
+
+# PAGE: team.php
+$config['site']['groups_support'] = array(2, 3, 4, 5, 6);
+Groups visible on site 'Support Team'.
+Format: array(group_first_id, group_second_id, ...)
+
+
+# PAGE: highscores.php
+$config['site']['groups_hidden'] = array(4, 5, 6);
+Groups hidden in highscores.
+Format: array(group_first_id, group_second_id, ...)
+
+$config['site']['accounts_hidden'] = array(1);
+Account IDs hidden in highscores.
+Format: array(account_first_id, account_second_id, ...)
+
+# PAGE: shopsystem.php
+$config['site']['shop_system'] = true;
+Show shop system (sell items) on page? Set it true only if you got LUA script to deliver items in-game.
+How to install on your ots: http://otland.net/f479/gesior2012-items-shop-installation-administration-170654/
+Format: true / false
+
+
+# PAGE: lostaccount.php
+$config['site']['email_lai_sec_interval'] = 180;
+Set minimum time between e-mails from Lost Account Interface to one account. Time in seconds. It is to block spam from someone who knows other player e-mail and could try to abuse it and send spam to his mailbox from OTS.
+Format: number, time in seconds
+
+
+# Layout Config
+$config['site']['layout'] = 'tibiacom';
+$config['site']['vdarkborder'] = '#505050';
+$config['site']['darkborder'] = '#D4C0A1';
+$config['site']['lightborder'] = '#F1E0C6';
+
+$config['site']['download_page'] = false;
+Show link to Downloads page in layout? Downloads page content you can edit in file 'pages/download.php'
+Format: true / false
+
+$config['site']['serverinfo_page'] = true;
+Show link to Server Info page in layout?
+Format: true / false

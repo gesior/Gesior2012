@@ -1,0 +1,5 @@
+serverStatus_checkInterval = "303"
+serverStatus_lastCheck = "1351031966"
+serverStatus_online = "0"
+serverStatus_players = "0"
+serverStatus_playersMax = "0"
