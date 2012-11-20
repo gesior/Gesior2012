@@ -141,12 +141,18 @@ class Website extends WebsiteErrors
 	
 	public static function encryptPassword($password, $account = null)
 	{
-		// add SALT for 0.4
 		if(isset(self::$passwordsEncryption))
-			if(self::$passwordsEncryption == 'plain')
-				return $password;
+		{
+			if($account !== null)
+			{
+				if(self::$passwordsEncryption == 'plain')
+					return $password;
+				else
+					return hash(self::$passwordsEncryption, $account->getSalt() . $password);
+			}
 			else
-				return hash(self::$passwordsEncryption, $password);
+				new Error_Critic('', 'Website::encryptPassword($password, $account = null) - $account not set, it\'s required for TFS 0.4');
+		}
 		else
 			new Error_Critic('#C-13', 'You cannot use Website::encryptPassword(\$password) when password encryption is not set.');
 	}
