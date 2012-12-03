@@ -1,6 +1,6 @@
 <?PHP
 # Account Maker Config
-$config['site']['serverPath'] = "C:/ots/";
+$config['site']['serverPath'] = "E:/gesior211/";
 $config['site']['useServerConfigCache'] = false;
 $towns_list = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
 

@@ -3,13 +3,13 @@ define('INITIALIZED', true);
 define('ONLY_PAGE', false);
 if(!file_exists('install.txt'))
 {
-	echo('AAC installation is disabled. To enable it make file <b>install.php</b> in main AAC directory and put there your IP.');
+	echo('AAC installation is disabled. To enable it make file <b>install.txt</b> in main AAC directory and put there your IP.');
 	exit;
 }
 $installIP = trim(file_get_contents('install.txt'));
 if($installIP != $_SERVER['REMOTE_ADDR'])
 {
-	echo('In file <b>install.php</b> must be your IP!<br />In file is:<br /><b>' . $installIP . '</b><br />Your IP is:<br /><b>' . $_SERVER['REMOTE_ADDR'] . '</b>');
+	echo('In file <b>install.txt</b> must be your IP!<br />In file is:<br /><b>' . $installIP . '</b><br />Your IP is:<br /><b>' . $_SERVER['REMOTE_ADDR'] . '</b>');
 	exit;
 }
 
@@ -198,6 +198,7 @@ elseif($page == 'step')
 			new Error_Critic('#E-6', 'Database error. Unknown database type in <b>server config</b> . Must be equal to: "<b>mysql</b>" or "<b>sqlite</b>". Now is: "<b>' . Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) . '</b>"');
 		Website::setPasswordsEncryption(Website::getServerConfig()->getValue('passwordType'));
 		$SQL = Website::getDBHandle();
+	Website::getDBHandle()->setPrintQueries(true);
 	}
 
 	if($step == 'start')

@@ -8,8 +8,8 @@ class Player extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_ACCOUNT_ID = 'account_id';
 	public static $table = 'players';
-	public $data = array('name' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'skull' => null, 'skulltime' => null, 'rank_id' => null, 'guildnick' => null, 'lastlogout' => null, 'blessings' => null, 'balance' => null, 'direction' => null, 'loss_experience' => null, 'loss_mana' => null, 'loss_skills' => null, 'premend' => null, 'online' => null, 'deleted' => null, 'description' => null, 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null);
-	public static $fields = array('id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'skull', 'skulltime', 'rank_id', 'guildnick', 'lastlogout', 'blessings', 'balance', 'direction', 'loss_experience', 'loss_mana', 'loss_skills', 'premend', 'online', 'deleted', 'description', 'create_ip', 'create_date', 'comment', 'hide_char');
+	public $data = array('name' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'redskull' => null, 'redskulltime' => null, 'rank_id' => null, 'guildnick' => null, 'lastlogout' => null, 'blessings' => null, 'direction' => null, 'loss_experience' => null, 'loss_mana' => null, 'loss_skills' => null, 'premend' => null, 'online' => null, 'deleted' => null, 'description' => null, 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null);
+	public static $fields = array('id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'redskull', 'redskulltime', 'rank_id', 'guildnick', 'lastlogout', 'blessings', 'direction', 'loss_experience', 'loss_mana', 'loss_skills', 'premend', 'online', 'deleted', 'description', 'create_ip', 'create_date', 'comment', 'hide_char');
 	public static $skillFields = array('player_id', 'skillid', 'value',	'count');
 	public $items;
 	public $storages;
@@ -359,10 +359,10 @@ class Player extends ObjectData
 	public function getLastLogin(){return $this->data['lastlogin'];}
 	public function setLastLogout($value){$this->data['lastlogout'] = $value;}
 	public function getLastLogout(){return $this->data['lastlogout'];}
-	public function setSkull($value){$this->data['skull'] = $value;}
-	public function getSkull(){return $this->data['skull'];}
-	public function setSkullTime($value){$this->data['skulltime'] = $value;}
-	public function getSkullTime(){return $this->data['skulltime'];}
+	public function setRedSkull($value){$this->data['redskull'] = $value;}
+	public function getRedSkull(){return $this->data['redskull'];}
+	public function setRedSkullTime($value){$this->data['redskulltime'] = $value;}
+	public function getRedSkullTime(){return $this->data['redskulltime'];}
 	public function setRankID($value){$this->data['rank_id'] = $value;}
 	public function getRankID(){return $this->data['rank_id'];}
 	public function setGuildNick($value){$this->data['guildnick'] = $value;}
@@ -371,8 +371,6 @@ class Player extends ObjectData
 	public function getSave(){return $this->data['save'];}
 	public function setBlessings($value){$this->data['blessings'] = $value;}
 	public function getBlessings(){return $this->data['blessings'];}
-	public function setBalance($value){$this->data['balance'] = $value;}
-	public function getBalance(){return $this->data['balance'];}
 	public function setDirection($value){$this->data['direction'] = $value;}
 	public function getDirection(){return $this->data['direction'];}
 	public function setLossExperience($value){$this->data['loss_experience'] = $value;}

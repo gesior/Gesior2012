@@ -5,11 +5,11 @@ if(!defined('INITIALIZED'))
 class Account extends ObjectData
 {
 	const LOADTYPE_ID = 'id';
-	const LOADTYPE_NAME = 'name';
+	const LOADTYPE_NAME = 'id';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('name' => null, 'password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null);
-	public static $fields = array('id', 'name', 'password', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
+	public $data = array('password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null);
+	public static $fields = array('id', 'password', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
 	public $players;
 	public $playerRanks;
 	public $guildAccess;
@@ -40,7 +40,7 @@ class Account extends ObjectData
 
 	public function loadByName($name)
 	{
-		$this->load($name, 'name');
+		$this->load($name, 'id');
 	}
 
 	public function loadByEmail($mail)
@@ -55,11 +55,10 @@ class Account extends ObjectData
 			$keys = array();
 			$values = array();
 			foreach(self::$fields as $key)
-				if($key != 'id')
-				{
-					$keys[] = $this->getDatabaseHandler()->fieldName($key);
-					$values[] = $this->getDatabaseHandler()->quote($this->data[$key]);
-				}
+			{
+				$keys[] = $this->getDatabaseHandler()->fieldName($key);
+				$values[] = $this->getDatabaseHandler()->quote($this->data[$key]);
+			}
 			$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName(self::$table) . ' (' . implode(', ', $keys) . ') VALUES (' . implode(', ', $values) . ')');
 			$this->setID($this->getDatabaseHandler()->lastInsertId());
 		}
@@ -136,8 +135,6 @@ class Account extends ObjectData
 
 	public function setID($value){$this->data['id'] = $value;}
 	public function getID(){return $this->data['id'];}
-	public function setName($value){$this->data['name'] = $value;}
-	public function getName(){return $this->data['name'];}
 	public function setPassword($value)
 	{
 		$this->data['password'] = Website::encryptPassword($value, $this);
@@ -192,7 +189,7 @@ class Account extends ObjectData
 		return ($this->data['password'] == Website::encryptPassword($password, $this));
 	}
 
-	public function find($name){$this->loadByName($name);}
+	public function find($name){$this->load($name);}
 	public function findByEmail($email){$this->loadByEmail($email);}
 	public function isPremium(){return ($this->getPremDays() > 0);}
 	public function getLastLogin(){return $this->getLastDay();}
