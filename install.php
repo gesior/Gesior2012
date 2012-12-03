@@ -9,7 +9,7 @@ if(!file_exists('install.txt'))
 $installIP = trim(file_get_contents('install.txt'));
 if($installIP != $_SERVER['REMOTE_ADDR'])
 {
-	echo('In file <b>install.php</b> must be your IP!<br />In file is:<br /><b>' . $installIP . '</b><br />Your IP is:<br /><b>' . $_SERVER['REMOTE_ADDR'] . '</b>');
+	echo('In file <b>install.txt</b> must be your IP!<br />In file is:<br /><b>' . $installIP . '</b><br />Your IP is:<br /><b>' . $_SERVER['REMOTE_ADDR'] . '</b>');
 	exit;
 }
 
