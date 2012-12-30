@@ -29,15 +29,15 @@ if($logged)
 	{
 		echo '<tr><td>Buy ' . $paypal['premium_points'] . ' premium points for ' . $paypal['money_amount'] . ' ' . $paypal['money_currency'] . '</td><td style="text-align:center"><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 		<input type="hidden" name="cmd" value="' . $paypal_payment_type . '">
-		<input type="hidden" name="business" value="' . htmlspecialchars($paypal['mail']) . '">
+		<input type="hidden" name="business" value="' . $paypal['mail'] . '">
 		<input type="hidden" name="item_name" value="' . htmlspecialchars($paypal['name']) . '">
 		<input type="hidden" name="custom" value="' . $account_logged->getID() . '">
 		<input type="hidden" name="amount" value="' . htmlspecialchars($paypal['money_amount']) . '">
 		<input type="hidden" name="currency_code" value="' . htmlspecialchars($paypal['money_currency']) . '">
 		<input type="hidden" name="no_note" value="0">
 		<input type="hidden" name="no_shipping" value="1">
-		<input type="hidden" name="notify_url" value="' . urlencode($paypal_report_url) . '">
-		<input type="hidden" name="return" value="' . urlencode($paypal_return_url) . '">
+		<input type="hidden" name="notify_url" value="' . $paypal_report_url . '">
+		<input type="hidden" name="return" value="' . $paypal_return_url . '">
 		<input type="hidden" name="rm" value="0">
 		<input type="image" src="' . $paypal_image . '" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
 		</form></td></tr>';
