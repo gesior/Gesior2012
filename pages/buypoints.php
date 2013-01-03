@@ -10,9 +10,11 @@ if(!defined('INITIALIZED'))
  * all systems are automatic, players should receive points after they pay without any admin 'action', they just need to send SMS and type received code
  * zaypay - in this gesior version it uses custom zaypay script which uses 'payalogues'
  * paypal - most popular payment system
+ * contenidopago - sms payments system
 */
 $config['paypal_active'] = true; // config is in './custom_scripts/paypal/'
 $config['zaypay_active'] = true; // config is in './custom_scripts/zaypay/'
+$config['contenidopago_active'] = true; // config is in './custom_scripts/contenidopago/'
 /* POLISH SYSTEMS:
  * wszystkie systemy sa automatyczne i po konfiguracji powinny dodawac punkty po wpisaniu kodu jaki klient dostanie SMSem/e-mailem
  * dotpay - to system dzieki ktoremu mozna otrzymac kase z SMS (30-40% z sms dla osob prywatnych) z polski oraz przelewow bankowych (~97%)
@@ -194,6 +196,23 @@ elseif ($_REQUEST['system'] == 'zaypay' && $config['zaypay_active'])
 		$main_content .= '<h3>You have to login to buy points!<br /><a href="?subtopic=accountmanagement" />LOGIN HERE</a></h3>';
 	}
 }
+elseif($_REQUEST['system'] == 'contenidopago' && $config['contenidopago_active'])
+{
+	if($logged)
+	{
+		require_once('custom_scripts/contenidopago/config.php');
+			$main_content .= '<script src="http://promo.contenidopago.com/js/contenidopago.js" type="text/javascript"></script>	
+			<form name="cnt_frm" method="post">
+			<input type="hidden" name="cnt_serviceid" value="' . $idOfService . '">
+			<input type="hidden" name="cnt_name" value="' . $account_logged->getId() . '">
+			<input type="image" name="cnt_button" class="contenidopago" src="http://promo.contenidopago.com/botones/boton2.png" border="0" alt="Realiza pagos con contenidopago" title="Realiza pagos con contenidopago" onClick="cnt_reDirect(this.form)">     
+		</form>';
+	}
+	else
+	{
+		$main_content .= '<h3>You have to login to buy points!<br /><a href="?subtopic=accountmanagement" />LOGIN HERE</a></h3>';
+	}
+}
 else
 {
 	if($config['dotpay_active'])
@@ -202,4 +221,6 @@ else
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=paypal"><h2>PayPal</h2><h3>Cheapest points! Send us money from your PayPal account or credit card.</h3><h2>PRESS HERE!</h2></a></center></div>';
 	if($config['zaypay_active'])
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=buypoints&system=zaypay"><h2>ZayPay</h2><h3>Send us money using SMS or phone call.</h3><h2>PRESS HERE!</h2></a></center></div>';
+	if($config['contenidopago_active'])
+		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=buypoints&system=contenidopago"><h2>Contenidopago</h2><h3>Send us money using SMS or phone call.</h3><h2>PRESS HERE!</h2></a></center></div>';
 }
