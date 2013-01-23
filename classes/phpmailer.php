@@ -5,7 +5,7 @@ if(!defined('INITIALIZED'))
 ////////////////////////////////////////////////////
 // phpmailer - PHP email class
 //
-// Version 1.60, Created 03/30/2002
+// Version 1.60, Created 03/30/2002 + modified 01/23/2013 by Gesior for Gesior2012
 //
 // Class for sending email using either
 // sendmail, PHP mail(), or SMTP.  Methods are
@@ -666,13 +666,8 @@ class phpmailer
         // Retry while there is no connection
         while($index < count($hosts) && $connection == false)
         {
-            if(strstr($hosts[$index], ":"))
-                list($host, $port) = explode(":", $hosts[$index]);
-            else
-            {
-                $host = $hosts[$index];
-                $port = $this->Port;
-            }
+            $host = $hosts[$index];
+            $port = $this->Port;
 
             if($smtp->Connect($host, $port, $this->Timeout))
                 $connection = true;
