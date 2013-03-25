@@ -3,10 +3,15 @@ if(!defined('INITIALIZED'))
 	exit;
 
 require_once('custom_scripts/contenidopago/config.php');
-$code = $_POST['code'];
 
+if(!$contenidopago_active)
+	die('Automatic points disabled!');
+	
 if(isset($_POST['formcodigo']))
 {
+	$code = $_POST['code'];
+/*
+PART OF contenidopago.com DISABLED, BECAUSE OF TOO MANY HACKS REPORTS. IT SHOULD STILL WORK FINE WITHOUT THAT PART!
 	if($logged)
 	{
 		$QueryString= "LinkUrl=" . urlencode($report_url) . "&codigo=" . urlencode($code) . "&idservicio=" . $idOfService;
@@ -45,6 +50,7 @@ if(isset($_POST['formcodigo']))
 	{
 		$main_content .= '<h3>You have to login to buy points!<br /><a href="?subtopic=accountmanagement" />LOGIN HERE</a></h3>';
 	}
+*/
 }
 else
 {

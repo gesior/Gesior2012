@@ -42,46 +42,46 @@ function replaceSmile($text, $smile)
 function replaceAll($text, $smile)
 {
     $rows = 0;
-    while(stripos($text, '[code]') !== false && stripos($text, '[/code]') !== false )
+    while(stripos($text, '[code]') !== false && stripos($text, '[/code]') !== false && stripos($text, '[code]') < stripos($text, '[/code]'))
     {
         $code = substr($text, stripos($text, '[code]')+6, stripos($text, '[/code]') - stripos($text, '[code]') - 6);
         if(!is_int($rows / 2)) { $bgcolor = 'ABED25'; } else { $bgcolor = '23ED25'; } $rows++;
         $text = str_ireplace('[code]'.$code.'[/code]', '<i>Code:</i><br /><table cellpadding="0" style="background-color: #'.$bgcolor.'; width: 480px; border-style: dotted; border-color: #CCCCCC; border-width: 2px"><tr><td>'.$code.'</td></tr></table>', $text);
     }
     $rows = 0;
-    while(stripos($text, '[quote]') !== false && stripos($text, '[/quote]') !== false )
+    while(stripos($text, '[quote]') !== false && stripos($text, '[/quote]') !== false && stripos($text, '[quote]') < stripos($text, '[/quote]'))
     {
         $quote = substr($text, stripos($text, '[quote]')+7, stripos($text, '[/quote]') - stripos($text, '[quote]') - 7);
         if(!is_int($rows / 2)) { $bgcolor = 'AAAAAA'; } else { $bgcolor = 'CCCCCC'; } $rows++;
         $text = str_ireplace('[quote]'.$quote.'[/quote]', '<table cellpadding="0" style="background-color: #'.$bgcolor.'; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>'.$quote.'</td></tr></table>', $text);
     }
     $rows = 0;
-    while(stripos($text, '[url]') !== false && stripos($text, '[/url]') !== false )
+    while(stripos($text, '[url]') !== false && stripos($text, '[/url]') !== false && stripos($text, '[url]') < stripos($text, '[/url]'))
     {
         $url = substr($text, stripos($text, '[url]')+5, stripos($text, '[/url]') - stripos($text, '[url]') - 5);
         $text = str_ireplace('[url]'.$url.'[/url]', '<a href="'.$url.'" target="_blank">'.$url.'</a>', $text);
     }
-    while(stripos($text, '[player]') !== false && stripos($text, '[/player]') !== false )
+    while(stripos($text, '[player]') !== false && stripos($text, '[/player]') !== false && stripos($text, '[player]') < stripos($text, '[/player]'))
     {
         $player = substr($text, stripos($text, '[player]')+8, stripos($text, '[/player]') - stripos($text, '[player]') - 8);
         $text = str_ireplace('[player]'.$player.'[/player]', '<a href="?subtopic=characters&name='.urlencode($player).'">'.$player.'</a>', $text);
     }
-    while(stripos($text, '[img]') !== false && stripos($text, '[/img]') !== false )
+    while(stripos($text, '[img]') !== false && stripos($text, '[/img]') !== false && stripos($text, '[img]') < stripos($text, '[/img]'))
     {
         $img = substr($text, stripos($text, '[img]')+5, stripos($text, '[/img]') - stripos($text, '[img]') - 5);
         $text = str_ireplace('[img]'.$img.'[/img]', '<img src="'.$img.'">', $text);
     }
-    while(stripos($text, '[b]') !== false && stripos($text, '[/b]') !== false )
+    while(stripos($text, '[b]') !== false && stripos($text, '[/b]') !== false && stripos($text, '[b]') < stripos($text, '[/b]'))
     {
         $b = substr($text, stripos($text, '[b]')+3, stripos($text, '[/b]') - stripos($text, '[b]') - 3);
         $text = str_ireplace('[b]'.$b.'[/b]', '<b>'.$b.'</b>', $text);
     }
-    while(stripos($text, '[i]') !== false && stripos($text, '[/i]') !== false )
+    while(stripos($text, '[i]') !== false && stripos($text, '[/i]') !== false && stripos($text, '[i]') < stripos($text, '[/i]'))
     {
         $i = substr($text, stripos($text, '[i]')+3, stripos($text, '[/i]') - stripos($text, '[i]') - 3);
         $text = str_ireplace('[i]'.$i.'[/i]', '<i>'.$i.'</i>', $text);
     }
-    while(stripos($text, '[u]') !== false && stripos($text, '[/u]') !== false )
+    while(stripos($text, '[u]') !== false && stripos($text, '[/u]') !== false && stripos($text, '[u]') < stripos($text, '[/u]'))
     {
         $u = substr($text, stripos($text, '[u]')+3, stripos($text, '[/u]') - stripos($text, '[u]') - 3);
         $text = str_ireplace('[u]'.$u.'[/u]', '<u>'.$u.'</u>', $text);
