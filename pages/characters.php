@@ -83,8 +83,9 @@ if(!empty($name))
 		}
 		if($config['site']['show_vip_storage'] > 0)
 		{
+			$storageValue = $player->getStorage($config['site']['show_vip_storage']);
 			$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
-			$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>VIP:</td><td>' . (($player->getStorage($config['site']['show_vip_storage']) === null) ? '<span style="font-weight:bold;color:red">NOT VIP</span>' : '<span style="font-weight:bold;color:green">VIP</span>') . '</td></tr>';
+			$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>VIP:</td><td>' . (($storageValue === null || $storageValue < 0) ? '<span style="font-weight:bold;color:red">NOT VIP</span>' : '<span style="font-weight:bold;color:green">VIP</span>') . '</td></tr>';
 		}
 		$comment = $player->getComment();
 		$newlines = array("\r\n", "\n", "\r");
