@@ -18,7 +18,7 @@ if(isset($_GET['payment_id']) && isset($_GET["price_setting_id"]) && isset($opti
 			$account = new Account($acc);
 			if($account->isLoaded())
 			{
-				$account->set('premium_points', ($account->getCustomField('premium_points')+$number_of_points));
+				$account->set('premium_points', ($account->getCustomField('premium_points')+$option['points']));
 				$account->save();
 			}
 			echo '*ok*';
