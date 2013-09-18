@@ -26,15 +26,15 @@ if(isset($_GET['payment_id']) && isset($_GET["price_setting_id"]) && isset($opti
 		}
 		else
 		{
-			echo '*cannot save code to folder used_codes*';
+			echo '*ERROR: cannot save code to folder used_codes, make that folder writeable*';
 			exit;
 		}
 	}
 	else
 	{
-		echo '*code already used*';
+		echo '*ok*';
 		exit;
 	}
 }
-echo '*bugged config*';
+echo '*ERROR: bugged config or someone try to hack*';
 exit;
