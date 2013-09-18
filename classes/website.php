@@ -12,7 +12,10 @@ class Website extends WebsiteErrors
 	public static $passwordsEncryptions = array(
 	'plain' => 'plain',
 	'md5' => 'md5',
-	'sha1' => 'sha1'
+	'sha1' => 'sha1',
+	'sha256' => 'sha256',
+	'sha512' => 'sha512',
+	'vahash' => 'vahash'
 	);
 	private static $passwordsEncryption;
 
@@ -173,7 +176,7 @@ class Website extends WebsiteErrors
 	public static function loadGroups()
 	{
 		$path = self::getWebsiteConfig()->getValue('serverPath');
-		self::$groups = new Groups();
+		self::$groups = new Groups($path . 'data/XML/groups.xml');
 	}
 
 	public static function getGroups()

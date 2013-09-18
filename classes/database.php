@@ -8,6 +8,7 @@ class Database extends PDO
 	private $connected = false;
 	const DB_MYSQL = 1;
 	const DB_SQLITE = 2;
+	const DB_PGSQL = 3;
 
 	private $db_driver;
 	private $db_host = 'localhost';

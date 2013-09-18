@@ -2,10 +2,12 @@
 if(!defined('INITIALIZED'))
 	exit;
 
+echo 'page disabled, wait for new version of acc. maker with support for TFS 1.0 wars';
+/*
 $main_content = "<h1 align=\"center\">Guild Wars</h1>
-/war invite,guild name,fraglimit                              Send an invitation to start a war. Example: war invite,Black Ninjas,150 <br>
+/war invite,guild name,fraglimit                              Send an invitation to start a war. Example: /war invite,Black Ninjas,150 <br>
 /war invite,guild name,fraglimit,money,time                   Send an invitation to start a war. <br>
-Example: war invite,Black Ninjas,150,10000,3 day's <br>
+Example: /war invite,Black Ninjas,150,10000,3 day's <br>
 
 <b>/war accept,guild name </b> <u>                                      Accept the invitation to start a war. <br></u>
 <b>/war reject,guild name  </b>    <u>                                  Reject the invitation to start a war. <br></u>
@@ -92,7 +94,7 @@ foreach($SQL->query('SELECT * FROM ' . $SQL->tableName('guild_wars') . ' WHERE '
         }
  
         $main_content .= "<br /><br /><a onclick=\"show_hide('war-details:" . $war['id'] . "'); return false;\" style=\"cursor: pointer;\">&raquo; Details &laquo;</a></td>
-<td align=\"center\"><a href=\"?subtopic=guilds&action=show&guild=".$e->getId()."\"><img src=\"" . $a->getGuildLogoLink() . "\" width=\"64\" height=\"64\" border=\"0\"/><br />".htmlspecialchars($e->getName())."</a></td>
+<td align=\"center\"><a href=\"?subtopic=guilds&action=show&guild=".$e->getId()."\"><img src=\"" . $e->getGuildLogoLink() . "\" width=\"64\" height=\"64\" border=\"0\"/><br />".htmlspecialchars($e->getName())."</a></td>
 </tr>
 <tr id=\"war-details:" . $war['id'] . "\" style=\"display: none; background: " . (is_int($count / 2) ? $config['site']['darkborder'] : $config['site']['lightborder']) . ";\">
 <td colspan=\"3\">";
@@ -156,3 +158,4 @@ if($count == 0)
 </tr>";
  
 $main_content .= "</table>";
+*/

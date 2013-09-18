@@ -30,11 +30,13 @@ if($action == 'login')
 //show list of guilds
 if($action == '')
 {
+	$world_name = $config['server']['serverName'];
+	
 	$guilds_list = new DatabaseList('Guild');
 	$guilds_list->addOrder(new SQL_Order(new SQL_Field('name'), SQL_Order::ASC));
 	
-	$main_content .= '<h2><center>Guilds on '.htmlspecialchars(Website::getServerConfig()->getValue('serverName')).'</center></h2><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
-	<TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=3 CLASS=white><B>Guilds on '.htmlspecialchars(Website::getServerConfig()->getValue('serverName')).'</B></TD></TR>
+	$main_content .= '<h2><center>Guilds on '.htmlspecialchars($world_name).'</center></h2><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
+	<TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=3 CLASS=white><B>Guilds on '.htmlspecialchars($world_name).'</B></TD></TR>
 	<TR BGCOLOR='.$config['site']['darkborder'].'><TD WIDTH=64><B>Logo</B></TD>
 	<TD WIDTH=100%><B>Description</B></TD>
 	<TD WIDTH=56><B>&#160;</B></TD></TR>';
@@ -1931,7 +1933,7 @@ if($action == 'cleanup_players')
 							$player->setGuildNick($new_nick);
 							$player->save();
 							$main_content .= 'Guild nick of player <b>'.htmlspecialchars($player->getName()).'</b> changed to <b>'.htmlspecialchars($new_nick).'</b>.';
-							$addtolink = '&action=show&guild='.$player->getRank()->getGuild()->getId();
+							$addtolink = '&action=show&guild='.$player->getRank()->getGuildId();
 						}
 						else
 							$main_content .= 'This player is not from your account.';

@@ -5,11 +5,11 @@ if(!defined('INITIALIZED'))
 class Account extends ObjectData
 {
 	const LOADTYPE_ID = 'id';
-	const LOADTYPE_NAME = 'id';
+	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null);
-	public static $fields = array('id', 'password', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
+	public $data = array('name' => null, 'password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'create_ip' => null, 'creation' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null);
+	public static $fields = array('id', 'name', 'password', 'premdays', 'lastday', 'email', 'key', 'create_ip', 'creation', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
 	public $players;
 	public $playerRanks;
 	public $guildAccess;
@@ -40,7 +40,7 @@ class Account extends ObjectData
 
 	public function loadByName($name)
 	{
-		$this->load($name, 'id');
+		$this->load($name, 'name');
 	}
 
 	public function loadByEmail($mail)
@@ -55,10 +55,11 @@ class Account extends ObjectData
 			$keys = array();
 			$values = array();
 			foreach(self::$fields as $key)
-			{
-				$keys[] = $this->getDatabaseHandler()->fieldName($key);
-				$values[] = $this->getDatabaseHandler()->quote($this->data[$key]);
-			}
+				if($key != 'id')
+				{
+					$keys[] = $this->getDatabaseHandler()->fieldName($key);
+					$values[] = $this->getDatabaseHandler()->quote($this->data[$key]);
+				}
 			$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName(self::$table) . ' (' . implode(', ', $keys) . ') VALUES (' . implode(', ', $values) . ')');
 			$this->setID($this->getDatabaseHandler()->lastInsertId());
 		}
@@ -82,16 +83,18 @@ class Account extends ObjectData
 		}
 		return $this->players;
 	}
-
+/*
 	public function getGuildRanks($forceReload = false)
 	{
 		if(!isset($this->playerRanks) || $forceReload)
 		{
 			$this->playerRanks = new DatabaseList('AccountGuildRank');
 			$filterAccount = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, $this->getID());
-			$filterPlayer = new SQL_Filter(new SQL_Field('rank_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'guild_ranks'));
+			$filterPlayer1 = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'guild_membership'));
+			$filterPlayer2 = new SQL_Filter(new SQL_Field('rank_id', 'guild_membership'), SQL_Filter::EQUAL, new SQL_Field('id', 'guild_ranks'));
 			$filterGuild = new SQL_Filter(new SQL_Field('guild_id', 'guild_ranks'), SQL_Filter::EQUAL, new SQL_Field('id', 'guilds'));
-			$filter = new SQL_Filter($filterAccount, SQL_Filter::CRITERIUM_AND, $filterPlayer);
+			$filter = new SQL_Filter($filterAccount, SQL_Filter::CRITERIUM_AND, $filterPlayer1);
+			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterPlayer2);
 			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterGuild);
 			$this->playerRanks->setFilter($filter);
 		}
@@ -125,6 +128,46 @@ class Account extends ObjectData
 		else
 			return 0;
 	}
+*/
+	public function unban()
+	{
+        $this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName('account_bans') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('account_id') . ' = ' . $this->getDatabaseHandler()->quote($this->data['id']));
+
+        unset($this->bans);
+	}
+
+	public function loadBans($forceReload = false)
+	{
+		if(!isset($this->bans) || $forceReload)
+		{
+			$this->bans = new DatabaseList('AccountBan');
+			$filter = new SQL_Filter(new SQL_Field('account_id'), SQL_Filter::EQUAL, $this->data['id']);
+			$this->bans->setFilter($filter);
+		}
+	}
+
+	public function isBanned($forceReload = false)
+	{
+		$this->loadBans($forceReload);
+		return count($this->bans) > 0;
+	}
+
+	public function getBanTime($forceReload = false)
+	{
+		$this->loadBans($forceReload);
+		$lastExpires = 0;
+		foreach($bans as $ban)
+		{
+			if($ban->getExpiresAt() <= 0)
+			{
+				$lastExpires = 0;
+				break;
+			}
+			if($ban->getExpiresAt() > time() && $ban->getExpiresAt() > $lastExpires)
+				$lastExpires = $ban->getExpiresAt();
+		}
+		return $lastExpires;
+	}
 
     public function delete()
     {
@@ -135,6 +178,8 @@ class Account extends ObjectData
 
 	public function setID($value){$this->data['id'] = $value;}
 	public function getID(){return $this->data['id'];}
+	public function setName($value){$this->data['name'] = $value;}
+	public function getName(){return $this->data['name'];}
 	public function setPassword($value)
 	{
 		$this->data['password'] = Website::encryptPassword($value, $this);
@@ -148,12 +193,9 @@ class Account extends ObjectData
 	public function getMail(){return $this->data['email'];}
 	public function setKey($value){$this->data['key'] = $value;}
 	public function getKey(){return $this->data['key'];}
-	public function setGroupID($value){$this->data['group_id'] = $value;}
-	public function getGroupID(){return $this->data['group_id'];}
 /*
  * Custom AAC fields
  * create_ip , INT, default 0
- * create_date , INT, default 0
  * premium_points , INT, default 0
  * page_access, INT, default 0
  * location, VARCHAR(255), default ''
@@ -161,8 +203,8 @@ class Account extends ObjectData
 */
 	public function setCreateIP($value){$this->data['create_ip'] = $value;}
 	public function getCreateIP(){return $this->data['create_ip'];}
-	public function setCreateDate($value){$this->data['create_date'] = $value;}
-	public function getCreateDate(){return $this->data['create_date'];}
+	public function setCreateDate($value){$this->data['creation'] = $value;}
+	public function getCreateDate(){return $this->data['creation'];}
 	public function setPremiumPoints($value){$this->data['premium_points'] = $value;}
 	public function getPremiumPoints(){return $this->data['premium_points'];}
 	public function setPageAccess($value){$this->data['page_access'] = $value;}
@@ -177,8 +219,6 @@ class Account extends ObjectData
 /*
  * for compability with old scripts
 */
-	public function getGroup(){return $this->getGroupID();}
-	public function setGroup($value){$this->setGroupID($value);}
 	public function getEMail(){return $this->getMail();}
 	public function setEMail($value){$this->setMail($value);}
 	public function getPlayersList(){return $this->getPlayers();}
@@ -189,7 +229,7 @@ class Account extends ObjectData
 		return ($this->data['password'] == Website::encryptPassword($password, $this));
 	}
 
-	public function find($name){$this->load($name);}
+	public function find($name){$this->loadByName($name);}
 	public function findByEmail($email){$this->loadByEmail($email);}
 	public function isPremium(){return ($this->getPremDays() > 0);}
 	public function getLastLogin(){return $this->getLastDay();}

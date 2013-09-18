@@ -44,7 +44,13 @@ else
 			$account_email_new = $account_logged->getCustomField("email_new");
 		$account_rlname = $account_logged->getRLName();
 		$account_location = $account_logged->getLocation();
-		$welcome_msg = 'Welcome to your account!';
+		if($account_logged->isBanned())
+			if($account_logged->getBanTime() > 0)
+				$welcome_msg = '<font color="red">Your account is banished until '.date("j F Y, G:i:s", $account_logged->getBanTime()).'!</font>';
+			else
+				$welcome_msg = '<font color="red">Your account is banished FOREVER!</font>';
+		else
+			$welcome_msg = 'Welcome to your account!';
 		$main_content .= '<div class="SmallBox" >  <div class="MessageContainer" ><div class="BoxFrameHorizontal" style="background-image:url('.$layout_name.'/images/content/box-frame-horizontal.gif);" /></div><div class="BoxFrameEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div><div class="BoxFrameEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div><div class="Message" >      <div class="BoxFrameVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></div><div class="BoxFrameVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></div><table><td width="100%"></td><td><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=accountmanagement&action=logout" method="post" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Logout" alt="Logout" src="'.$layout_name.'/images/buttons/_sbutton_logout.gif" ></div></div></td></tr></form></table></td></tr></table>    </div><div class="BoxFrameHorizontal" style="background-image:url('.$layout_name.'/images/content/box-frame-horizontal.gif);" /></div>    <div class="BoxFrameEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>    <div class="BoxFrameEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>  </div></div><br/><center><table><tr><td><img src="'.$layout_name.'/images/content/headline-bracer-left.gif" /></td><td style="text-align:center;vertical-align:middle;horizontal-align:center;font-size:17px;font-weight:bold;" >'.$welcome_msg.'<br/></td><td><img src="'.$layout_name.'/images/content/headline-bracer-right.gif" /></td></tr></table><br/></center>';
 		//if account dont have recovery key show hint
 		if(empty($account_reckey))
@@ -744,7 +750,6 @@ function NameStateChanged()
 				{
 					// load items and skills of player before we change ID
 					$char_to_copy->getItems()->load();
-					$char_to_copy->loadSkills();
 					
 					if($newchar_sex == "0")
 						$char_to_copy->setLookType(136);
@@ -766,7 +771,6 @@ function NameStateChanged()
 					if($char_to_copy->isLoaded())
 					{
 						$char_to_copy->saveItems();
-						$char_to_copy->saveSkills();
 						$main_content .= '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Character Created</div>        <span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>The character <b>'.htmlspecialchars($newchar_name).'</b> has been created.<br/>Please select the outfit when you log in for the first time.<br/><br/><b>See you on '.$config['server']['serverName'].'!</b></td></tr>          </table>        </div>  </table></div></td></tr><br/><center><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=accountmanagement" method="post" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></td></tr></form></table></center>';
 					}
 					else
@@ -803,7 +807,7 @@ function NameStateChanged()
 							$main_content .= '<tr><td><input type="radio" name="newcharvocation" value="'.htmlspecialchars($char_vocation_key).'" ';
 							if($newchar_vocation == $char_vocation_key)
 								$main_content .= 'checked="checked" ';
-							$main_content .= '>'.htmlspecialchars($vocation_name[$char_vocation_key]).'</td></tr>';
+							$main_content .= '>'.htmlspecialchars($vocation_name[0][$char_vocation_key]).'</td></tr>';
 						}
 						$main_content .= '</table></table></td>';
 					}
@@ -824,6 +828,5 @@ function NameStateChanged()
 					$main_content .= '</table></div></td></tr><br/><table style="width:100%;" ><tr align="center" ><td><table border="0" cellspacing="0" cellpadding="0" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/buttons/_sbutton_submit.gif" ></div></div></td><tr></form></table></td><td><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=accountmanagement" method="post" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></td></tr></form></table></td></tr></table>';
 				}
 			}
-		
 	}
 }

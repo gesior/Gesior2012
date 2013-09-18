@@ -53,10 +53,11 @@ switch($list)
 		$list_name='Experience';
 		break;
 }
+$world_name = $config['server']['serverName'];
 
 $offset = $page * 100;
-$skills = new Highscores($id, 100, $page, 0, $vocation);
-$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD><IMG SRC="'.$layout_name.'/images/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD><TD><CENTER><H2>Ranking for '.htmlspecialchars($list_name).' on '.htmlspecialchars(Website::getServerConfig()->getValue('serverName')).'</H2></CENTER><BR>';
+$skills = new Highscores($id, 100, $page, $vocation);
+$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD><IMG SRC="'.$layout_name.'/images/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD><TD><CENTER><H2>Ranking for '.htmlspecialchars($list_name).' on '.htmlspecialchars($world_name).'</H2></CENTER><BR>';
 
 $main_content .= '<br><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%></TABLE><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=whites><B>#</B></TD><TD CLASS=whites><b>Outfit</b></TD><TD WIDTH=75% CLASS=whites><B>Name</B></TD><TD WIDTH=15% CLASS=whites><b><center>Level</center></B></TD>';
 if($list == "experience")

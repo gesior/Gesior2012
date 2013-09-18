@@ -5,16 +5,28 @@ if(!defined('INITIALIZED'))
 class Groups implements Iterator, Countable
 {
 	private $groups = array();
+	private $XML;
 	public $iterator = 0;
 
-	public function __construct()
+	public function __construct($file)
 	{
-		foreach(Website::getDBHandle()->query('SELECT * FROM ' . Website::getDBHandle()->tableName('groups')) as $group)
+		$XML = new DOMDocument();
+		if(!$XML->load($file))
+			new Error_Critic('', 'Groups::__construct - cannot load file <b>' . htmlspecialchars($file) . '</b>');
+
+		$this->XML = $XML;
+
+		foreach($XML->getElementsByTagName('group') as $group)
 		{
-			$groupData = array();
-			$groupData['id'] = $group['id'];
-			$groupData['name'] = $group['name'];
-			$this->groups[$groupData['id']] = new Group($groupData);
+			if($group->hasAttribute('id') && $group->hasAttribute('name'))
+			{
+				$groupData = array();
+				$groupData['id'] = $group->getAttribute('id');
+				$groupData['name'] = $group->getAttribute('name');
+				$this->groups[$groupData['id']] = new Group($groupData);
+			}
+			else
+				new Error_Critic('#C', 'Cannot load group. <b>id</b> or/and <b>name</b> parameter is missing');
 		}
 	}
 	/*

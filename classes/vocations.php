@@ -24,10 +24,15 @@ class Vocations implements Iterator, Countable
 				$vocationData = array();
 				$vocationData['id'] = $vocation->getAttribute('id');
 				$vocationData['name'] = $vocation->getAttribute('name');
+				if($vocation->hasAttribute('fromvoc'))
+					$vocationData['fromvoc'] = $vocation->getAttribute('fromvoc');
+				else
+					$vocationData['fromvoc'] = $vocationData['id'];
 				if($vocation->hasAttribute('manamultiplier'))
 					$vocationData['manamultiplier'] = $vocation->getAttribute('manamultiplier');
 				else
 					$vocationData['manamultiplier'] = 1;
+
 				if($vocation->hasAttribute('gainhp'))
 					$vocationData['gainhp'] = $vocation->getAttribute('gainhp');
 				else
@@ -82,20 +87,20 @@ class Vocations implements Iterator, Countable
 	/*
 	 * Get vocation
 	*/
-	public function getVocation($id)
+	public function getVocation($voc_id)
 	{
-		if(isset($this->vocations[$id]))
-			return $this->vocations[$id];
+		if(isset($this->vocations[$voc_id]))
+			return $this->vocations[$voc_id];
 		return false;
 	}
 	/*
 	 * Get vocation name without getting vocation
 	*/
-	public function getVocationName($id)
+	public function getVocationName($voc_id)
 	{
-		if($vocs = self::getVocation($id))
+		if($vocs = self::getVocation($voc_id))
 			return $vocs->getName();
-		return false;
+		return 'vocation does not exist';
 	}
 
     public function current()

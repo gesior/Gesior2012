@@ -18,7 +18,7 @@ class Highscores extends DatabaseList
 	public $skillType;
 	public $vocation = '';
 
-	public function __construct($type, $limit = 5, $page = 0, $worldId = 0, $vocation = '')
+	public function __construct($type, $limit = 5, $page = 0, $vocation = '')
 	{
 		$this->highscoreConfig = Website::getWebsiteConfig();
 		parent::__construct();
@@ -93,7 +93,7 @@ class Highscores extends DatabaseList
 
 		if($this->highscoreConfig->isSetKey('accounts_hidden'))
 			foreach($this->highscoreConfig->getValue('accounts_hidden') as $_account_filter)
-				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::NOT_EQUAL, $_account_filter));
+				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::NOT_EQUAL, $_account_filter));;
 
 		$this->setFilter($filter);
 	}

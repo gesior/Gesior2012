@@ -15,11 +15,17 @@ if(!empty($name))
 		$number_of_rows = 0;
 		$account = $player->getAccount();
 		$skull = '';
-		if ($player->getRedSkull() != 0)
+		if ($player->getSkull() == 4)
 			$skull = "<img style='border: 0;' src='./images/skulls/redskull.gif'/>";
+		else if ($player->getSkull() == 5)
+			$skull = "<img style='border: 0;' src='./images/skulls/blackskull.gif'/>";
 		$main_content .= '<table border="0" cellspacing="1" cellpadding="4" width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2" style="font-weight:bold;color:white">Character Information</td></tr>';
 		$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
 		$main_content .= '<tr bgcolor="' . $bgcolor . '"><td width="20%">Name:</td><td style="font-weight:bold;color:' . (($player->isOnline()) ? 'green' : 'red') . '">' . htmlspecialchars($player->getName()) . ' ' . $skull . ' <img src="' . $config['site']['flag_images_url'] . $account->getFlag() . $config['site']['flag_images_extension'] . '" title="Country: ' . $account->getFlag() . '" alt="' . $account->getFlag() . '" />';
+		if($player->isBanned() || $account->isBanned())
+			$main_content .= '<span style="color:red">[BANNED]</span>';
+		if($player->isNamelocked())
+			$main_content .= '<span style="color:red">[NAMELOCKED]</span>';
 		$main_content .= '<br /><img src="' . $config['site']['outfit_images_url'] . '?id=' . $player->getLookType() . '&addons=' . $player->getLookAddons() . '&head=' . $player->getLookHead() . '&body=' . $player->getLookBody() . '&legs=' . $player->getLookLegs() . '&feet=' . $player->getLookFeet() . '" alt="" /></td></tr>';
 
 		if(in_array($player->getGroup(), $config['site']['groups_support']))
@@ -42,6 +48,8 @@ if(!empty($name))
 			$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>Guild Membership:</td><td>' . htmlspecialchars($rank_of_player->getName()) . ' of the <a href="?subtopic=guilds&action=show&guild='. $rank_of_player->getGuild()->getID() .'">' . htmlspecialchars($rank_of_player->getGuild()->getName()) . '</a></td></tr>';
 		}
 		$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
+		$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>Balance:</td><td>' . htmlspecialchars($player->getBalance()) . ' gold coins</td></tr>';
+		$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
 		$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>Last login:</td><td>' . (($player->getLastLogin() > 0) ? date("j F Y, g:i a", $player->getLastLogin()) : 'Never logged in.') . '</td></tr>';
 		if($player->getCreateDate() > 0)
 		{
@@ -50,8 +58,9 @@ if(!empty($name))
 		}
 		if($config['site']['show_vip_storage'] > 0)
 		{
+			$storageValue = $player->getStorage($config['site']['show_vip_storage']);
 			$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
-			$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>VIP:</td><td>' . (($player->getStorage($config['site']['show_vip_storage']) === null) ? '<span style="font-weight:bold;color:red">NOT VIP</span>' : '<span style="font-weight:bold;color:green">VIP</span>') . '</td></tr>';
+			$main_content .= '<tr bgcolor="' . $bgcolor . '"><td>VIP:</td><td>' . (($storageValue === null || $storageValue < 0) ? '<span style="font-weight:bold;color:red">NOT VIP</span>' : '<span style="font-weight:bold;color:green">VIP</span>') . '</td></tr>';
 		}
 		$comment = $player->getComment();
 		$newlines = array("\r\n", "\n", "\r");
@@ -189,21 +198,18 @@ if(!empty($name))
 		$deads = 0;
 
 		//deaths list
-		$player_deaths = $SQL->query('SELECT ' . $SQL->fieldName('player_id') . ', ' . $SQL->fieldName('time') . ', ' . $SQL->fieldName('level') . ', ' . $SQL->fieldName('killed_by') . ', ' . $SQL->fieldName('is_player') . ' FROM ' . $SQL->tableName('player_deaths') . ' WHERE ' . $SQL->fieldName('player_id') . ' = '.$player->getId().' ORDER BY ' . $SQL->fieldName('time') . ' DESC LIMIT 15');
+		$player_deaths = new DatabaseList('PlayerDeath');
+		$player_deaths->setFilter(new SQL_Filter(new SQL_Filter(new SQL_Field('player_id'), SQL_Filter::EQUAL, $player->getId()), SQL_Filter::CRITERIUM_AND,new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'player_deaths'))));
+		$player_deaths->addOrder(new SQL_Order(new SQL_Field('time'), SQL_Order::DESC));
+		$player_deaths->setLimit(20);
+
 		foreach($player_deaths as $death)
 		{
 			$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
 			$deads++;
-			$dead_add_content .= "<tr bgcolor=\"".$bgcolor."\"><td width=\"20%\" align=\"center\">".date("j M Y, H:i", $death['time'])."</td><td>";
-			$dead_add_content .= "<td>killed at level " . $death['level'] . " by ";
-			if($death['is_player'] == 0)
-			{
-				$dead_add_content .= htmlspecialchars($death['killed_by']);
-			}
-			else
-			{
-				$dead_add_content .= '<a href="?subtopic=characters&name=' . urlencode($death['killed_by']) . '">' . htmlspecialchars($death['killed_by']) . '</a>';
-			}
+			$dead_add_content .= "<tr bgcolor=\"".$bgcolor."\"><td width=\"20%\" align=\"center\">".date("j M Y, H:i", $death->getTime())."</td><td>at level " . $death->getLevel() . " by " . $death->getKillerString();
+			if($death->getMostDamageString() != '' && $death->getKillerString() != $death->getMostDamageString())
+				$dead_add_content .= ' and ' . $death->getMostDamageString();
 			$dead_add_content .= "</td></tr>";
 		}
 
@@ -236,6 +242,13 @@ if(!empty($name))
 			$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
 			$main_content .= '<TR BGCOLOR="' . $bgcolor . '"><TD>Account&#160;Status:</TD><TD>';
 			$main_content .= ($account->isPremium() > 0) ? '<b><font color="green">Premium Account</font></b>' : '<b><font color="red">Free Account</font></b>';
+			if($account->isBanned())
+			{
+				if($account->getBanTime() > 0)
+					$main_content .= '<font color="red"> [Banished until '.date("j F Y, G:i", $account->getBanTime()).']</font>';
+				else
+					$main_content .= '<font color="red"> [Banished FOREVER]</font>';
+			}
 			$main_content .= '</TD></TR></TABLE>';
 			$main_content .= '<br><TABLE BORDER=0><TR><TD></TD></TR></TABLE><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD COLSPAN=5 CLASS=white><B>Characters</B></TD></TR>
 			<TR BGCOLOR="' . $bgcolor . '"><TD><B>Name</B></TD><TD><B>Level</B></TD><TD><b>Status</b></TD><TD><B>&#160;</B></TD></TR>';

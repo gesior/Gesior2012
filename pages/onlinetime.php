@@ -80,7 +80,7 @@ foreach($players as $player)
 {
 	if(!is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
 	$main_content .= '<tr bgcolor="'.$bgcolor.'"><td align="center">'.$number_of_rows.'. </td>';
-	if($player['online'] == 1)
+	if(Player::isPlayerOnline($player['id']))
 		$main_content .= '<td><a href="?subtopic=characters&name='.urlencode($player['name']).'"><b><font color="green">'.htmlspecialchars($player['name']).'</font></b></a>';
 	else
 		$main_content .= '<td><a href="?subtopic=characters&name='.urlencode($player['name']).'"><b><font color="red">'.htmlspecialchars($player['name']).'</font></b></a>';

@@ -1,6 +1,26 @@
 <?php
 if(!defined('INITIALIZED'))
 	exit;
+/*
+// top kills - guilds
+$main_content .= '<table border="0" width="100%">
+	<tr>
+		<td style="text-align: center; font-weight: bold;">
+			<center><font color="red">Most powerfull guilds</font></center>
+		</td>
+	</tr>
+</table>';
+
+$main_content .= '<table border="0" cellspacing="3" cellpadding="4" width="100%"><tr>';
+
+foreach($SQL->query('SELECT ' . $SQL->tableName('g') . '.' . $SQL->fieldName('id') . ' AS ' . $SQL->fieldName('id') . ', ' . $SQL->tableName('g') . '.' . $SQL->fieldName('name') . ' AS ' . $SQL->fieldName('name') . ', COUNT(' . $SQL->tableName('g') . '.' . $SQL->fieldName('name') . ') AS ' . $SQL->fieldName('frags') . ' FROM ' . $SQL->tableName('killers') . ' k LEFT JOIN ' . $SQL->tableName('player_killers') . ' pk ON ' . $SQL->tableName('k') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('pk') . '.' . $SQL->fieldName('kill_id') . ' LEFT JOIN ' . $SQL->tableName('players') . ' p ON ' . $SQL->tableName('pk') . '.' . $SQL->fieldName('player_id') . ' = ' . $SQL->tableName('p') . '.' . $SQL->fieldName('id') . ' LEFT JOIN ' . $SQL->tableName('guild_ranks') . ' gr ON ' . $SQL->tableName('p') . '.' . $SQL->fieldName('rank_id') . ' = ' . $SQL->tableName('gr') . '.' . $SQL->fieldName('id') . ' LEFT JOIN ' . $SQL->tableName('guilds') . ' g ON ' . $SQL->tableName('gr') . '.' . $SQL->fieldName('guild_id') . ' = ' . $SQL->tableName('g') . '.' . $SQL->fieldName('id') . ' WHERE ' . $SQL->tableName('g') . '.' . $SQL->fieldName('id') . ' > 0 AND ' . $SQL->tableName('k') . '.' . $SQL->fieldName('unjustified') . ' = 1 AND ' . $SQL->tableName('k') . '.' . $SQL->fieldName('final_hit') . ' = 1 GROUP BY ' . $SQL->fieldName('name') . ' ORDER BY ' . $SQL->fieldName('frags') . ' DESC, ' . $SQL->fieldName('name') . ' ASC LIMIT 4;') as $guild)
+$main_content .= '<td style="width: 25%; text-align: center;"><a href="?subtopic=guilds&action=show&guild=' . $guild['id'] . '"><img src="guild_image.php?id=' . $guild['id'] . '" width="64" height="64" border="0"/><br />' . htmlspecialchars($guild['name']) . '</a><br />' . $guild['frags'] . ' kills
+</td>';
+$main_content .= '</tr></table>';
+*/
+
+
+
 
 function replaceSmile($text, $smile)
 {

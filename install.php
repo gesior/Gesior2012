@@ -3,7 +3,7 @@ define('INITIALIZED', true);
 define('ONLY_PAGE', false);
 if(!file_exists('install.txt'))
 {
-	echo('AAC installation is disabled. To enable it make file <b>install.txt</b> in main AAC directory and put there your IP.');
+	echo('AAC installation is disabled. To enable it make file <b>install.php</b> in main AAC directory and put there your IP.');
 	exit;
 }
 $installIP = trim(file_get_contents('install.txt'));
@@ -110,7 +110,7 @@ elseif($page == 'menu')
 	<a href="install.php?page=step&step=5" target="step">5. Set Admin Account</a><br>
 	<b>Author:</b><br>
 	Gesior<br>
-	Compatible with TFS 0.2.13+</a>';
+	Compatible with TFS 0.3.6 and TFS 0.4 up to revision 3702</a>';
 }
 elseif($page == 'step')
 {
@@ -142,63 +142,40 @@ elseif($page == 'step')
 		}
 		if(Website::getServerConfig()->isSetKey('mysqlHost'))
 		{
-			define('SERVERCONFIG_SQL_TYPE', 'sqlType');
 			define('SERVERCONFIG_SQL_HOST', 'mysqlHost');
 			define('SERVERCONFIG_SQL_PORT', 'mysqlPort');
 			define('SERVERCONFIG_SQL_USER', 'mysqlUser');
 			define('SERVERCONFIG_SQL_PASS', 'mysqlPass');
 			define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
-			define('SERVERCONFIG_SQLITE_FILE', 'sqliteDatabase');
-		}
-		elseif(Website::getServerConfig()->isSetKey('sqlHost'))
-		{
-			define('SERVERCONFIG_SQL_TYPE', 'sqlType');
-			define('SERVERCONFIG_SQL_HOST', 'sqlHost');
-			define('SERVERCONFIG_SQL_PORT', 'sqlPort');
-			define('SERVERCONFIG_SQL_USER', 'sqlUser');
-			define('SERVERCONFIG_SQL_PASS', 'sqlPass');
-			define('SERVERCONFIG_SQL_DATABASE', 'sqlDatabase');
-			define('SERVERCONFIG_SQLITE_FILE', 'sqliteDatabase');
+			define('SERVERCONFIG_SQLITE_FILE', 'sqlFile');
 		}
 		else
-			new Error_Critic('#E-3', 'There is no key <b>sqlHost</b> or <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
-		if(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) == 'mysql')
-		{
-			Website::setDatabaseDriver(Database::DB_MYSQL);
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
-				Website::getDBHandle()->setDatabaseHost(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_HOST));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PORT))
-				Website::getDBHandle()->setDatabasePort(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PORT));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
-				Website::getDBHandle()->setDatabaseName(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_USER))
-				Website::getDBHandle()->setDatabaseUsername(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_USER));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
-				Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
-		}
-		elseif(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) == 'sqlite')
-		{
-			Website::setDatabaseDriver(Database::DB_SQLITE);
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQLITE_FILE))
-				Website::getDBHandle()->setDatabaseFile(Website::getWebsiteConfig()->getValue('serverPath') . Website::getServerConfig()->getValue(SERVERCONFIG_SQLITE_FILE));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQLITE_FILE . '</b> in server config file.');
-		}
+			new Error_Critic('#E-3', 'There is no key <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
+
+		Website::setDatabaseDriver(Database::DB_MYSQL);
+		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
+			Website::getDBHandle()->setDatabaseHost(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_HOST));
 		else
-			new Error_Critic('#E-6', 'Database error. Unknown database type in <b>server config</b> . Must be equal to: "<b>mysql</b>" or "<b>sqlite</b>". Now is: "<b>' . Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) . '</b>"');
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
+		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PORT))
+			Website::getDBHandle()->setDatabasePort(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PORT));
+		else
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
+		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
+			Website::getDBHandle()->setDatabaseName(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
+		else
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
+		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_USER))
+			Website::getDBHandle()->setDatabaseUsername(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_USER));
+		else
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
+		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
+			Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
+		else
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
 		Website::setPasswordsEncryption(Website::getServerConfig()->getValue('passwordType'));
 		$SQL = Website::getDBHandle();
-	Website::getDBHandle()->setPrintQueries(true);
+Website::getDBHandle()->setPrintQueries(true);
 	}
 
 	if($step == 'start')
@@ -228,9 +205,9 @@ elseif($page == 'step')
 			setServerPath($path);
 			$tmp_lua_config = new ConfigLUA($path . 'config.lua');
 			$config['server'] = $tmp_lua_config->getConfig();
-			if(isset($config['server']['sqlType']))
+			if(isset($config['server']['mysqlHost']))
 			{
-				echo 'File <b>config.lua</b> loaded from <font color="red"><i>'.$path.'config.lua</i></font>. It looks like fine server config file. Now you can check database('.$config['server']['sqlType'].') connection: <a href="install.php?page=step&step=2">STEP 2 - check database connection</a>';
+				echo 'File <b>config.lua</b> loaded from <font color="red"><i>'.$path.'config.lua</i></font>. It looks like fine server config file. Now you can check database connection: <a href="install.php?page=step&step=2">STEP 2 - check database connection</a>';
 			}
 			else
 			{
@@ -274,7 +251,6 @@ elseif($page == 'step')
 		$columns[] = array('guilds', 'guild_logo', 'MEDIUMBLOB', '', NULL);
 		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0');
 		$columns[] = array('guilds', 'balance', 'BIGINT UNSIGNED', '', '0');
-		$columns[] = array('killers', 'war', 'INT', '11', '0');
 
 		$columns[] = array('players', 'deleted', 'TINYINT', '1', '0');
 		$columns[] = array('players', 'description', 'VARCHAR', '255', '');
@@ -344,57 +320,7 @@ elseif($page == 'step')
 							  PRIMARY KEY  (`id`),
 							  KEY `section` (`section`)
 							) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
-		// sqlite tables
-		$tables[Database::DB_SQLITE]['z_ots_comunication'] = 'CREATE TABLE "z_ots_comunication" (
-							  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-							  "name" varchar(255) NOT NULL,
-							  "type" varchar(255) NOT NULL,
-							  "action" varchar(255) NOT NULL,
-							  "param1" varchar(255) NOT NULL,
-							  "param2" varchar(255) NOT NULL,
-							  "param3" varchar(255) NOT NULL,
-							  "param4" varchar(255) NOT NULL,
-							  "param5" varchar(255) NOT NULL,
-							  "param6" varchar(255) NOT NULL,
-							  "param7" varchar(255) NOT NULL,
-							  "delete_it" int(2) NOT NULL default 1);';
-		$tables[Database::DB_SQLITE]['z_shop_offer'] = 'CREATE TABLE "z_shop_offer" (
-							  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-							  "points" int(11) NOT NULL default 0,
-							  "itemid1" int(11) NOT NULL default 0,
-							  "count1" int(11) NOT NULL default 0,
-							  "itemid2" int(11) NOT NULL default 0,
-							  "count2" int(11) NOT NULL default 0,
-							  "offer_type" varchar(255) default NULL,
-							  "offer_description" text NOT NULL,
-							  "offer_name" varchar(255) NOT NULL);';
-		$tables[Database::DB_SQLITE]['z_shop_history_item'] = 'CREATE TABLE "z_shop_history_item" (
-							  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-							  "to_name" varchar(255) NOT NULL default 0,
-							  "to_account" int(11) NOT NULL default 0,
-							  "from_nick" varchar(255) NOT NULL,
-							  "from_account" int(11) NOT NULL default 0,
-							  "price" int(11) NOT NULL default 0,
-							  "offer_id" varchar(255) NOT NULL default "",
-							  "trans_state" varchar(255) NOT NULL,
-							  "trans_start" int(11) NOT NULL default 0,
-							  "trans_real" int(11) NOT NULL default 0);';
-		$tables[Database::DB_SQLITE]['z_forum'] = 'CREATE TABLE "z_forum" (
-								"id" INTEGER PRIMARY KEY AUTOINCREMENT,
-								"first_post" int(11) NOT NULL default 0,
-								"last_post" int(11) NOT NULL default 0,
-								"section" int(3) NOT NULL default 0,
-								"replies" int(20) NOT NULL default 0,
-								"views" int(20) NOT NULL default 0,
-								"author_aid" int(20) NOT NULL default 0,
-								"author_guid" int(20) NOT NULL default 0,
-								"post_text" text NOT NULL,
-								"post_topic" varchar(255) NOT NULL,
-								"post_smile" tinyint(1) NOT NULL default 0,
-								"post_date" int(20) NOT NULL default 0,
-								"last_edit_aid" int(20) NOT NULL default 0,
-								"edit_date" int(20) NOT NULL default 0,
-								"post_ip" varchar(15) NOT NULL default "0.0.0.0");';
+		
 		foreach($columns as $column)
 		{
 			if($column[4] === NULL && $SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '  NULL DEFAULT NULL') !== false)

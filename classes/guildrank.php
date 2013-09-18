@@ -60,7 +60,7 @@ class GuildRank extends ObjectData
 		{
 			foreach($this->getMembers(true) as $member)
 			{
-				$member->setRankID(0);
+				$member->setRank();
 				$member->save();
 			}
 			$this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName(self::$table) . ' WHERE ' . $this->getDatabaseHandler()->fieldName('id') . ' = ' . $this->getDatabaseHandler()->quote($this->data['id']));
@@ -79,11 +79,15 @@ class GuildRank extends ObjectData
 		if(!isset($this->members) || $forceReload)
 		{
 			$members = new DatabaseList('Player');
-			$members->setFilter(new SQL_Filter(new SQL_Field('rank_id'), SQL_Filter::EQUAL, $this->getID()));
-			$members->addOrder(new SQL_Order(new SQL_Field('name')));
+			$filterGuild = new SQL_Filter(new SQL_Field('rank_id', 'guild_membership'), SQL_Filter::EQUAL, $this->getID());
+			$filterPlayer = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'guild_membership'));
+			$members->setFilter(new SQL_Filter($filterGuild, SQL_Filter::CRITERIUM_AND, $filterPlayer));
+			$members->addOrder(new SQL_Order(new SQL_Field('name', 'players')));
 			$this->members = $members;
 		}
 		return $this->members;
+
+
 	}
 
 	public function getGuild($forceReload = false)

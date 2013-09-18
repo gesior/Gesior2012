@@ -212,6 +212,11 @@ function items_on_player($characterid, $pid)
 	new Error_Critic('', 'function <i>items_on_player</i> is deprecated. Do not use it. It used too many queries!');
 }
 
+function getReason($reasonId)
+{
+	return Functions::getBanReasonName($reasonId);
+}
+
 //################### DISPLAY FUNCTIONS #####################
 //return shorter text (news ticker)
 function short_text($text, $chars_limit) 

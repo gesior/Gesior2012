@@ -15,13 +15,14 @@ $sections_desc = array(1 => 'Here you can comment news.', 2 => 'Feel free to tel
 function canPost($account)
 {
     if($account->isLoaded())
-    {
-        $SQL = $GLOBALS['SQL'];
-        $level_limit = $GLOBALS['level_limit'];
-        $player = $SQL->query("SELECT " . $SQL->fieldName('level') . " FROM " . $SQL->tableName('players') . " WHERE " . $SQL->fieldName('account_id') . " = ".$SQL->quote($account->getId())." ORDER BY " . $SQL->fieldName('level') . " DESC")->fetch();
-        if($player['level'] >= $level_limit)
-            return true;
-    }
+        if(!$account->isBanned())
+        {
+            $SQL = $GLOBALS['SQL'];
+            $level_limit = $GLOBALS['level_limit'];
+            $player = $SQL->query("SELECT " . $SQL->fieldName('level') . " FROM " . $SQL->tableName('players') . " WHERE " . $SQL->fieldName('account_id') . " = ".$SQL->quote($account->getId())." ORDER BY " . $SQL->fieldName('level') . " DESC")->fetch();
+            if($player['level'] >= $level_limit)
+                return true;
+        }
     return false;
 }
 
@@ -41,46 +42,46 @@ function replaceSmile($text, $smile)
 function replaceAll($text, $smile)
 {
     $rows = 0;
-    while(stripos($text, '[code]') !== false && stripos($text, '[/code]') !== false )
+    while(stripos($text, '[code]') !== false && stripos($text, '[/code]') !== false && stripos($text, '[code]') < stripos($text, '[/code]'))
     {
         $code = substr($text, stripos($text, '[code]')+6, stripos($text, '[/code]') - stripos($text, '[code]') - 6);
         if(!is_int($rows / 2)) { $bgcolor = 'ABED25'; } else { $bgcolor = '23ED25'; } $rows++;
         $text = str_ireplace('[code]'.$code.'[/code]', '<i>Code:</i><br /><table cellpadding="0" style="background-color: #'.$bgcolor.'; width: 480px; border-style: dotted; border-color: #CCCCCC; border-width: 2px"><tr><td>'.$code.'</td></tr></table>', $text);
     }
     $rows = 0;
-    while(stripos($text, '[quote]') !== false && stripos($text, '[/quote]') !== false )
+    while(stripos($text, '[quote]') !== false && stripos($text, '[/quote]') !== false && stripos($text, '[quote]') < stripos($text, '[/quote]'))
     {
         $quote = substr($text, stripos($text, '[quote]')+7, stripos($text, '[/quote]') - stripos($text, '[quote]') - 7);
         if(!is_int($rows / 2)) { $bgcolor = 'AAAAAA'; } else { $bgcolor = 'CCCCCC'; } $rows++;
         $text = str_ireplace('[quote]'.$quote.'[/quote]', '<table cellpadding="0" style="background-color: #'.$bgcolor.'; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>'.$quote.'</td></tr></table>', $text);
     }
     $rows = 0;
-    while(stripos($text, '[url]') !== false && stripos($text, '[/url]') !== false )
+    while(stripos($text, '[url]') !== false && stripos($text, '[/url]') !== false && stripos($text, '[url]') < stripos($text, '[/url]'))
     {
         $url = substr($text, stripos($text, '[url]')+5, stripos($text, '[/url]') - stripos($text, '[url]') - 5);
         $text = str_ireplace('[url]'.$url.'[/url]', '<a href="'.$url.'" target="_blank">'.$url.'</a>', $text);
     }
-    while(stripos($text, '[player]') !== false && stripos($text, '[/player]') !== false )
+    while(stripos($text, '[player]') !== false && stripos($text, '[/player]') !== false && stripos($text, '[player]') < stripos($text, '[/player]'))
     {
         $player = substr($text, stripos($text, '[player]')+8, stripos($text, '[/player]') - stripos($text, '[player]') - 8);
         $text = str_ireplace('[player]'.$player.'[/player]', '<a href="?subtopic=characters&name='.urlencode($player).'">'.$player.'</a>', $text);
     }
-    while(stripos($text, '[img]') !== false && stripos($text, '[/img]') !== false )
+    while(stripos($text, '[img]') !== false && stripos($text, '[/img]') !== false && stripos($text, '[img]') < stripos($text, '[/img]'))
     {
         $img = substr($text, stripos($text, '[img]')+5, stripos($text, '[/img]') - stripos($text, '[img]') - 5);
         $text = str_ireplace('[img]'.$img.'[/img]', '<img src="'.$img.'">', $text);
     }
-    while(stripos($text, '[b]') !== false && stripos($text, '[/b]') !== false )
+    while(stripos($text, '[b]') !== false && stripos($text, '[/b]') !== false && stripos($text, '[b]') < stripos($text, '[/b]'))
     {
         $b = substr($text, stripos($text, '[b]')+3, stripos($text, '[/b]') - stripos($text, '[b]') - 3);
         $text = str_ireplace('[b]'.$b.'[/b]', '<b>'.$b.'</b>', $text);
     }
-    while(stripos($text, '[i]') !== false && stripos($text, '[/i]') !== false )
+    while(stripos($text, '[i]') !== false && stripos($text, '[/i]') !== false && stripos($text, '[i]') < stripos($text, '[/i]'))
     {
         $i = substr($text, stripos($text, '[i]')+3, stripos($text, '[/i]') - stripos($text, '[i]') - 3);
         $text = str_ireplace('[i]'.$i.'[/i]', '<i>'.$i.'</i>', $text);
     }
-    while(stripos($text, '[u]') !== false && stripos($text, '[/u]') !== false )
+    while(stripos($text, '[u]') !== false && stripos($text, '[/u]') !== false && stripos($text, '[u]') < stripos($text, '[/u]'))
     {
         $u = substr($text, stripos($text, '[u]')+3, stripos($text, '[/u]') - stripos($text, '[u]') - 3);
         $text = str_ireplace('[u]'.$u.'[/u]', '<u>'.$u.'</u>', $text);
@@ -229,7 +230,7 @@ if($action == 'show_thread')
             else
                 $links_to_pages .= '<b>'.($i + 1).' </b>';
         }
-        $threads = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('account_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('rank_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('vocation') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('level') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . "," . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . "," . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_edit_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('edit_date') . " FROM " . $SQL->tableName('players') . ", " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread_id." ORDER BY " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . " LIMIT ".$posts_per_page." OFFSET ".($page * $posts_per_page))->fetchAll();
+        $threads = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('account_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('vocation') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('level') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . "," . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . "," . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_edit_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('edit_date') . ", IFNULL(" . $SQL->tableName('guild_membership') . "." . $SQL->fieldName('rank_id') . ", 0) AS rank_id FROM " . $SQL->tableName('z_forum') . ", " . $SQL->tableName('players') . " LEFT JOIN " . $SQL->tableName('guild_membership') . " ON (" . $SQL->tableName('guild_membership') . "." . $SQL->fieldName('player_id') . " = " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . ") WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread_id." ORDER BY " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . " LIMIT ".$posts_per_page." OFFSET ".($page * $posts_per_page))->fetchAll();
         if(isset($threads[0]['name']))
             $SQL->query("UPDATE " . $SQL->tableName('z_forum') . " SET " . $SQL->fieldName('views') . "=" . $SQL->fieldName('views') . "+1 WHERE " . $SQL->fieldName('id') . " = ".(int) $thread_id);
         $main_content .= '<a href="?subtopic=forum">Boards</a> >> <a href="?subtopic=forum&action=show_board&id='.$threads[0]['section'].'">'.$sections[$threads[0]['section']].'</a> >> <b>'.htmlspecialchars($thread_name['post_topic']).'</b>';
@@ -238,13 +239,16 @@ if($action == 'show_thread')
         {
             if(!is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
             $main_content .= '<tr bgcolor="'.$bgcolor.'"><td valign="top"><a href="?subtopic=characters&name='.urlencode($thread['name']).'">'.htmlspecialchars($thread['name']).'</a><br /><br /><font size="1">Profession: '.htmlspecialchars(Website::getVocationName($thread['vocation'])).'<br />Level: '.$thread['level'].'<br />';
-            $rank = new GuildRank($thread['rank_id']);
-            if($rank->isLoaded())
-            {
-                $guild = $rank->getGuild();
-                if($guild->isLoaded())
-                    $main_content .= htmlspecialchars($rank->getName()).' of <a href="?subtopic=guilds&action=show&guild='.$guild->getId().'">'.htmlspecialchars($guild->getName()).'</a><br />';
-            }
+            if($thread['rank_id'] > 0)
+			{
+				$rank = new GuildRank($thread['rank_id']);
+				if($rank->isLoaded())
+				{
+					$guild = $rank->getGuild();
+					if($guild->isLoaded())
+						$main_content .= htmlspecialchars($rank->getName()).' of <a href="?subtopic=guilds&action=show&guild='.$guild->getId().'">'.htmlspecialchars($guild->getName()).'</a><br />';
+				}
+			}
             $posts = $SQL->query("SELECT COUNT(" . $SQL->fieldName('id') . ") AS 'posts' FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->fieldName('author_aid') . "=".(int) $thread['account_id'])->fetch();
             $main_content .= '<br />Posts: '.(int) $posts['posts'].'<br /></font></td><td valign="top">'.showPost(htmlspecialchars($thread['post_topic']), htmlspecialchars($thread['post_text']), $thread['post_smile']).'</td></tr>
             <tr bgcolor="'.$bgcolor.'"><td><font size="1">'.date('d.m.y H:i:s', $thread['post_date']);

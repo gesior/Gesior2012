@@ -7,6 +7,35 @@ if($action == "")
 {
 	$main_content .= '<script type="text/javascript">
 
+var accountHttp;
+
+function checkAccount()
+{
+	if(document.getElementById("account_name").value=="")
+	{
+		document.getElementById("acc_name_check").innerHTML = \'<b><font color="red">Please enter account name.</font></b>\';
+		return;
+	}
+	accountHttp=GetXmlHttpObject();
+	if (accountHttp==null)
+	{
+		return;
+	}
+	var account = document.getElementById("account_name").value;
+	var url="?subtopic=ajax_check_account&account=" + account + "&uid="+Math.random();
+	accountHttp.onreadystatechange=AccountStateChanged;
+	accountHttp.open("GET",url,true);
+	accountHttp.send(null);
+} 
+
+function AccountStateChanged() 
+{ 
+	if (accountHttp.readyState==4)
+	{ 
+		document.getElementById("acc_name_check").innerHTML=accountHttp.responseText;
+	}
+}
+
 var emailHttp;
 
 //sprawdza czy dane konto istnieje czy nie
@@ -133,14 +162,14 @@ function EmailStateChanged()
 						<TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLSPACING=8 CELLPADDING=0>
 						  <TR><TD>
 						    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>';
-	$main_content .= '<TR><TD width="150" valign="top"><B>Email address: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Your email address is required to recovery an '.htmlspecialchars($config['server']['serverName']).' account)</font></TD></TR>
+	$main_content .= '<TR><TD width="150" valign="top"><B>Account name: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Please enter your new account name)</font></TD></TR>
+					  <TR><TD width="150"><b>Name status:</b></TD><TD colspan="2"><b><div id="acc_name_check">Please enter your account name.</div></b></TD></TR>
+					<TR><TD width="150" valign="top"><B>Email address: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Your email address is required to recovery an '.htmlspecialchars($config['server']['serverName']).' account)</font></TD></TR>
 					  <TR><TD width="150"><b>Email status:</b></TD><TD colspan="2"><b><div id="email_check">Please enter your e-mail.</div></b></TD></TR>';
 	if(!$config['site']['create_account_verify_mail'])
-	{
-		$main_content .= '<script type="text/javascript">var verifpass=1;</script>
+	$main_content .= '<script type="text/javascript">var verifpass=1;</script>
 						<TR><TD width="150" valign="top"><B>Password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Here write your password to new account on '.htmlspecialchars($config['server']['serverName']).')</font></TD></TR>
 					  <TR><TD width="150" valign="top"><B>Repeat password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Repeat your password)</font></TD></TR>';
-	}
 	else
 		$main_content .= '<script type="text/javascript">var verifpass=0;</script>';
 	if($config['site']['verify_code'])
@@ -197,10 +226,16 @@ function EmailStateChanged()
 //CREATE ACCOUNT PAGE (save account in database)
 if($action == "saveaccount")
 {
+	$reg_name = strtoupper(trim($_POST['reg_name']));
 	$reg_email = trim($_POST['reg_email']);
 	$reg_password = trim($_POST['reg_password']);
 	$reg_code = trim($_POST['reg_code']);
-
+	//FIRST check
+	//check e-mail
+	if(empty($reg_name))
+		$reg_form_errors[] = "Please enter account name.";
+	elseif(!check_account_name($reg_name))
+		$reg_form_errors[] = "Invalid account name format. Use only A-Z and numbers 0-9.";
 	if(empty($reg_email))
 		$reg_form_errors[] = "Please enter your email address.";
 	else
@@ -227,6 +262,7 @@ if($action == "saveaccount")
 			}
 		}
 	}
+	//check password
 	if(empty($reg_password) && !$config['site']['create_account_verify_mail'])
 		$reg_form_errors[] = "Please enter password to your new account.";
 	elseif(!$config['site']['create_account_verify_mail'])
@@ -234,6 +270,8 @@ if($action == "saveaccount")
 		if(!check_password($reg_password))
 			$reg_form_errors[] = "Password contains illegal chars (a-z, A-Z and 0-9 only!) or lenght.";
 	}
+	//SECOND check
+	//check e-mail address in database
 	if(empty($reg_form_errors))
 	{
 		if($config['site']['one_email'])
@@ -244,18 +282,15 @@ if($action == "saveaccount")
 			if($test_email_account->isLoaded())
 				$reg_form_errors[] = "Account with this e-mail address already exist in database.";
 		}
+		$account_db = new Account();
+		$account_db->find($reg_name);
+		if($account_db->isLoaded())
+			$reg_form_errors[] = 'Account with this name already exist.';
 	}
 	// ----------creates account-------------(save in database)
 	if(empty($reg_form_errors))
 	{
 		//create object 'account' and generate new acc. number
-		$reg_id = rand(1,9999999);
-		$tmpAcc = new Account($reg_id);
-		while($tmpAcc->isLoaded())
-		{
-			$reg_id = rand(1,9999999);
-			$tmpAcc = new Account($reg_id);
-		}
 		if($config['site']['create_account_verify_mail'])
 		{
 			$reg_password = '';
@@ -264,10 +299,9 @@ if($action == "saveaccount")
 		}
 		$reg_account = new Account();
 		// saves account information in database
-		$reg_account->setID($reg_id);
+		$reg_account->setName($reg_name);
 		$reg_account->setPassword($reg_password);
 		$reg_account->setEMail($reg_email);
-		$reg_account->setGroupID(1);
 		$reg_account->setCreateDate(time());
 		$reg_account->setCreateIP(Visitor::getIP());
 		$reg_account->setFlag(Website::getCountryCode(long2ip(Visitor::getIP())));
@@ -276,7 +310,7 @@ if($action == "saveaccount")
 			$reg_account->set("premdays", $config['site']['newaccount_premdays']);
 			$reg_account->set("lastday", time());
 		}
-		$reg_account->save(true); // force INSERT new account to database
+		$reg_account->save();
 		//show information about registration
 		if($config['site']['send_emails'] && $config['site']['create_account_verify_mail'])
 		{
@@ -284,7 +318,7 @@ if($action == "saveaccount")
 			<body>
 			<h3>Your account name and password!</h3>
 			<p>You or someone else registred on server <a href="'.$config['server']['url'].'"><b>'.htmlspecialchars($config['server']['serverName']).'</b></a> with this e-mail.</p>
-			<p>Login: <b>'.htmlspecialchars($reg_id).'</b></p>
+			<p>Account name: <b>'.htmlspecialchars($reg_name).'</b></p>
 			<p>Password: <b>'.htmlspecialchars(trim($reg_password)).'</b></p>
 			<br />
 			<p>After login you can:</p>
@@ -317,7 +351,7 @@ if($action == "saveaccount")
 				<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Account Created</B></TD></TR>
 				<TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
 				  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
-				    <BR>Your account login is <b>'.$reg_id.'</b>.
+				    <BR>Your account name is <b>'.$reg_name.'</b>.
 					<BR><b><i>You will receive e-mail (<b>'.htmlspecialchars($reg_email).'</b>) with your password.</b></i><br>';
 				$main_content .= 'You will need the account name and your password to play on '.htmlspecialchars($config['server']['serverName']).'.
 				    Please keep your account name and password in a safe place and
@@ -337,16 +371,16 @@ if($action == "saveaccount")
 			<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Account Created</B></TD></TR>
 			<TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
 			  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
-			    <BR>Your account ID is <b>'.htmlspecialchars($reg_id).'</b><br>You will need the account ID and your password to play on '.htmlspecialchars($config['server']['serverName']).'.
-			    Please keep your account ID and password in a safe place and
-			    never give your account ID or password to anybody.<BR><BR>';
+			    <BR>Your account name is <b>'.htmlspecialchars($reg_name).'</b><br>You will need the account name and your password to play on '.htmlspecialchars($config['server']['serverName']).'.
+			    Please keep your account name and password in a safe place and
+			    never give your account name or password to anybody.<BR><BR>';
 			if($config['site']['send_emails'] && $config['site']['send_register_email'])
 			{
 				$mailBody = '<html>
 				<body>
 				<h3>Your account name and password!</h3>
 				<p>You or someone else registred on server <a href="'.$config['server']['url'].'"><b>'.htmlspecialchars($config['server']['serverName']).'</b></a> with this e-mail.</p>
-				<p>Account ID: <b>'.htmlspecialchars($reg_id).'</b></p>
+				<p>Account name: <b>'.htmlspecialchars($reg_name).'</b></p>
 				<p>Password: <b>'.htmlspecialchars(trim($reg_password)).'</b></p>
 				<br />
 				<p>After login you can:</p>
