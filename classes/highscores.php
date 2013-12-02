@@ -52,27 +52,23 @@ class Highscores extends DatabaseList
 	public function loadSkill()
 	{
 		$this->setClass('Highscore');
-		$this->addOrder(new SQL_Order(new SQL_Field('value', 'player_skills'), SQL_Order::DESC));
-		$this->addOrder(new SQL_Order(new SQL_Field('count', 'player_skills'), SQL_Order::DESC));
-		$this->addExtraField(new SQL_Field('count', 'player_skills'));
-		$this->addExtraField(new SQL_Field('value', 'player_skills'));
+		$this->addOrder(new SQL_Order(new SQL_Field('skill_' . $this->skillType), SQL_Order::DESC));
+		$this->addOrder(new SQL_Order(new SQL_Field('skill_' . $this->skillType . '_tries'), SQL_Order::DESC));
 		$this->addExtraField(new SQL_Field('flag', 'accounts'));
-		$filterPlayer = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'player_skills'));
-		$filterSkill = new SQL_Filter(new SQL_Field('skillid', 'player_skills'), SQL_Filter::EQUAL, $this->skillType);
-		$filter = new SQL_Filter($filterPlayer, SQL_Filter::CRITERIUM_AND, $filterSkill);
+		$this->addExtraField(new SQL_Field('skill_' . $this->skillType, 'players', 'value'));
+		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'accounts'));
+
+		if($this->vocation != '')
+			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('vocation', 'players'), SQL_Filter::EQUAL, $this->vocation));
 
 		if($this->highscoreConfig->isSetKey('groups_hidden'))
 			foreach($this->highscoreConfig->getValue('groups_hidden') as $_group_filter)
-				$filter = new SQL_Filter(new SQL_Filter(new SQL_Field('group_id', 'players'), SQL_Filter::NOT_EQUAL, $_group_filter), SQL_Filter::CRITERIUM_AND, $filter);
+				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('group_id', 'players'), SQL_Filter::NOT_EQUAL, $_group_filter));
 
 		if($this->highscoreConfig->isSetKey('accounts_hidden'))
 			foreach($this->highscoreConfig->getValue('accounts_hidden') as $_account_filter)
-				$filter = new SQL_Filter(new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::NOT_EQUAL, $_account_filter), SQL_Filter::CRITERIUM_AND, $filter);
+				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::NOT_EQUAL, $_account_filter));
 
-		if($this->vocation != '')
-			$filter = new SQL_Filter(new SQL_Filter(new SQL_Field('vocation', 'players'), SQL_Filter::EQUAL, $this->vocation), SQL_Filter::CRITERIUM_AND, $filter);
-
-		$filter = new SQL_Filter(new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'accounts')), SQL_Filter::CRITERIUM_AND, $filter);
 		$this->setFilter($filter);
 	}
 
