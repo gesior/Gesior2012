@@ -4,13 +4,13 @@ if(!defined('INITIALIZED'))
 
 class Highscores extends DatabaseList
 {
-	const SKILL_FIST = 0;
-	const SKILL_CLUB = 1;
-	const SKILL_SWORD = 2;
-	const SKILL_AXE = 3;
-	const SKILL_DISTANCE = 4;
-	const SKILL_SHIELD = 5;
-	const SKILL_FISHING = 6;
+	const SKILL_FIST = 'fist';
+	const SKILL_CLUB = 'club';
+	const SKILL_SWORD = 'sword';
+	const SKILL_AXE = 'axe';
+	const SKILL_DISTANCE = 'dist';
+	const SKILL_SHIELD = 'shielding';
+	const SKILL_FISHING = 'fishing';
 	const SKILL__MAGLEVEL = 7;
 	const SKILL__LEVEL = 8;
 
