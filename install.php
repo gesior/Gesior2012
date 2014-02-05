@@ -1,4 +1,6 @@
 <?PHP
+// comment to show E_NOTICE [undefinied variable etc.], comment if you want make script and see all errors
+error_reporting(E_ALL ^ E_STRICT ^ E_NOTICE);
 define('INITIALIZED', true);
 define('ONLY_PAGE', false);
 if(!file_exists('install.txt'))
@@ -175,7 +177,6 @@ elseif($page == 'step')
 			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
 		Website::setPasswordsEncryption(Website::getServerConfig()->getValue('passwordType'));
 		$SQL = Website::getDBHandle();
-Website::getDBHandle()->setPrintQueries(true);
 	}
 
 	if($step == 'start')
@@ -342,14 +343,38 @@ Website::getDBHandle()->setPrintQueries(true);
 	elseif($step == 4)
 	{
 		echo '<h1>STEP '.$step.'</h1>Add samples to DB:<br>';
-
 		$samplePlayers = array();
 		$samplePlayers[0] = 'Rook Sample';
 		$samplePlayers[1] = 'Sorcerer Sample';
 		$samplePlayers[2] = 'Druid Sample';
 		$samplePlayers[3] = 'Paladin Sample';
 		$samplePlayers[4] = 'Knight Sample';
+
+		$account = new Account(1, Account::LOADTYPE_NAME);
+		if(!$account->isLoaded())
+		{
+			$account->setName(1);
+			$account->setPassword(1);
+			$account->setMail(rand(0,999999) . '@gmail.com');
+			$account->setPageAccess(3);
+			$account->setFlag('unknown');
+			$account->setCreateIP(Visitor::getIP());
+			$account->setCreateDate(time());
+			$account->save();
+		}
 		$newPlayer = new Player('Account Manager', Player::LOADTYPE_NAME);
+		if(!$newPlayer->isLoaded())
+		{
+			$newPlayer->setComment('');
+			$newPlayer->setName('Account Manager');
+			$newPlayer->setAccountID($account->getID());
+			$newPlayer->setLookBody(44);
+			$newPlayer->setLookFeet(98);
+			$newPlayer->setLookHead(15);
+			$newPlayer->setLookLegs(76);
+			$newPlayer->save();
+		}
+
 		if($newPlayer->isLoaded())
 		{
 			foreach($samplePlayers as $vocationID => $name)
