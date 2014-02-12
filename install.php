@@ -5,7 +5,7 @@ define('INITIALIZED', true);
 define('ONLY_PAGE', false);
 if(!file_exists('install.txt'))
 {
-	echo('AAC installation is disabled. To enable it make file <b>install.txt</b> in main AAC directory and put there your IP.');
+	echo('AAC installation is disabled. To enable it make file <b>install.php</b> in main AAC directory and put there your IP.');
 	exit;
 }
 $installIP = trim(file_get_contents('install.txt'));
@@ -386,6 +386,23 @@ elseif($page == 'step')
 			$newPlayer->setLookFeet(98);
 			$newPlayer->setLookHead(15);
 			$newPlayer->setLookLegs(76);
+
+			$newPlayer->setSkill(0, 10);
+			$newPlayer->setSkill(1, 10);
+			$newPlayer->setSkill(2, 10);
+			$newPlayer->setSkill(3, 10);
+			$newPlayer->setSkill(4, 10);
+			$newPlayer->setSkill(5, 10);
+			$newPlayer->setSkill(6, 10);
+
+			$newPlayer->setSkillCount(0, 0);
+			$newPlayer->setSkillCount(1, 0);
+			$newPlayer->setSkillCount(2, 0);
+			$newPlayer->setSkillCount(3, 0);
+			$newPlayer->setSkillCount(4, 0);
+			$newPlayer->setSkillCount(5, 0);
+			$newPlayer->setSkillCount(6, 0);
+
 			$newPlayer->save();
 		}
 
