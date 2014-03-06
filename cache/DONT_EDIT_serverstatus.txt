@@ -1,0 +1,6 @@
+serverStatus_checkInterval = "63"
+	serverStatus_lastCheck = "1378294407"
+	serverStatus_online = "0"
+	serverStatus_players = "0"
+	serverStatus_playersMax = "0"
+	
