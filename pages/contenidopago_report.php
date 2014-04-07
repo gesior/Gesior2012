@@ -118,7 +118,7 @@ else
 		else 
 		{
 			
-			$account->setPremiumPoints($account->getPremiumPoints() + $puntos);
+			$account->setPremiumPoints($account->getPremiumPoints() + $points);
 			$account->save();
 		}
 	}
