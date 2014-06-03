@@ -23,6 +23,9 @@ $config['site']['newchar_vocations'] = array(1 => 'Sorcerer Sample', 2 => 'Druid
 $config['site']['newchar_towns'] = array(1);
 $config['site']['max_players_per_account'] = 7;
 
+# Server Status Options
+$config['server']['ip'] = 127.0.0.1;
+$config['server']['statusPort'] = 7171;
 
 # Emails Config
 $config['site']['send_emails'] = false;
