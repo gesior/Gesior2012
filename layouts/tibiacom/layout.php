@@ -10,8 +10,24 @@ if(!defined('INITIALIZED'))
   <meta http-equiv="content-language" content="en" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
   <meta name="keywords" content="free online game, free multiplayer game, ots, open tibia server" />
-  <link rel="shortcut icon" href="<?PHP echo $layout_name; ?>/images/server.ico" type="image/x-icon">
-  <link rel="icon" href="<?PHP echo $layout_name; ?>/images/server.ico" type="image/x-icon">
+  <!--  regular browsers -->
+  <link rel="shortcut icon" href="<?php echo $layout_name; ?>/images/favicon.ico" type="image/x-icon">
+  <!-- For iPad with high-resolution Retina display running iOS = 7: -->
+  <link rel="apple-touch-icon" sizes="152x152" href="<?php echo $layout_name; ?>/images/apple-touch-icon-152x152.png">
+  <!-- For iPad with high-resolution Retina display running iOS = 6: -->
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $layout_name; ?>/images/apple-touch-icon-144x144.png">
+  <!-- For iPhone with high-resolution Retina display running iOS = 7: -->
+  <link rel="apple-touch-icon" sizes="120x120" href="<?php echo $layout_name; ?>/images/apple-touch-icon-120x120.png">
+  <!-- For iPhone with high-resolution Retina display running iOS = 6: -->
+  <link rel="apple-touch-icon" sizes="114x114" href="<?php echo $layout_name; ?>/images/apple-touch-icon-114x114.png">
+  <!-- For the iPad mini and the first- and second-generation iPad on iOS = 7: -->
+  <link rel="apple-touch-icon" sizes="76x76" href="<?php echo $layout_name; ?>/images/apple-touch-icon-76x76.png">
+  <!-- For the iPad mini and the first- and second-generation iPad on iOS = 6: -->
+  <link rel="apple-touch-icon" sizes="72x72" href="<?php echo $layout_name; ?>/images/apple-touch-icon-72x72.png">
+  <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+  <link rel="apple-touch-icon" href="<?php echo $layout_name; ?>/images/apple-touch-icon.png">
+  <!-- Fallback for older devices: -->
+  <link rel="apple-touch-icon-precomposed" href="<?php echo $layout_name; ?>/images/apple-touch-icon-precomposed.png">
   <?PHP echo $layout_header; ?>
   <link href="<?PHP echo $layout_name; ?>/basic.css" rel="stylesheet" type="text/css">
   <script type='text/javascript'> var IMAGES=0; IMAGES='<?PHP echo $layout_name; ?>/images'; var g_FormField='';  var LINK_ACCOUNT=0; LINK_ACCOUNT='';</script>
