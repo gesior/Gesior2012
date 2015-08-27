@@ -111,39 +111,13 @@ body {
 
 #LeftArtwork #TibiaLogoArtworkTop {
   position: absolute;
-  top: 20px;
-  left: 0px;
-  height: 82px;
-  width: 166px;
+  top: -17px;
+  left: -14px;
+  height: 158px;
+  width: 196px;
   z-index: 5;
   cursor: pointer;
-}
-
-#LeftArtwork #TibiaLogoArtworkBottom {
-  position: absolute;
-  top: 102px;
-  left: 0px;
-  height: 43px;
-  width: 166px;
-  z-index: 5;
-}
-
-#LeftArtwork #Statue_1{
-  position: absolute;
-  top: 0px;
-  left: 5px;
-  height: 30px;
-  width: 32px;
-  z-index:10;
-}
-
-#LeftArtwork #Statue_2 {
-  position: absolute;
-  top: 0px;
-  right: 25px;
-  height: 30px;
-  width: 32px;
-  z-index:10;
+  border: 0px;
 }
 
 #LeftArtwork #LogoLink {
@@ -159,7 +133,7 @@ body {
 #RightArtwork {
   text-align: left;
   position: absolute;
-  top: -1px;
+  /*top: 143px;*/
   right: 24px;
   width: 132px;
   background-repeat: no-repeat;
@@ -171,16 +145,17 @@ body {
   height: 80px;
   width: 80px;
   top: -137px;
-  left: 8px;
+  left: 7px;
   z-index: 15;
   cursor: pointer;
 }
 
 #PedestalAndOnline {
   position: absolute;
+  left: -10px;
   top: -105px;
-  width: 132px;
-  height: 111px;
+  width: 153px;
+  height: 107px;
 }
 
 #RightArtwork #PlayersOnline {
@@ -1581,6 +1556,7 @@ body {
 
 .Content #FeaturedArticle #TeaserText {
   height: 100px;
+  margin-top: 5px;
   overflow: hidden;
   z-index: 0;
 }
@@ -1589,7 +1565,7 @@ body {
   position: absolute;
   top: 0px;
   right: 0px;
-  margin: 89 165 0 0;
+  margin: 83 15 0 0;
   z-index: 99;
 }
 

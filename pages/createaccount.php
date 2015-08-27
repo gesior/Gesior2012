@@ -162,14 +162,14 @@ function EmailStateChanged()
 						<TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLSPACING=8 CELLPADDING=0>
 						  <TR><TD>
 						    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>';
-	$main_content .= '<TR><TD width="150" valign="top"><B>Account name: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Please enter your new account name)</font></TD></TR>
+	$main_content .= '<TR><TD width="150" valign="top"><B>Account name: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=30><BR><font size="1" face="verdana,arial,helvetica">(Please enter your new account name)</font></TD></TR>
 					  <TR><TD width="150"><b>Name status:</b></TD><TD colspan="2"><b><div id="acc_name_check">Please enter your account name.</div></b></TD></TR>
 					<TR><TD width="150" valign="top"><B>Email address: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Your email address is required to recovery an '.htmlspecialchars($config['server']['serverName']).' account)</font></TD></TR>
 					  <TR><TD width="150"><b>Email status:</b></TD><TD colspan="2"><b><div id="email_check">Please enter your e-mail.</div></b></TD></TR>';
 	if(!$config['site']['create_account_verify_mail'])
 	$main_content .= '<script type="text/javascript">var verifpass=1;</script>
-						<TR><TD width="150" valign="top"><B>Password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Here write your password to new account on '.htmlspecialchars($config['server']['serverName']).')</font></TD></TR>
-					  <TR><TD width="150" valign="top"><B>Repeat password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Repeat your password)</font></TD></TR>';
+						<TR><TD width="150" valign="top"><B>Password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=29><BR><font size="1" face="verdana,arial,helvetica">(Here write your password to new account on '.htmlspecialchars($config['server']['serverName']).')</font></TD></TR>
+					  <TR><TD width="150" valign="top"><B>Repeat password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=29><BR><font size="1" face="verdana,arial,helvetica">(Repeat your password)</font></TD></TR>';
 	else
 		$main_content .= '<script type="text/javascript">var verifpass=0;</script>';
 	if($config['site']['verify_code'])

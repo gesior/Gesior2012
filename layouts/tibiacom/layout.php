@@ -10,12 +10,29 @@ if(!defined('INITIALIZED'))
   <meta http-equiv="content-language" content="en" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
   <meta name="keywords" content="free online game, free multiplayer game, ots, open tibia server" />
-  <link rel="shortcut icon" href="<?PHP echo $layout_name; ?>/images/server.ico" type="image/x-icon">
-  <link rel="icon" href="<?PHP echo $layout_name; ?>/images/server.ico" type="image/x-icon">
+  <!--  regular browsers -->
+  <link rel="shortcut icon" href="<?php echo $layout_name; ?>/images/favicon.ico" type="image/x-icon">
+  <!-- For iPad with high-resolution Retina display running iOS = 7: -->
+  <link rel="apple-touch-icon" sizes="152x152" href="<?php echo $layout_name; ?>/images/apple-touch-icon-152x152.png">
+  <!-- For iPad with high-resolution Retina display running iOS = 6: -->
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $layout_name; ?>/images/apple-touch-icon-144x144.png">
+  <!-- For iPhone with high-resolution Retina display running iOS = 7: -->
+  <link rel="apple-touch-icon" sizes="120x120" href="<?php echo $layout_name; ?>/images/apple-touch-icon-120x120.png">
+  <!-- For iPhone with high-resolution Retina display running iOS = 6: -->
+  <link rel="apple-touch-icon" sizes="114x114" href="<?php echo $layout_name; ?>/images/apple-touch-icon-114x114.png">
+  <!-- For the iPad mini and the first- and second-generation iPad on iOS = 7: -->
+  <link rel="apple-touch-icon" sizes="76x76" href="<?php echo $layout_name; ?>/images/apple-touch-icon-76x76.png">
+  <!-- For the iPad mini and the first- and second-generation iPad on iOS = 6: -->
+  <link rel="apple-touch-icon" sizes="72x72" href="<?php echo $layout_name; ?>/images/apple-touch-icon-72x72.png">
+  <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+  <link rel="apple-touch-icon" href="<?php echo $layout_name; ?>/images/apple-touch-icon.png">
+  <!-- Fallback for older devices: -->
+  <link rel="apple-touch-icon-precomposed" href="<?php echo $layout_name; ?>/images/apple-touch-icon-precomposed.png">
   <?PHP echo $layout_header; ?>
   <link href="<?PHP echo $layout_name; ?>/basic.css" rel="stylesheet" type="text/css">
   <script type='text/javascript'> var IMAGES=0; IMAGES='<?PHP echo $layout_name; ?>/images'; var g_FormField='';  var LINK_ACCOUNT=0; LINK_ACCOUNT='';</script>
   <script type="text/javascript" src="<?PHP echo $layout_name; ?>/initialize.js"></script>
+  <script type="text/javascript" src="<?PHP echo $layout_name; ?>/newsticker.js"></script>
 </head>
 <body onBeforeUnLoad="SaveMenu();" onUnload="SaveMenu();">
  <a name="top"></a>
@@ -24,10 +41,8 @@ if(!defined('INITIALIZED'))
       <div id="ContentRow">
         <div id="MenuColumn">
           <div id="LeftArtwork">
-            <img id="Statue_1" src="<?PHP echo $layout_name; ?>/images/header/animated-statue.gif" alt="logoartwork" />
-            <img id="TibiaLogoArtworkTop" src="<?PHP echo $layout_name; ?>/images/header/tibia-logo-artwork-top.gif" onClick="window.location = '?subtopic=latestnews';" alt="logoartwork" />
-            <img id="TibiaLogoArtworkBottom" src="<?PHP echo $layout_name; ?>/images/header/tibia-logo-artwork-bottom.gif" alt="logoartwork" />
-            <img id="Statue_2" src="<?PHP echo $layout_name; ?>/images/header/animated-statue.gif" alt="logoartwork" />
+            <img id="TibiaLogoArtworkTop" src="<?PHP echo $layout_name; ?>/images/header/tibia-logo-artwork-top.gif" alt="logoartwork" onClick="window.location = '?subtopic=latestnews';">
+            <img id="LogoLink" src="<?PHP echo $layout_name; ?>/images/header/tibia-logo-artwork-string.gif" onClick="window.location = '?subtopic=latestnews';" alt="logoartwork">
           </div>
           
   <div id="Loginbox" >
@@ -368,6 +383,11 @@ echo "</div>";
         <div id="ContentColumn">
           <div class="Content">
             <div id="ContentHelper">
+
+            <?php echo $newsTicker; ?>
+
+            <?php echo $featuredArticle; ?>
+
     <div id="<?PHP echo $subtopic; ?>" class="Box">
     <div class="Corner-tl" style="background-image:url(<?PHP echo $layout_name; ?>/images/content/corner-tl.gif);"></div>
     <div class="Corner-tr" style="background-image:url(<?PHP echo $layout_name; ?>/images/content/corner-tr.gif);"></div>
@@ -397,17 +417,17 @@ $time = $time_end - $time_start;
         </div>
         <div id="ThemeboxesColumn">
           <div id="RightArtwork">
-            <img id="Monster" src="<?PHP echo $layout_name; ?>/images/hellhound.gif" alt="Monster of the Week" />
-            <img id="PedestalAndOnline" src="<?PHP echo $layout_name; ?>/images/header/pedestal-and-online.gif" alt="Monster Pedestal and Players Online Box"/>
-             <div id="PlayersOnline" onClick="window.location='?subtopic=whoisonline'">
-
-		  <?PHP
-			if($config['status']['serverStatus_online'] == 1)
-				echo $config['status']['serverStatus_players'].'<br />Players Online';
-			else
-				echo '<font color="red"><b>Server<br />OFFLINE</b></font>';
-		  ?></div>
-        </div>
+            <img id="Monster" src="<?PHP echo $layout_name; ?>/images/cryptshambler.gif" alt="Monster of the Week">
+            <img id="PedestalAndOnline" src="<?PHP echo $layout_name; ?>/images/header/pedestal-and-online.gif" alt="Monster Pedestal and Players Online Box">
+            <div id="PlayersOnline" onClick="window.location='?subtopic=whoisonline'">
+              <?PHP
+              if($config['status']['serverStatus_online'] == 1)
+                echo $config['status']['serverStatus_players'].'<br>Players Online';
+              else
+                echo '<font color="red"><b>Server<br />OFFLINE</b></font>';
+              ?>
+            </div>
+          </div>
 
   <div id="Themeboxes">
           
