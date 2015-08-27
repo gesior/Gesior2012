@@ -95,16 +95,79 @@ function showPost($topic, $text, $smile)
     return $post;
 }
 
+    $last_tickers = $SQL->query('SELECT ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_text') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_smile') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('replies') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_date') . ' FROM ' . $SQL->tableName('players') . ', ' . $SQL->tableName('z_forum') . ' WHERE ' . $SQL->tableName('players') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('author_guid') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('section') . ' = 1 AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('first_post') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . '=\'News Ticker\'' . ' ORDER BY ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('last_post') . ' DESC LIMIT 5')->fetchAll();
+    if(isset($last_tickers[0]))
+    {
 
-    $last_threads = $SQL->query('SELECT ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_text') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_smile') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('replies') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_date') . ' FROM ' . $SQL->tableName('players') . ', ' . $SQL->tableName('z_forum') . ' WHERE ' . $SQL->tableName('players') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('author_guid') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('section') . ' = 1 AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('first_post') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ' ORDER BY ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('last_post') . ' DESC LIMIT ' . $config['site']['news_limit'])->fetchAll();
+    $newsTicker = '<div id="newsticker" class="Box">
+    <div class="Corner-tl" style="background-image:url('.$layout_name.'/images/general/corner-tl.gif);"></div>
+    <div class="Corner-tr" style="background-image:url('.$layout_name.'/images/general/corner-tr.gif);"></div>
+    <div class="Border_1" style="background-image:url('.$layout_name.'/images/general/border-1.gif);"></div>
+    <div class="BorderTitleText" style="background-image:url('.$layout_name.'/images/general/title-background-green.gif);"></div><img id="ContentBoxHeadline" class="Title" src="'.$layout_name.'/images/general/headline-newsticker.gif" alt="Contentbox headline">    
+    <div class="Border_2">
+      <div class="Border_3">
+        <div class="BoxContent" style="background-image:url('.$layout_name.'/images/general/scroll.gif);">';
+
+    foreach($last_tickers as $ticker)
+    {
+        $newsTicker .= '<div id="TickerEntry-'.$ticker['id'].'" class="Row" onclick="TickerAction(&quot;TickerEntry-'.$ticker['id'].'&quot;)">
+  <div class="Odd">
+    <div class="NewsTickerIcon" style="background-image:url('.$layout_name.'/images/general/newsicon_support_small.gif)"></div>
+    <div id="TickerEntry-'.$ticker['id'].'-Button" class="NewsTickerExtend" style="background-image: url('.$layout_name.'/images/general/plus.gif);"></div>
+    <div class="NewsTickerText">
+      <span class="NewsTickerDate"> '.date('M d Y', $ticker['post_date']).' &nbsp;&nbsp;-&nbsp;</span>
+      <div id="TickerEntry-'.$ticker['id'].'-ShortText" class="NewsTickerShortText" style="display: block;">'.substr(showPost('', $ticker['post_text'], $ticker['post_smile']), 0, 70).'...</div>
+      <div id="TickerEntry-'.$ticker['id'].'-FullText" class="NewsTickerFullText" style="display: none;">'.showPost('', $ticker['post_text'], $ticker['post_smile']).'</div>
+    </div>
+  </div>
+</div>';
+    }
+
+    $newsTicker .= '</div>
+      </div>
+    </div>
+    <div class="Border_1" style="background-image:url('.$layout_name.'/images/general/border-1.gif);"></div>
+    <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url('.$layout_name.'/images/general/corner-bl.gif);"></div></div>
+    <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url('.$layout_name.'/images/general/corner-br.gif);"></div></div>
+  </div>';
+}
+
+    $last_featuredArticle = $SQL->query('SELECT ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_text') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_smile') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('replies') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_date') . ' FROM ' . $SQL->tableName('players') . ', ' . $SQL->tableName('z_forum') . ' WHERE ' . $SQL->tableName('players') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('author_guid') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('section') . ' = 1 AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('first_post') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . '=\'Featured Article\'' . ' ORDER BY ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('last_post') . ' DESC LIMIT 1')->fetchAll();
+    if(isset($last_featuredArticle[0]))
+    {
+
+  $featuredArticle = '<div id="featuredarticle" class="Box">
+    <div class="Corner-tl" style="background-image:url('.$layout_name.'/images/general/corner-tl.gif);"></div>
+    <div class="Corner-tr" style="background-image:url('.$layout_name.'/images/general/corner-tr.gif);"></div>
+    <div class="Border_1" style="background-image:url('.$layout_name.'/images/general/border-1.gif);"></div>
+    <div class="BorderTitleText" style="background-image:url('.$layout_name.'/images/general/title-background-green.gif);"></div><img id="ContentBoxHeadline" class="Title" src="'.$layout_name.'/images/general/headline-featuredarticle.gif" alt="Contentbox headline">    
+    <div class="Border_2">
+      <div class="Border_3">
+        <div class="BoxContent" style="background-image:url('.$layout_name.'/images/general/scroll.gif);">';
+
+    foreach($last_featuredArticle as $fArticle)
+    {
+        $featuredArticle .= '<a id="Link" style="position: absolute; margin-bottom: 10px; top: 2px;" href="?subtopic=forum&action=show_thread&id=' . $fArticle['id'] . '">» read more</a><div id="TeaserText">'.substr(showPost('', $fArticle['post_text'], $fArticle['post_smile']), 0, 400).'...</div>';
+    }
+
+    $featuredArticle .= '</div>
+      </div>
+    </div>
+    <div class="Border_1" style="background-image:url('.$layout_name.'/images/general/border-1.gif);"></div>
+    <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url('.$layout_name.'/images/general/corner-bl.gif);"></div></div>
+    <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url('.$layout_name.'/images/general/corner-br.gif);"></div></div>
+  </div>';
+}
+
+    $last_threads = $SQL->query('SELECT ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_text') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_smile') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('replies') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_date') . ' FROM ' . $SQL->tableName('players') . ', ' . $SQL->tableName('z_forum') . ' WHERE ' . $SQL->tableName('players') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('author_guid') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . '!=\'News Ticker\'' . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . '!=\'Featured Article\'' . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('section') . ' = 1 AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('first_post') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ' ORDER BY ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('last_post') . ' DESC LIMIT ' . $config['site']['news_limit'])->fetchAll();
     if(isset($last_threads[0]))
     {
         $main_content .= '<table width="100%">';
         foreach($last_threads as $thread)
         {
-            $main_content .= '<tr><td><b>' . htmlspecialchars($thread['post_topic']) . '</a></td><td style="text-align:right">' . date('d.m.y H:i:s', $thread['post_date']) . '</td></tr>';
+            $main_content .= '<tr><td><b>' . htmlspecialchars($thread['post_topic']) . '</a></td><td style="text-align:right">' . date('M d Y', $thread['post_date']) . '</td></tr>';
             $main_content .= '<tr><td colspan="2">' . showPost('', $thread['post_text'], $thread['post_smile']) . '</td></tr>';
-			$main_content .= '<tr><td>by <a href="?subtopic=characters&name='. urlencode($thread['name']) .'">'. htmlspecialchars($thread['name']) .'</a></td><td style="text-align:right"><a href="?subtopic=forum&action=show_thread&id=' . $thread['id'] . '">[Comments: ' . $thread['replies'] . ']</a></td></tr>';
+			$main_content .= '<tr><td>by <a href="?subtopic=characters&name='. urlencode($thread['name']) .'">'. htmlspecialchars($thread['name']) .'</a></td><td style="text-align:right"><a href="?subtopic=forum&action=show_thread&id=' . $thread['id'] . '">» Comment on this news</a></td></tr>';
 			$main_content .= '<tr style="background-color:black;width:100%;height:3px"><td colspan="2"></td></tr>';
         }
         $main_content .= '</table>';
