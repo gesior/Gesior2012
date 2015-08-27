@@ -172,6 +172,15 @@ function EmailStateChanged()
 					  <TR><TD width="150" valign="top"><B>Repeat password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=29><BR><font size="1" face="verdana,arial,helvetica">(Repeat your password)</font></TD></TR>';
 	else
 		$main_content .= '<script type="text/javascript">var verifpass=0;</script>';
+	// Country list
+	$main_content .= '<tr><td width="150" valign="top"><b>Country: </b></td><td colspan="2"><select name="reg_country" class="w230">
+                    <option value="unknown">Please choose your country</option>
+                    <option value="af">Afghanistan</option><option value="al">Albania</option><option value="dz">Algeria</option><option value="ad">Andorra</option><option value="ao">Angola</option><option value="ai">Anguilla</option><option value="ar">Argentina</option><option value="am">Armenia</option><option value="au">Australia</option><option value="at">Austria</option><option value="az">Azerbaijan</option><option value="bs">Bahamas</option><option value="bh">Bahrain</option><option value="bd">Bangladesh</option><option value="bb">Barbados</option><option value="by">Belarus</option><option value="be">Belgium</option><option value="bj">Benin</option><option value="bt">Bhutan</option><option value="bo">Bolivia</option><option value="ba">Bosnia and Herzegovina</option><option value="bw">Botswana</option><option value="br">Brazil</option><option value="bg">Bulgaria</option><option value="bf">Burkina Faso</option>
+                    <option value="kh">Cambodia</option><option value="cm">Cameroon</option><option value="ca">Canada</option><option value="td">Chad</option><option value="cl">Chile</option><option value="cn">China</option><option value="co">Colombia</option><option value="cd">Congo</option><option value="cr">Costa Rica</option><option value="hr">Croatia</option><option value="cu">Cuba</option><option value="cz">Czech Republic</option><option value="dk">Denmark</option><option value="do">Dominican Republic</option><option value="ec">Ecuador</option><option value="eg">Egypt</option><option value="ee">Estonia</option><option value="et">Ethiopia</option><option value="fj">Fiji</option><option value="fi">Finland</option><option value="fr">France</option><option value="ga">Gabon</option><option value="de">Germany</option><option value="gh">Ghana</option><option value="gr">Greece</option><option value="ht">Haiti</option><option value="hk">Hong Kong</option>
+                    <option value="hu">Hungary</option><option value="id">Indonesia</option><option value="iq">Iraq</option><option value="ie">Ireland</option><option value="il">Israel</option><option value="it">Italy</option>
+                    <option value="jm">Jamaica</option><option value="jp">Japan</option><option value="kz">Kazakhstan</option><option value="lv">Latvia</option><option value="lt">Lithuania</option><option value="lu">Luxembourg</option><option value="mx">Mexico</option><option value="ma">Morocco</option><option value="nl">Netherlands</option><option value="nz">New Zealand</option><option value="no">Norway</option><option value="om">Oman</option><option value="pk">Pakistan</option><option value="pa">Panama</option><option value="pg">Papua New Guinea</option><option value="py">Paraguay</option><option value="pe">Peru</option><option value="pl">Poland</option><option value="pt">Portugal</option><option value="pr">Puerto Rico</option><option value="qa">Qatar</option><option value="ro">Romania</option><option value="ru">Russian Federation</option><option value="sk">Slovakia</option><option value="za">South Africa</option><option value="es">Spain</option><option value="se">Sweden</option><option value="ch">Switzerland</option><option value="tw">Taiwan</option><option value="tr">Turkey</option><option value="ua">Ukraine</option><option value="gb">United Kingdom</option><option value="us">United States</option><option value="uy">Uruguay</option>
+                    <option value="ve">Venezuela</option><option value="vn">Vietnam</option><option value="zm">Zambia</option><option value="zw">Zimbabwe</option>
+                </select></td></tr>';
 	if($config['site']['verify_code'])
 		$main_content .= '<script type="text/javascript">var verifya=1;</script><TR><TD width="150"><B>Code: </B></TD><TD colspan="2"><img src="?subtopic=imagebuilder&image_refresher='.mt_rand(1,99999).'" border="0" alt="Image Verification is missing, please contact the administrator"></TD></TR>
 						  <TR><TD width="150" valign="top"><B>Verification Code: </B></TD><TD colspan="2"><INPUT id="verify" NAME="reg_code" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Here write verification code from picture)</font></TD></TR>';
@@ -230,6 +239,7 @@ if($action == "saveaccount")
 	$reg_email = trim($_POST['reg_email']);
 	$reg_password = trim($_POST['reg_password']);
 	$reg_code = trim($_POST['reg_code']);
+	$reg_country = trim($_POST['reg_country']);
 	//FIRST check
 	//check e-mail
 	if(empty($reg_name))
@@ -304,7 +314,7 @@ if($action == "saveaccount")
 		$reg_account->setEMail($reg_email);
 		$reg_account->setCreateDate(time());
 		$reg_account->setCreateIP(Visitor::getIP());
-		$reg_account->setFlag(Website::getCountryCode(long2ip(Visitor::getIP())));
+		$reg_account->setFlag($reg_country);
 		if(isset($config['site']['newaccount_premdays']) && $config['site']['newaccount_premdays'] > 0)
 		{
 			$reg_account->set("premdays", $config['site']['newaccount_premdays']);
