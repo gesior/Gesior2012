@@ -162,15 +162,20 @@ function showPost($topic, $text, $smile)
     $last_threads = $SQL->query('SELECT ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_text') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_smile') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('replies') . ', ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_date') . ' FROM ' . $SQL->tableName('players') . ', ' . $SQL->tableName('z_forum') . ' WHERE ' . $SQL->tableName('players') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('author_guid') . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . '!=\'News Ticker\'' . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('post_topic') . '!=\'Featured Article\'' . ' AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('section') . ' = 1 AND ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('first_post') . ' = ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('id') . ' ORDER BY ' . $SQL->tableName('z_forum') . '.' . $SQL->fieldName('last_post') . ' DESC LIMIT ' . $config['site']['news_limit'])->fetchAll();
     if(isset($last_threads[0]))
     {
-        $main_content .= '<table width="100%">';
         foreach($last_threads as $thread)
         {
-            $main_content .= '<tr><td><b>' . htmlspecialchars($thread['post_topic']) . '</a></td><td style="text-align:right">' . date('M d Y', $thread['post_date']) . '</td></tr>';
-            $main_content .= '<tr><td colspan="2">' . showPost('', $thread['post_text'], $thread['post_smile']) . '</td></tr>';
-			$main_content .= '<tr><td>by <a href="?subtopic=characters&name='. urlencode($thread['name']) .'">'. htmlspecialchars($thread['name']) .'</a></td><td style="text-align:right"><a href="?subtopic=forum&action=show_thread&id=' . $thread['id'] . '">» Comment on this news</a></td></tr>';
-			$main_content .= '<tr style="background-color:black;width:100%;height:3px"><td colspan="2"></td></tr>';
+            $main_content .= '<div class="NewsHeadline" style="margin-bottom: 10px;">
+              <div class="NewsHeadlineBackground" style="background-image:url('.$layout_name.'/images/general/newsheadline_background.gif)">
+                <img src="'.$layout_name.'/images/general/newsicon_community_big.gif" class="NewsHeadlineIcon" alt="">
+                <div class="NewsHeadlineDate">'.date('M d Y', $thread['post_date']).' - </div>
+                <div class="NewsHeadlineText">'.htmlspecialchars($thread['post_topic']).'</div>
+              </div>
+            </div>
+            <table style="clear:both" border="0" cellpadding="0" cellspacing="0" width="100%"><tbody>
+            <tr>'.showPost('', $thread['post_text'], $thread['post_smile']).'</tr><tr><td><div style="text-align:right;margin:10px 10px 0 0;"><a href="?subtopic=forum&action=show_thread&id=' . $thread['id'] . '">» Comment on this news</a></div></td></tr></tbody>
+            </table>
+            <br>';
         }
-        $main_content .= '</table>';
     }
     else
         $main_content .= '<h3>No news. Go forum and make new thread on board News.</h3>';

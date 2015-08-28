@@ -18,6 +18,7 @@ $config['site']['verify_code'] = true;
 $config['site']['email_days_to_change'] = 3;
 $config['site']['newaccount_premdays'] = 999;
 $config['site']['send_register_email'] = false;
+$config['site']['select_flag'] = true;
 
 # Create Character Options
 $config['site']['newchar_vocations'] = array(1 => 'Sorcerer Sample', 2 => 'Druid Sample', 3 => 'Paladin Sample', 4 => 'Knight Sample');
