@@ -1607,13 +1607,13 @@ body {
 
 /* News */
 
-.Content #News .BoxContent {
+.Content .BoxContent {
   min-height: 100px;
   height: auto !important;
   height: 110px;
 }
 
-.Content #News .NewsHeadlineBackground {
+.Content .NewsHeadlineBackground {
   position: relative;
   height: 28px;
   margin-bottom: 5px;
@@ -1622,7 +1622,7 @@ body {
   border-right: 1px solid #000000;
 }
 
-.Content #News .NewsHeadlineIcon {
+.Content .NewsHeadlineIcon {
   position: absolute;
   top: -1px;
   left: 0px;
@@ -1630,7 +1630,7 @@ body {
   margin-right: 5px;
 }
 
-.Content #News .NewsHeadlineDate {
+.Content .NewsHeadlineDate {
   font-size: 7pt;
   position: absolute;
   top: 10px;
@@ -1639,7 +1639,7 @@ body {
   color: white;
 }
 
-.Content #News .NewsHeadlineText {
+.Content .NewsHeadlineText {
   position: relative;
   top: 7px;
   left: 135px;
