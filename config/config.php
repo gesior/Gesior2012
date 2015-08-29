@@ -10,6 +10,7 @@ $config['site']['item_images_url'] = 'http://item-images.ots.me/960/';
 $config['site']['item_images_extension'] = '.gif';
 $config['site']['flag_images_url'] = 'http://flag-images.ots.me/';
 $config['site']['flag_images_extension'] = '.png';
+$config['site']['encryptionType'] = 'sha1';
 
 # Create Account Options
 $config['site']['one_email'] = false;
@@ -25,7 +26,6 @@ $config['site']['newchar_vocations'] = array(1 => 'Sorcerer Sample', 2 => 'Druid
 $config['site']['newchar_towns'] = array(2);
 $config['site']['max_players_per_account'] = 7;
 
-
 # Emails Config
 $config['site']['send_emails'] = false;
 $config['site']['mail_address'] = "xxxx@gmx.com";
@@ -37,7 +37,7 @@ $config['site']['smtp_user'] = "xxx@gmx.com";
 $config['site']['smtp_pass'] = "xxxx";
 
 # PAGE: whoisonline.php
-$config['site']['private-servlist.com_server_id'] = 1;
+$config['site']['private-servlist.com_server_id'] = 0;
 /*
 Server id on 'private-servlist.com' to show Players Online Chart (whoisonline.php page), set 0 to disable Chart feature.
 To use this feature you must register on 'private-servlist.com' and add your server.
