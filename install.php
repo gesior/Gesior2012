@@ -175,7 +175,7 @@ elseif($page == 'step')
 			Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
 		else
 			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
-		Website::setPasswordsEncryption(Website::getServerConfig()->getValue('passwordType'));
+		Website::updatePasswordEncryption();
 		$SQL = Website::getDBHandle();
 	}
 

@@ -49,8 +49,11 @@ $title = ucwords($subtopic) . ' - ' . Website::getServerConfig()->getValue('serv
 $topic = $subtopic;
 
 $passwordency = Website::getServerConfig()->getValue('passwordType');
-if($passwordency == 'plain')
+if (empty($passwordency)) {
+	$passwordency = 'sha1';
+} else if ($passwordency == 'plain') {
 	$passwordency = '';
+}
 
 $news_content = '';
 $vocation_name = array();

@@ -118,14 +118,23 @@ class Website extends WebsiteErrors
 		return file_exists($path);
 	}
 
-	public static function setPasswordsEncryption($encryption)
+	public static function updatePasswordEncryption()
 	{
-		if(isset(self::$passwordsEncryptions[strtolower($encryption)]))
-			self::$passwordsEncryption = strtolower($encryption);
-		else
+		$encryptionTypeLowerd = strtolower(self::getServerConfig()->getValue('passwordType'));
+		if (empty($encryptionTypeLowerd)) { // TFS 1.1+
+			$encryptionTypeLowerd = $config['site']['encryptionType'];
+			if (empty($encryptionTypeLowerd)) {
+				$encryptionTypeLowerd = 'sha1';
+			}
+		}
+
+		if (isset(self::$passwordsEncryptions[$encryptionTypeLowerd])) {
+			self::$passwordsEncryption = $encryptionTypeLowerd;
+		} else {
 			new Error_Critic('#C-12', 'Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
+		}
 	}
-	
+
 	public static function getPasswordsEncryption()
 	{
 		return self::$passwordsEncryption;
