@@ -781,6 +781,7 @@ function NameStateChanged()
 					$char_to_copy->setPosX(0);
 					$char_to_copy->setPosY(0);
 					$char_to_copy->setPosZ(0);
+					$char_to_copy->setBalance(0);
 					$char_to_copy->setWorldID((int) $world_id);
 					$char_to_copy->setCreateIP(Visitor::getIP());
 					$char_to_copy->setCreateDate(time());
