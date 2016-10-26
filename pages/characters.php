@@ -207,7 +207,7 @@ if(!empty($name))
 		{
 			$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
 			$deads++;
-			$dead_add_content .= "<tr bgcolor=\"".$bgcolor."\"><td width=\"20%\" align=\"center\">".date("j M Y, H:i", $death->getTime())."</td><td>Died at level " . $death->getLevel() . " by " . $death->getKillerString();
+			$dead_add_content .= "<tr bgcolor=\"".$bgcolor."\"><td width=\"20%\" align=\"center\">".date("j M Y, H:i", $death->getTime())."</td><td>Died at level " . $death->getLevel() . " by " . $death->getKillerString() . ".";
 			if($death->getMostDamageString() != '' && $death->getKillerString() != $death->getMostDamageString())
 				$dead_add_content .= ' and ' . $death->getMostDamageString();
 			$dead_add_content .= "</td></tr>";
