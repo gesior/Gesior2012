@@ -118,64 +118,34 @@ elseif($page == 'step')
 {
 	if($step >= 2 && $step <= 5)
 	{
-		//load server config $config['server']
-		if(Website::getWebsiteConfig()->getValue('useServerConfigCache'))
-		{
-			// use cache to make website load faster
-			if(Website::fileExists('./config/server.config.php'))
-			{
-				$tmp_php_config = new ConfigPHP('./config/server.config.php');
-				$config['server'] = $tmp_php_config->getConfig();
-			}
-			else
-			{
-				// if file isn't cache we should load .lua file and make .php cache
-				$tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
-				$config['server'] = $tmp_lua_config->getConfig();
-				$tmp_php_config = new ConfigPHP();
-				$tmp_php_config->setConfig($tmp_lua_config->getConfig());
-				$tmp_php_config->saveToFile('./config/server.config.php');
-			}
-		}
-		else
-		{
-			$tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
-			$config['server'] = $tmp_lua_config->getConfig();
-		}
-		if(Website::getServerConfig()->isSetKey('mysqlHost'))
-		{
-			define('SERVERCONFIG_SQL_HOST', 'mysqlHost');
-			define('SERVERCONFIG_SQL_PORT', 'mysqlPort');
-			define('SERVERCONFIG_SQL_USER', 'mysqlUser');
-			define('SERVERCONFIG_SQL_PASS', 'mysqlPass');
-			define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
-			define('SERVERCONFIG_SQLITE_FILE', 'sqlFile');
-		}
-		else
-			new Error_Critic('#E-3', 'There is no key <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
+        define('SERVERCONFIG_SQL_HOST', 'mysqlHost');
+        define('SERVERCONFIG_SQL_PORT', 'mysqlPort');
+        define('SERVERCONFIG_SQL_USER', 'mysqlUser');
+        define('SERVERCONFIG_SQL_PASS', 'mysqlPass');
+        define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
 
 		Website::setDatabaseDriver(Database::DB_MYSQL);
-		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
-			Website::getDBHandle()->setDatabaseHost(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_HOST));
+		if(Website::getWebsiteConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
+			Website::getDBHandle()->setDatabaseHost(Website::getWebsiteConfig()->getValue(SERVERCONFIG_SQL_HOST));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
-		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PORT))
-			Website::getDBHandle()->setDatabasePort(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PORT));
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in site config file.');
+		if(Website::getWebsiteConfig()->isSetKey(SERVERCONFIG_SQL_PORT))
+			Website::getDBHandle()->setDatabasePort(Website::getWebsiteConfig()->getValue(SERVERCONFIG_SQL_PORT));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
-		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
-			Website::getDBHandle()->setDatabaseName(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in site config file.');
+		if(Website::getWebsiteConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
+			Website::getDBHandle()->setDatabaseName(Website::getWebsiteConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
-		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_USER))
-			Website::getDBHandle()->setDatabaseUsername(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_USER));
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in site config file.');
+		if(Website::getWebsiteConfig()->isSetKey(SERVERCONFIG_SQL_USER))
+			Website::getDBHandle()->setDatabaseUsername(Website::getWebsiteConfig()->getValue(SERVERCONFIG_SQL_USER));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
-		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
-			Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in site config file.');
+		if(Website::getWebsiteConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
+			Website::getDBHandle()->setDatabasePassword(Website::getWebsiteConfig()->getValue(SERVERCONFIG_SQL_PASS));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
-		Website::updatePasswordEncryption();
+			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in site config file.');
+
 		$SQL = Website::getDBHandle();
 	}
 
@@ -204,20 +174,11 @@ elseif($page == 'step')
 			$path = str_replace("\\", "/", $path);
 			$path = str_replace("//", "/", $path);
 			setServerPath($path);
-			$tmp_lua_config = new ConfigLUA($path . 'config.lua');
-			$config['server'] = $tmp_lua_config->getConfig();
-			if(isset($config['server']['mysqlHost']))
-			{
-				echo 'File <b>config.lua</b> loaded from <font color="red"><i>'.$path.'config.lua</i></font>. It looks like fine server config file. Now you can check database connection: <a href="install.php?page=step&step=2">STEP 2 - check database connection</a>';
-			}
-			else
-			{
-				echo 'File <b>config.lua</b> loaded from <font color="red"><i>'.$path.'config.lua</i></font> and it\'s not valid TFS config.lua file. <a href="install.php?page=step&step=1">Go to STEP 1 - select other directory.</a> If it\'s your config.lua file from TFS contact with acc. maker author.';
-			}
+			echo 'Set server folder. Now you can check database connection: <a href="install.php?page=step&step=2">STEP 2 - check database connection</a>';
 		}
 		else
 		{
-			echo 'Please write you TFS directory below. Like: <i>C:\Documents and Settings\Gesior\Desktop\TFS 0.2.9\</i><form action="install.php">
+			echo 'Please write you RLOTS directory below. Like: <i>C:\Documents and Settings\Gesior\Desktop\RLOTS\</i><form action="install.php">
 			<input type="text" name="server_path" size="90" value="'.htmlspecialchars(getServerPath()).'" /><input type="hidden" name="page" value="step" /><input type="hidden" name="step" value="1" /><input type="submit" value="Set server path" />
 			</form>';
 		}
@@ -234,31 +195,31 @@ elseif($page == 'step')
 		echo 'Installer try to add new tables and columns to database.<br>';
 		$columns = array();
 		//$columns[] = array('table', 'name_of_column', 'type', 'length', 'default');
-		$columns[] = array('accounts', 'key', 'VARCHAR', '20', '0');
-		$columns[] = array('accounts', 'email_new', 'VARCHAR', '255', '');
-		$columns[] = array('accounts', 'email_new_time', 'INT', '11', '0');
-		$columns[] = array('accounts', 'rlname', 'VARCHAR', '255', '');
-		$columns[] = array('accounts', 'location', 'VARCHAR', '255', '');
-		$columns[] = array('accounts', 'page_access', 'INT', '11', '0');
-		$columns[] = array('accounts', 'email_code', 'VARCHAR', '255', '');
-		$columns[] = array('accounts', 'next_email', 'INT', '11', '0');
-		$columns[] = array('accounts', 'premium_points', 'INT', '11', '0');
-		$columns[] = array('accounts', 'create_date', 'INT', '11', '0');
-		$columns[] = array('accounts', 'create_ip', 'INT', '11', '0');
-		$columns[] = array('accounts', 'last_post', 'INT', '11', '0');
-		$columns[] = array('accounts', 'flag', 'VARCHAR', '80', '');
-
+		$columns[] = array('users', 'key', 'VARCHAR', '20', '0');
+		$columns[] = array('users', 'email_new', 'VARCHAR', '255', '');
+		$columns[] = array('users', 'email_new_time', 'INT', '11', '0');
+		$columns[] = array('users', 'rlname', 'VARCHAR', '255', '');
+		$columns[] = array('users', 'location', 'VARCHAR', '255', '');
+		$columns[] = array('users', 'page_access', 'INT', '11', '0');
+		$columns[] = array('users', 'email_code', 'VARCHAR', '255', '');
+		$columns[] = array('users', 'next_email', 'INT', '11', '0');
+		$columns[] = array('users', 'premium_points', 'INT', '11', '0');
+		$columns[] = array('users', 'create_date', 'INT', '11', '0');
+		$columns[] = array('users', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('users', 'last_post', 'INT', '11', '0');
+		$columns[] = array('users', 'flag', 'VARCHAR', '80', '');
+/*
 		$columns[] = array('guilds', 'description', 'TEXT', '', '');
 		$columns[] = array('guilds', 'guild_logo', 'MEDIUMBLOB', '', NULL);
 		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0');
 		$columns[] = array('guilds', 'balance', 'BIGINT UNSIGNED', '', '0');
-
-		$columns[] = array('players', 'deleted', 'TINYINT', '1', '0');
-		$columns[] = array('players', 'description', 'VARCHAR', '255', '');
-		$columns[] = array('players', 'comment', 'TEXT', '', '');
+*/
+		//$columns[] = array('players', 'deleted', 'TINYINT', '1', '0');
+		//$columns[] = array('players', 'description', 'VARCHAR', '255', '');
+		//$columns[] = array('players', 'comment', 'TEXT', '', '');
 		$columns[] = array('players', 'create_ip', 'INT', '11', '0');
 		$columns[] = array('players', 'create_date', 'INT', '11', '0');
-		$columns[] = array('players', 'hide_char', 'INT', '11', '0');
+		//$columns[] = array('players', 'hide_char', 'INT', '11', '0');
 
 		$tables = array();
 		// mysql tables
@@ -342,92 +303,7 @@ elseif($page == 'step')
 	}
 	elseif($step == 4)
 	{
-		echo '<h1>STEP '.$step.'</h1>Add samples to DB:<br>';
-		$samplePlayers = array();
-		$samplePlayers[0] = 'Rook Sample';
-		$samplePlayers[1] = 'Sorcerer Sample';
-		$samplePlayers[2] = 'Druid Sample';
-		$samplePlayers[3] = 'Paladin Sample';
-		$samplePlayers[4] = 'Knight Sample';
-
-		$account = new Account(1, Account::LOADTYPE_NAME);
-		if(!$account->isLoaded())
-		{
-			$account->setName(1);
-			$account->setPassword(1);
-			$account->setMail(rand(0,999999) . '@gmail.com');
-			$account->setPageAccess(3);
-			$account->setFlag('unknown');
-			$account->setCreateIP(Visitor::getIP());
-			$account->setCreateDate(time());
-			$account->save();
-		}
-		$newPlayer = new Player('Account Manager', Player::LOADTYPE_NAME);
-		if(!$newPlayer->isLoaded())
-		{
-			$newPlayer->setComment('');
-			$newPlayer->setName('Account Manager');
-			$newPlayer->setAccountID($account->getID());
-			$newPlayer->setLevel(8);
-			$newPlayer->setExperience(4200);
-			$newPlayer->setGroupID(1);
-			$newPlayer->setVocation(0);
-			$newPlayer->setHealth(185);
-			$newPlayer->setHealthMax(185);
-			$newPlayer->setMana(35);
-			$newPlayer->setManaMax(35);
-			$newPlayer->setTown(1);
-			$newPlayer->setSoul(100);
-			$newPlayer->setCapacity(420);
-			$newPlayer->setSave(1);
-			$newPlayer->setStamina(2520);
-			$newPlayer->setLookType(128);
-			$newPlayer->setLookBody(44);
-			$newPlayer->setLookFeet(98);
-			$newPlayer->setLookHead(15);
-			$newPlayer->setLookLegs(76);
-
-			$newPlayer->setSkill(0, 10);
-			$newPlayer->setSkill(1, 10);
-			$newPlayer->setSkill(2, 10);
-			$newPlayer->setSkill(3, 10);
-			$newPlayer->setSkill(4, 10);
-			$newPlayer->setSkill(5, 10);
-			$newPlayer->setSkill(6, 10);
-
-			$newPlayer->setSkillCount(0, 0);
-			$newPlayer->setSkillCount(1, 0);
-			$newPlayer->setSkillCount(2, 0);
-			$newPlayer->setSkillCount(3, 0);
-			$newPlayer->setSkillCount(4, 0);
-			$newPlayer->setSkillCount(5, 0);
-			$newPlayer->setSkillCount(6, 0);
-
-			$newPlayer->save();
-		}
-
-		if($newPlayer->isLoaded())
-		{
-			foreach($samplePlayers as $vocationID => $name)
-			{
-				$samplePlayer = new Player($name, Player::LOADTYPE_NAME);
-				if(!$samplePlayer->isLoaded())
-				{
-					$samplePlayer = new Player('Account Manager', Player::LOADTYPE_NAME);
-					$samplePlayer->setID(null); // save as new player, not edited
-					$samplePlayer->setName($name);
-					$samplePlayer->setVocation($vocationID);
-					$samplePlayer->setGroupID(1);
-					$samplePlayer->setLookType(128);
-					$samplePlayer->save();
-					echo '<span style="color:green">Added sample character: </span><span style="color:green;font-weight:bold">' . $name . '</span><br/>';
-				}
-				else
-					echo 'Sample character: <span style="font-weight:bold">' . $name . '</span> already exist in database<br/>';
-			}
-		}
-		else
-			new Error_Critic('', 'Character <i>Account Manager</i> does not exist. Cannot install sample characters!');
+	    echo '<h2>No samples/vocations on RL OTS. Skip this step.</h2>';
 	}
 	elseif($step == 5)
 	{
@@ -462,10 +338,10 @@ elseif($page == 'step')
 					$newAccount->setPassword($newpass); // setPassword encrypt it to ots encryption
 					$newAccount->setMail(rand(0,999999) . '@gmail.com');
 					$newAccount->setPageAccess(3);
-					$newAccount->setGroupID(1);
 					$newAccount->setFlag('unknown');
 					$newAccount->setCreateIP(Visitor::getIP());
-					$newAccount->setCreateDate(time());
+                    $newAccount->setCreateDate(time());
+                    $newAccount->save();
 				}
 				$_SESSION['account'] = 1;
 				$_SESSION['password'] = $newpass;

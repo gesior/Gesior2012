@@ -44,22 +44,15 @@ if(!ONLY_PAGE)
 }
 $layout_name = './layouts/' . Website::getWebsiteConfig()->getValue('layout');
 
-$title = ucwords($subtopic) . ' - ' . Website::getServerConfig()->getValue('serverName');
+$title = ucwords($subtopic) . ' - ' . Website::getWebsiteConfig()->getValue('serverName');
 
 $topic = $subtopic;
 
-$passwordency = Website::getServerConfig()->getValue('passwordType');
-if (empty($passwordency)) {
-	$passwordency = 'sha1';
-} else if ($passwordency == 'plain') {
-	$passwordency = '';
-}
-
 $news_content = '';
 $vocation_name = array();
-foreach(Website::getVocations() as $vocation)
+foreach(Website::getVocations() as $vocationId => $vocationName)
 {
-	$vocation_name[$vocation->getId()] = $vocation->getName();
+	$vocation_name[$vocationId] = $vocationName;
 }
 
 $layout_ini = parse_ini_file($layout_name.'/layout_config.ini');
@@ -102,12 +95,14 @@ function check_name($name)
 function check_account_name($name)
 {
 	$name = (string) $name;
-	$temp = strspn("$name", "QWERTYUIOPASDFGHJKLZXCVBNM0123456789");
+	if ($name[0] == 0)
+	    return false;
+	$temp = strspn("$name", "0123456789");
 	if ($temp != strlen($name))
 		return false;
 	if(strlen($name) < 1)
 		return false;
-	if(strlen($name) > 32)
+	if(strlen($name) > 7)
 		return false;
 
 	return true;
@@ -244,44 +239,10 @@ function logo_monster()
 if(!ONLY_PAGE)
 {
 	// STATUS CHECKER
-	$statustimeout = 1;
-	foreach(explode("*", str_replace(" ", "", $config['server']['statusTimeout'])) as $status_var)
-		if($status_var > 0)
-			$statustimeout = $statustimeout * $status_var;
-	$statustimeout = $statustimeout / 1000;
-	$config['status'] = parse_ini_file('cache/DONT_EDIT_serverstatus.txt');
-	if($config['status']['serverStatus_lastCheck']+$statustimeout < time())
-	{
-		$config['status']['serverStatus_checkInterval'] = $statustimeout+3;
-		$config['status']['serverStatus_lastCheck'] = time();
-		$statusInfo = new ServerStatus($config['server']['ip'], $config['server']['statusProtocolPort'], 1);
-		if($statusInfo->isOnline())
-		{
-			$config['status']['serverStatus_online'] = 1;
-			$config['status']['serverStatus_players'] = $statusInfo->getPlayersCount();
-			$config['status']['serverStatus_playersMax'] = $statusInfo->getPlayersMaxCount();
-			$h = floor($statusInfo->getUptime() / 3600);
-			$m = floor(($statusInfo->getUptime() - $h*3600) / 60);
-			$config['status']['serverStatus_uptime'] = $h.'h '.$m.'m';
-			$config['status']['serverStatus_monsters'] = $statusInfo->getMonsters();
-		}
-		else
-		{
-			$config['status']['serverStatus_online'] = 0;
-			$config['status']['serverStatus_players'] = 0;
-			$config['status']['serverStatus_playersMax'] = 0;
-		}
-		$file = fopen("cache/DONT_EDIT_serverstatus.txt", "w");
-		$file_data = '';
-		foreach($config['status'] as $param => $data)
-		{
-	$file_data .= $param.' = "'.str_replace('"', '', $data).'"
-	';
-		}
-		rewind($file);
-		fwrite($file, $file_data);
-		fclose($file);
-	}
+    $config['status']['serverStatus_online'] = 1;
+    $config['status']['serverStatus_players'] = $SQL->query('SELECT COUNT(1) AS count FROM `players` WHERE `online` = 1')->fetch()['count'];
+    $config['status']['serverStatus_playersMax'] = $config['status']['serverStatus_players'];
+
 	//PAGE VIEWS COUNTER
 	$views_counter = "cache/DONT_EDIT_usercounter.txt";
 	// checking if the file exists

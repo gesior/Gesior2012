@@ -4,20 +4,10 @@ if(!defined('INITIALIZED'))
 
 class Website extends WebsiteErrors
 {
-	public static $serverConfig;
 	public static $websiteConfig;
-	public static $vocations;
-	public static $groups;
+	public static $vocations = ['None', 'Sorcerer', 'Druid', 'Paladin', 'Knight'];
 	public static $SQL;
-	public static $passwordsEncryptions = array(
-	'plain' => 'plain',
-	'md5' => 'md5',
-	'sha1' => 'sha1',
-	'sha256' => 'sha256',
-	'sha512' => 'sha512',
-	'vahash' => 'vahash'
-	);
-	private static $passwordsEncryption;
+	private static $passwordsEncryption = 'plain';
 
 	public static function setDatabaseDriver($value)
 	{
@@ -27,9 +17,6 @@ class Website extends WebsiteErrors
 		{
 			case Database::DB_MYSQL:
 				self::$SQL = new Database_MySQL();
-				break;
-			case Database::DB_SQLITE:
-				self::$SQL = new Database_SQLite();
 				break;
 		}
 	}
@@ -55,21 +42,6 @@ class Website extends WebsiteErrors
 			self::loadWebsiteConfig();
 
 		return self::$websiteConfig;
-	}
-
-	public static function loadServerConfig()
-	{
-		self::$serverConfig = new ConfigPHP();
-		global $config;
-		self::$serverConfig->setConfig($config['server']);
-	}
-
-	public static function getServerConfig()
-	{
-		if(!isset(self::$serverConfig))
-			self::loadServerConfig();
-
-		return self::$serverConfig;
 	}
 
 	public static function getConfig($fileNameArray)
@@ -118,39 +90,13 @@ class Website extends WebsiteErrors
 		return file_exists($path);
 	}
 
-	public static function updatePasswordEncryption()
-	{
-		$encryptionTypeLowerd = strtolower(self::getServerConfig()->getValue('passwordType'));
-		if (empty($encryptionTypeLowerd)) { // TFS 1.1+
-			$encryptionTypeLowerd = $config['site']['encryptionType'];
-			if (empty($encryptionTypeLowerd)) {
-				$encryptionTypeLowerd = 'sha1';
-			}
-		}
-
-		if (isset(self::$passwordsEncryptions[$encryptionTypeLowerd])) {
-			self::$passwordsEncryption = $encryptionTypeLowerd;
-		} else {
-			new Error_Critic('#C-12', 'Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
-		}
-	}
-
 	public static function getPasswordsEncryption()
 	{
 		return self::$passwordsEncryption;
 	}
 
-	public static function validatePasswordsEncryption($encryption)
-	{
-		if(isset(self::$passwordsEncryptions[strtolower($encryption)]))
-			return true;
-		else
-			return false;
-	}
-	
 	public static function encryptPassword($password, $account = null)
 	{
-		// add SALT for 0.4
 		if(isset(self::$passwordsEncryption))
 			if(self::$passwordsEncryption == 'plain')
 				return $password;
@@ -160,48 +106,21 @@ class Website extends WebsiteErrors
 			new Error_Critic('#C-13', 'You cannot use Website::encryptPassword(\$password) when password encryption is not set.');
 	}
 
-	public static function loadVocations()
-	{
-		$path = self::getWebsiteConfig()->getValue('serverPath');
-		self::$vocations = new Vocations($path . 'data/XML/vocations.xml');
-	}
+    public static function getVocations()
+    {
 
-	public static function getVocations()
-	{
-		if(!isset(self::$vocations))
-			self::loadVocations();
+        return self::$vocations;
+    }
 
-		return self::$vocations;
-	}
+    public static function getVocationName($id)
+    {
 
-	public static function getVocationName($id)
-	{
-		if(!isset(self::$vocations))
-			self::loadVocations();
-
-		return self::$vocations->getVocationName($id);
-	}
-
-	public static function loadGroups()
-	{
-		$path = self::getWebsiteConfig()->getValue('serverPath');
-		self::$groups = new Groups($path . 'data/XML/groups.xml');
-	}
-
-	public static function getGroups()
-	{
-		if(!isset(self::$groups))
-			self::loadGroups();
-
-		return self::$groups;
-	}
+        return self::$vocations[$id];
+    }
 
 	public static function getGroupName($id)
 	{
-		if(!isset(self::$groups))
-			self::loadGroups();
-
-		return self::$groups->getGroupName($id);
+		return 'Player';
 	}
 
 	public static function getCountryCode($IP)

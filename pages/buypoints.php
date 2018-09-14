@@ -302,9 +302,9 @@ elseif ($_REQUEST['system'] == 'homepay' && $config['homepay_active'])
 	<b>Regulamin usług dostępnych na stronie:</b><br/>
 	<b>1.a)</b> Kiedy Twój poprawnie wysłany SMS zostanie dostarczony otrzymasz SMS zwrotny z kodem.<br/>
 	<b>1.b)</b> Kiedy Twój przelew zostanie zaksięgowany (z kart kredytowych i bankow internetowych z listy, jest to kwestia paru sekund) na e-mail który podałeś w formularzu otrzymasz kod.<br/>
-	<b>2.</b> Po otrzymaniu kodu SMS/przelewu i wpisaniu go wraz z <b>nazwą konta w grze</b> w powyższym formularzu, na serwerze '.$config['server']['serverName'].' podane konto zostanie automatycznie doładowane o okresloną ilość <b>punktów premium</b> które nastepnie mogą być zamienione na przedmioty w grze.</b>.<br/>
+	<b>2.</b> Po otrzymaniu kodu SMS/przelewu i wpisaniu go wraz z <b>nazwą konta w grze</b> w powyższym formularzu, na serwerze '.$config['site']['serverName'].' podane konto zostanie automatycznie doładowane o okresloną ilość <b>punktów premium</b> które nastepnie mogą być zamienione na przedmioty w grze.</b>.<br/>
 	<b>3.</b> Do pełnego skorzystania z usługi wymagana jest przeglądarka internetowa oraz połączenie z siecią Internet.<br/>
-	<b>4.</b> <b>'.$config['server']['serverName'].'</b> nie odpowiada za źle wpisane treści SMS.<br/>
+	<b>4.</b> <b>'.$config['site']['serverName'].'</b> nie odpowiada za źle wpisane treści SMS.<br/>
 	<b>5.</b> W razie problemów z działaniem usługi należy kontaktować się z <a href="mailto:' . $config['homepay_email_kontaktowy'] . '">' . $config['homepay_email_kontaktowy'] . '</a>
 	</td></tr></table>';
 }

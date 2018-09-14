@@ -1,5 +1,2 @@
-<?php
-if(!defined('INITIALIZED'))
-	exit;
-
-$main_content .= 'Edit this text in pages/download.php.';
+Here admin must put some HTML. It's possible to use PHP:
+<?php echo $config['site']['serverName']; ?>

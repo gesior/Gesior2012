@@ -26,8 +26,8 @@ class Database_MySQL extends Database
 
 	public function fieldName($name)
 	{
-		if(strspn($name, "1234567890qwertyuiopasdfghjklzxcvbnm_") != strlen($name))
-			new Error_Critic('', 'Invalid field name format.');
+		if(strspn($name, "1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm_") != strlen($name))
+			new Error_Critic('', 'Invalid field name format: ' . $name);
 
 		return '`' . $name . '`';
 	}

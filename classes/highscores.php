@@ -54,16 +54,12 @@ class Highscores extends DatabaseList
 		$this->setClass('Highscore');
 		$this->addOrder(new SQL_Order(new SQL_Field('skill_' . $this->skillType), SQL_Order::DESC));
 		$this->addOrder(new SQL_Order(new SQL_Field('skill_' . $this->skillType . '_tries'), SQL_Order::DESC));
-		$this->addExtraField(new SQL_Field('flag', 'accounts'));
+		$this->addExtraField(new SQL_Field('flag', 'users'));
 		$this->addExtraField(new SQL_Field('skill_' . $this->skillType, 'players', 'value'));
-		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'accounts'));
+		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'users'));
 
 		if($this->vocation != '')
 			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('vocation', 'players'), SQL_Filter::EQUAL, $this->vocation));
-
-		if($this->highscoreConfig->isSetKey('groups_hidden'))
-			foreach($this->highscoreConfig->getValue('groups_hidden') as $_group_filter)
-				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('group_id', 'players'), SQL_Filter::NOT_EQUAL, $_group_filter));
 
 		if($this->highscoreConfig->isSetKey('accounts_hidden'))
 			foreach($this->highscoreConfig->getValue('accounts_hidden') as $_account_filter)
@@ -77,15 +73,11 @@ class Highscores extends DatabaseList
 		$this->setClass('Highscore');
 		$this->addOrder(new SQL_Order(new SQL_Field('maglevel'), SQL_Order::DESC));
 		$this->addOrder(new SQL_Order(new SQL_Field('manaspent'), SQL_Order::DESC));
-		$this->addExtraField(new SQL_Field('flag', 'accounts'));
-		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'accounts'));
+		$this->addExtraField(new SQL_Field('flag', 'users'));
+		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'users'));
 
 		if($this->vocation != '')
 			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('vocation', 'players'), SQL_Filter::EQUAL, $this->vocation));
-
-		if($this->highscoreConfig->isSetKey('groups_hidden'))
-			foreach($this->highscoreConfig->getValue('groups_hidden') as $_group_filter)
-				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('group_id', 'players'), SQL_Filter::NOT_EQUAL, $_group_filter));
 
 		if($this->highscoreConfig->isSetKey('accounts_hidden'))
 			foreach($this->highscoreConfig->getValue('accounts_hidden') as $_account_filter)
@@ -97,16 +89,12 @@ class Highscores extends DatabaseList
 	public function loadLevel()
 	{
 		$this->setClass('Highscore');
-		$this->addOrder(new SQL_Order(new SQL_Field('experience'), SQL_Order::DESC));
-		$this->addExtraField(new SQL_Field('flag', 'accounts'));
-		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'accounts'));
+		$this->addOrder(new SQL_Order(new SQL_Field('level'), SQL_Order::DESC));
+		$this->addExtraField(new SQL_Field('flag', 'users'));
+		$filter = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'users'));
 
 		if($this->vocation != '')
 			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('vocation', 'players'), SQL_Filter::EQUAL, $this->vocation));
-
-		if($this->highscoreConfig->isSetKey('groups_hidden'))
-			foreach($this->highscoreConfig->getValue('groups_hidden') as $_group_filter)
-				$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, new SQL_Filter(new SQL_Field('group_id', 'players'), SQL_Filter::NOT_EQUAL, $_group_filter));
 
 		if($this->highscoreConfig->isSetKey('accounts_hidden'))
 			foreach($this->highscoreConfig->getValue('accounts_hidden') as $_account_filter)

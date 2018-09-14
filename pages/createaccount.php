@@ -152,23 +152,23 @@ function EmailStateChanged()
 		}
 	}
 	</script>';
-	$main_content .= 'To play on '.htmlspecialchars($config['server']['serverName']).' you need an account. 
+	$main_content .= 'To play on '.htmlspecialchars($config['site']['serverName']).' you need an account. 
 						All you have to do to create your new account is to enter your email address, password to new account, verification code from picture and to agree to the terms presented below. 
 						If you have done so, your account name, password and e-mail address will be shown on the following page and your account and password will be sent 
 						to your email address along with further instructions.<BR><BR>
 						<FORM ACTION="?subtopic=createaccount&action=saveaccount" onsubmit="return validate_form(this)" METHOD=post>
 						<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
-						<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Create an '.htmlspecialchars($config['server']['serverName']).' Account</B></TD></TR>
+						<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Create an '.htmlspecialchars($config['site']['serverName']).' Account</B></TD></TR>
 						<TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLSPACING=8 CELLPADDING=0>
 						  <TR><TD>
 						    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>';
 	$main_content .= '<TR><TD width="150" valign="top"><B>Account name: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=30><BR><font size="1" face="verdana,arial,helvetica">(Please enter your new account name)</font></TD></TR>
 					  <TR><TD width="150"><b>Name status:</b></TD><TD colspan="2"><b><div id="acc_name_check">Please enter your account name.</div></b></TD></TR>
-					<TR><TD width="150" valign="top"><B>Email address: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Your email address is required to recovery an '.htmlspecialchars($config['server']['serverName']).' account)</font></TD></TR>
+					<TR><TD width="150" valign="top"><B>Email address: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Your email address is required to recovery an '.htmlspecialchars($config['site']['serverName']).' account)</font></TD></TR>
 					  <TR><TD width="150"><b>Email status:</b></TD><TD colspan="2"><b><div id="email_check">Please enter your e-mail.</div></b></TD></TR>';
 	if(!$config['site']['create_account_verify_mail'])
 	$main_content .= '<script type="text/javascript">var verifpass=1;</script>
-						<TR><TD width="150" valign="top"><B>Password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=29><BR><font size="1" face="verdana,arial,helvetica">(Here write your password to new account on '.htmlspecialchars($config['server']['serverName']).')</font></TD></TR>
+						<TR><TD width="150" valign="top"><B>Password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=29><BR><font size="1" face="verdana,arial,helvetica">(Here write your password to new account on '.htmlspecialchars($config['site']['serverName']).')</font></TD></TR>
 					  <TR><TD width="150" valign="top"><B>Repeat password: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=29><BR><font size="1" face="verdana,arial,helvetica">(Repeat your password)</font></TD></TR>';
 	else
 		$main_content .= '<script type="text/javascript">var verifpass=0;</script>';
@@ -195,7 +195,7 @@ function EmailStateChanged()
 					       Please review the following terms and state your agreement below.
 					    </TD></TR>
 					    <TR><TD>
-					      <B>'.htmlspecialchars($config['server']['serverName']).' Rules</B><BR>
+					      <B>'.htmlspecialchars($config['site']['serverName']).' Rules</B><BR>
 					      <TEXTAREA ROWS="16" WRAP="physical" COLS="75" READONLY="true">';
 	//load server rules from file
 	include("pages/tibiarules.php");
@@ -205,11 +205,11 @@ function EmailStateChanged()
 					  <TR><TD>
 					    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>
 					    <TR><TD>
-					      <INPUT TYPE="checkbox" NAME="rules" id="rules" value="true" /><label for="rules"><u> I agree to the '.htmlspecialchars($config['server']['serverName']).' Rules.</u></lable><BR>
+					      <INPUT TYPE="checkbox" NAME="rules" id="rules" value="true" /><label for="rules"><u> I agree to the '.htmlspecialchars($config['site']['serverName']).' Rules.</u></lable><BR>
 					    </TD></TR>
 					    <TR><TD>
-					      If you fully agree to these terms, click on the "I Agree" button in order to create an '.htmlspecialchars($config['server']['serverName']).' account.<BR>
-					      If you do not agree to these terms or do not want to create an '.htmlspecialchars($config['server']['serverName']).' account, please click on the "Cancel" button.
+					      If you fully agree to these terms, click on the "I Agree" button in order to create an '.htmlspecialchars($config['site']['serverName']).' account.<BR>
+					      If you do not agree to these terms or do not want to create an '.htmlspecialchars($config['site']['serverName']).' account, please click on the "Cancel" button.
 					    </TD></TR></TABLE>
 					  </TD></TR>
 					</TABLE></TD></TR>
@@ -249,7 +249,7 @@ if($action == "saveaccount")
 	if(empty($reg_name))
 		$reg_form_errors[] = "Please enter account name.";
 	elseif(!check_account_name($reg_name))
-		$reg_form_errors[] = "Invalid account name format. Use only A-Z and numbers 0-9.";
+		$reg_form_errors[] = "Invalid account name format. Use only digits 0-9. Zero ( 0 ) cannot be first digit.";
 	if(empty($reg_email))
 		$reg_form_errors[] = "Please enter your email address.";
 	else
@@ -323,11 +323,7 @@ if($action == "saveaccount")
 		} else {
 			$reg_account->setFlag(Website::getCountryCode(long2ip(Visitor::getIP())));
 		}
-		if(isset($config['site']['newaccount_premdays']) && $config['site']['newaccount_premdays'] > 0)
-		{
-			$reg_account->set("premdays", $config['site']['newaccount_premdays']);
-			$reg_account->set("lastday", time());
-		}
+
 		$reg_account->save();
 		//show information about registration
 		if($config['site']['send_emails'] && $config['site']['create_account_verify_mail'])
@@ -335,7 +331,7 @@ if($action == "saveaccount")
 			$mailBody = '<html>
 			<body>
 			<h3>Your account name and password!</h3>
-			<p>You or someone else registred on server <a href="'.$config['server']['url'].'"><b>'.htmlspecialchars($config['server']['serverName']).'</b></a> with this e-mail.</p>
+			<p>You or someone else registred on server <a href="'.$config['site']['url'].'"><b>'.htmlspecialchars($config['site']['serverName']).'</b></a> with this e-mail.</p>
 			<p>Account name: <b>'.htmlspecialchars($reg_name).'</b></p>
 			<p>Password: <b>'.htmlspecialchars(trim($reg_password)).'</b></p>
 			<br />
@@ -360,7 +356,7 @@ if($action == "saveaccount")
 			$mail->IsHTML(true);
 			$mail->From = $config['site']['mail_address'];
 			$mail->AddAddress($reg_email);
-			$mail->Subject = $config['server']['serverName']." - Registration";
+			$mail->Subject = $config['site']['serverName']." - Registration";
 			$mail->Body = $mailBody;
 			if($mail->Send())
 			{
@@ -371,7 +367,7 @@ if($action == "saveaccount")
 				  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
 				    <BR>Your account name is <b>'.$reg_name.'</b>.
 					<BR><b><i>You will receive e-mail (<b>'.htmlspecialchars($reg_email).'</b>) with your password.</b></i><br>';
-				$main_content .= 'You will need the account name and your password to play on '.htmlspecialchars($config['server']['serverName']).'.
+				$main_content .= 'You will need the account name and your password to play on '.htmlspecialchars($config['site']['serverName']).'.
 				    Please keep your account name and password in a safe place and
 				    never give your account name or password to anybody.<BR><BR>';
 				$main_content .= '<br /><small>These informations were send on email address <b>'.htmlspecialchars($reg_email).'</b>. Please check your inbox/spam folder.';
@@ -389,7 +385,7 @@ if($action == "saveaccount")
 			<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Account Created</B></TD></TR>
 			<TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
 			  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
-			    <BR>Your account name is <b>'.htmlspecialchars($reg_name).'</b><br>You will need the account name and your password to play on '.htmlspecialchars($config['server']['serverName']).'.
+			    <BR>Your account name is <b>'.htmlspecialchars($reg_name).'</b><br>You will need the account name and your password to play on '.htmlspecialchars($config['site']['serverName']).'.
 			    Please keep your account name and password in a safe place and
 			    never give your account name or password to anybody.<BR><BR>';
 			if($config['site']['send_emails'] && $config['site']['send_register_email'])
@@ -397,7 +393,7 @@ if($action == "saveaccount")
 				$mailBody = '<html>
 				<body>
 				<h3>Your account name and password!</h3>
-				<p>You or someone else registred on server <a href="'.$config['server']['url'].'"><b>'.htmlspecialchars($config['server']['serverName']).'</b></a> with this e-mail.</p>
+				<p>You or someone else registred on server <a href="'.$config['site']['url'].'"><b>'.htmlspecialchars($config['site']['serverName']).'</b></a> with this e-mail.</p>
 				<p>Account name: <b>'.htmlspecialchars($reg_name).'</b></p>
 				<p>Password: <b>'.htmlspecialchars(trim($reg_password)).'</b></p>
 				<br />
@@ -422,7 +418,7 @@ if($action == "saveaccount")
 				$mail->IsHTML(true);
 				$mail->From = $config['site']['mail_address'];
 				$mail->AddAddress($reg_email);
-				$mail->Subject = $config['server']['serverName']." - Registration";
+				$mail->Subject = $config['site']['serverName']." - Registration";
 				$mail->Body = $mailBody;
 				if($mail->Send())
 					$main_content .= '<br /><small>These informations were send on email address <b>'.htmlspecialchars($reg_email).'</b>.';
