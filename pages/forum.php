@@ -246,7 +246,7 @@ if($action == 'show_thread')
         foreach($threads as $thread)
         {
             if(!is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-            $main_content .= '<tr bgcolor="'.$bgcolor.'"><td valign="top"><a href="?subtopic=characters&name='.urlencode($thread['charname']).'">'.htmlspecialchars($thread['charname']).'</a><br /><br /><font size="1">Profession: '.htmlspecialchars(Website::getVocationName($thread['vocation'])).'<br />Level: '.$thread['level'].'<br />';
+            $main_content .= '<tr bgcolor="'.$bgcolor.'"><td valign="top"><a href="?subtopic=characters&name='.urlencode($thread['charname']).'">'.htmlspecialchars($thread['charname']).'</a><br /><br /><font size="1">Profession: '.htmlspecialchars($thread['vocation']).'<br />Level: '.$thread['level'].'<br />';
 
             $posts = $SQL->query("SELECT COUNT(" . $SQL->fieldName('id') . ") AS 'posts' FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->fieldName('author_aid') . "=".(int) $thread['account_id'])->fetch();
             $main_content .= '<br />Posts: '.(int) $posts['posts'].'<br /></font></td><td valign="top">'.showPost(htmlspecialchars($thread['post_topic']), htmlspecialchars($thread['post_text']), $thread['post_smile']).'</td></tr>
