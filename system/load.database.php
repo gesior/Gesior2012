@@ -9,7 +9,6 @@
 		define('SERVERCONFIG_SQL_USER', 'mysqlUser');
 		define('SERVERCONFIG_SQL_PASS', 'mysqlPass');
 		define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
-		define('SERVERCONFIG_SQLITE_FILE', 'sqlFile');
 	} else {
 		new Error_Critic('#E-3', 'There is no key <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
 	}

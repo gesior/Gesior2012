@@ -1,6 +1,6 @@
 <?PHP
 # Account Maker Config
-$config['site']['serverPath'] = "C:/otsy/tfs100/";
+$config['site']['serverPath'] = "/home/ots/";
 $config['site']['useServerConfigCache'] = false;
 $config['site']['server_name'] = 'Forgotten';
 $towns_list = array(2 => 'Thais', 1 => 'Venore', 4 => 'Carlin');
@@ -10,7 +10,6 @@ $config['site']['item_images_url'] = 'http://item-images.ots.me/960/';
 $config['site']['item_images_extension'] = '.gif';
 $config['site']['flag_images_url'] = 'http://flag-images.ots.me/';
 $config['site']['flag_images_extension'] = '.png';
-$config['site']['encryptionType'] = 'sha1';
 
 # Create Account Options
 $config['site']['one_email'] = false;

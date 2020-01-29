@@ -48,12 +48,7 @@ $title = ucwords($subtopic) . ' - ' . Website::getServerConfig()->getValue('serv
 
 $topic = $subtopic;
 
-$passwordency = Website::getServerConfig()->getValue('passwordType');
-if (empty($passwordency)) {
-	$passwordency = 'sha1';
-} else if ($passwordency == 'plain') {
-	$passwordency = '';
-}
+$passwordency = 'sha1';
 
 $news_content = '';
 $vocation_name = array();
@@ -249,7 +244,10 @@ if(!ONLY_PAGE)
 		if($status_var > 0)
 			$statustimeout = $statustimeout * $status_var;
 	$statustimeout = $statustimeout / 1000;
-	$config['status'] = parse_ini_file('cache/DONT_EDIT_serverstatus.txt');
+    $config['status'] = [];
+	if (is_file('cache/serverstatus.txt')) {
+        $config['status'] = parse_ini_file('cache/serverstatus.txt');
+    }
 	if($config['status']['serverStatus_lastCheck']+$statustimeout < time())
 	{
 		$config['status']['serverStatus_checkInterval'] = $statustimeout+3;
@@ -271,7 +269,7 @@ if(!ONLY_PAGE)
 			$config['status']['serverStatus_players'] = 0;
 			$config['status']['serverStatus_playersMax'] = 0;
 		}
-		$file = fopen("cache/DONT_EDIT_serverstatus.txt", "w");
+		$file = fopen("cache/serverstatus.txt", "w");
 		$file_data = '';
 		foreach($config['status'] as $param => $data)
 		{
@@ -283,7 +281,7 @@ if(!ONLY_PAGE)
 		fclose($file);
 	}
 	//PAGE VIEWS COUNTER
-	$views_counter = "cache/DONT_EDIT_usercounter.txt";
+	$views_counter = "cache/usercounter.txt";
 	// checking if the file exists
 	if (file_exists($views_counter))
 	{

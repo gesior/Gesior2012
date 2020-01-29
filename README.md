@@ -1,11 +1,8 @@
 Gesior2012
 ==========
 
-Gesior 2012 - Account Maker [website] for OTSes
-Select 'branch' for your OTS (TFS) version.
+Gesior 2012 - Account Maker (website) for OTSes
 
-## TODO list
+Version for TFS 1.2+ engine ( https://github.com/otland/forgottenserver/tree/1.2 ).
 
-* Improve the design and functionality of shop system;
-* Add social box on right sidebar of TIBIACOM layout.
-* Update the experience table with new levels.
+Tested on PHP 7.0 with MariaDB.

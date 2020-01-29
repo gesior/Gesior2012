@@ -1020,8 +1020,9 @@ if($action == 'createguild')
 	{
 		$new_guild = new Guild();
 		$new_guild->setCreationData(time());
+        $new_guild->setCreateIP(Visitor::getIP());
 		$new_guild->setName($new_guild_name);
-		$new_guild->setOwner($player);
+        $new_guild->setOwner($player);
 		$new_guild->setDescription('New guild. Leader must edit this text :)');
 		$new_guild->setGuildLogo('image/gif', Website::getFileContents('./images/default_guild_logo.gif'));
 		

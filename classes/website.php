@@ -28,9 +28,6 @@ class Website extends WebsiteErrors
 			case Database::DB_MYSQL:
 				self::$SQL = new Database_MySQL();
 				break;
-			case Database::DB_SQLITE:
-				self::$SQL = new Database_SQLite();
-				break;
 		}
 	}
 
@@ -120,19 +117,7 @@ class Website extends WebsiteErrors
 
 	public static function updatePasswordEncryption()
 	{
-		$encryptionTypeLowerd = strtolower(self::getServerConfig()->getValue('passwordType'));
-		if (empty($encryptionTypeLowerd)) { // TFS 1.1+
-			$encryptionTypeLowerd = $config['site']['encryptionType'];
-			if (empty($encryptionTypeLowerd)) {
-				$encryptionTypeLowerd = 'sha1';
-			}
-		}
-
-		if (isset(self::$passwordsEncryptions[$encryptionTypeLowerd])) {
-			self::$passwordsEncryption = $encryptionTypeLowerd;
-		} else {
-			new Error_Critic('#C-12', 'Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
-		}
+	    self::$passwordsEncryption = 'sha1';
 	}
 
 	public static function getPasswordsEncryption()
