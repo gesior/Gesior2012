@@ -7,8 +7,6 @@ class Database extends PDO
 	public $connectionError = '';
 	private $connected = false;
 	const DB_MYSQL = 1;
-	const DB_SQLITE = 2;
-	const DB_PGSQL = 3;
 
 	private $db_driver;
 	private $db_host = 'localhost';
@@ -157,14 +155,6 @@ class Database extends PDO
 			return parent::getAttribute($attribute);
 		else
 			new Error_Critic('', 'Website is not connected to database. Cannot execute getAttribute($attribute)');
-	}
-
-	public static function getAvailableDrivers()
-	{
-		if($this->isConnected() || $this->connect())
-			return parent::getAvailableDrivers();
-		else
-			new Error_Critic('', 'Website is not connected to database. Cannot execute getAvailableDrivers()');
 	}
 
 	public function inTransaction()

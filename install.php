@@ -149,7 +149,6 @@ elseif($page == 'step')
 			define('SERVERCONFIG_SQL_USER', 'mysqlUser');
 			define('SERVERCONFIG_SQL_PASS', 'mysqlPass');
 			define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
-			define('SERVERCONFIG_SQLITE_FILE', 'sqlFile');
 		}
 		else
 			new Error_Critic('#E-3', 'There is no key <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
@@ -184,14 +183,33 @@ elseif($page == 'step')
 		echo '<h1>STEP '.$step.'</h1>Informations<br>';
 		echo 'Welcome to Gesior Account Maker installer. <b>After 5 simple steps account maker will be ready to use!</b><br />';
 		// check access to write files
-		$writeable = array('config/config.php', 'cache', 'cache/flags', 'cache/DONT_EDIT_usercounter.txt', 'cache/DONT_EDIT_serverstatus.txt', 'custom_scripts', 'install.txt');
+		$writeable = array('config/config.php', 'cache', 'cache/flags', 'cache/signatures', 'cache/usercounter.txt', 'cache/serverstatus.txt');
 		foreach($writeable as $fileToWrite)
 		{
-			if(is_writable($fileToWrite))
-				echo '<span style="color:green">CAN WRITE TO FILE: <b>' . $fileToWrite . '</b></span><br />';
+		    if(!file_exists($fileToWrite))
+            {
+		        if (!touch($fileToWrite))
+                    echo '<span style="color:red">CANNOT WRITE/CREATE TO FILE/DIR: <b>' . $fileToWrite . '</b> - edit file/dir access for PHP</span><br />';
+		        else
+                    echo '<span style="color:green">CAN WRITE TO FILE/DIR: <b>' . $fileToWrite . '</b></span><br />';
+            }
+		    elseif(is_writable($fileToWrite))
+				echo '<span style="color:green">CAN WRITE TO FILE/DIR: <b>' . $fileToWrite . '</b></span><br />';
 			else
-				echo '<span style="color:red">CANNOT WRITE TO FILE: <b>' . $fileToWrite . '</b> - edit file access for PHP [on linux: chmod]</span><br />';
+				echo '<span style="color:red">CANNOT WRITE TO FILE/DIR: <b>' . $fileToWrite . '</b> - edit file/dir access for PHP</span><br />';
 		}
+        $executable = array('cache', 'cache/flags', 'cache/signatures', './');
+        foreach($executable as $file)
+        {
+            if(!file_exists($file))
+            {
+                echo '<span style="color:red">DOES NOT EXIST: <b>' . $file . '</b> </span><br />';
+            }
+            elseif(is_executable($file))
+                echo '<span style="color:green">CAN EXECUTE FILE/DIR: <b>' . $file . '</b></span><br />';
+            else
+                echo '<span style="color:red">CANNOT EXECUTE FILE/DIR: <b>' . $file . '</b> - edit file access for PHP</span><br />';
+        }
 	}
 	elseif($step == 1)
 	{
@@ -248,14 +266,14 @@ elseif($page == 'step')
 		$columns[] = array('accounts', 'last_post', 'INT', '11', '0');
 		$columns[] = array('accounts', 'flag', 'VARCHAR', '80', '');
 
-		$columns[] = array('guilds', 'description', 'TEXT', '', '');
+		$columns[] = array('guilds', 'description', 'TEXT', '', NULL);
 		$columns[] = array('guilds', 'guild_logo', 'MEDIUMBLOB', '', NULL);
 		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0');
 		$columns[] = array('guilds', 'balance', 'BIGINT UNSIGNED', '', '0');
 
 		$columns[] = array('players', 'deleted', 'TINYINT', '1', '0');
 		$columns[] = array('players', 'description', 'VARCHAR', '255', '');
-		$columns[] = array('players', 'comment', 'TEXT', '', '');
+		$columns[] = array('players', 'comment', 'TEXT', '', NULL);
 		$columns[] = array('players', 'create_ip', 'INT', '11', '0');
 		$columns[] = array('players', 'create_date', 'INT', '11', '0');
 		$columns[] = array('players', 'hide_char', 'INT', '11', '0');
@@ -324,12 +342,17 @@ elseif($page == 'step')
 		
 		foreach($columns as $column)
 		{
-			if($column[4] === NULL && $SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '  NULL DEFAULT NULL') !== false)
-				echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-			elseif($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
-				echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-			else
-				echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+			if($column[4] === NULL) {
+                if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '  NULL DEFAULT NULL'))
+                    echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                else
+                    echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+			} else {
+			    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
+                    echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                else
+                    echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+            }
 		}
 		foreach($tables[$SQL->getDatabaseDriver()] as $tableName => $tableQuery)
 		{
@@ -353,6 +376,7 @@ elseif($page == 'step')
 		$account = new Account(1, Account::LOADTYPE_NAME);
 		if(!$account->isLoaded())
 		{
+		    $account = new Account();
 			$account->setName(1);
 			$account->setPassword(1);
 			$account->setMail(rand(0,999999) . '@gmail.com');
@@ -365,6 +389,7 @@ elseif($page == 'step')
 		$newPlayer = new Player('Account Manager', Player::LOADTYPE_NAME);
 		if(!$newPlayer->isLoaded())
 		{
+            $newPlayer = new Player();
 			$newPlayer->setComment('');
 			$newPlayer->setName('Account Manager');
 			$newPlayer->setAccountID($account->getID());
@@ -385,7 +410,8 @@ elseif($page == 'step')
 			$newPlayer->setLookBody(44);
 			$newPlayer->setLookFeet(98);
 			$newPlayer->setLookHead(15);
-			$newPlayer->setLookLegs(76);
+            $newPlayer->setLookLegs(76);
+            $newPlayer->setLookAddons(0);
 
 			$newPlayer->setSkill(0, 10);
 			$newPlayer->setSkill(1, 10);
@@ -450,20 +476,19 @@ elseif($page == 'step')
 				$account = new Account(1, Account::LOADTYPE_NAME);
 				if($account->isLoaded())
 				{
-					$account->setPassword($newpass); // setPassword encrypt it to ots encryption
+					$account->setPassword($newpass);
 					$account->setPageAccess(3);
-					$account->setFlag('unknown');
+					$account->setFlag('pl');
 					$account->save();
 				}
 				else
 				{
 					$newAccount = new Account();
 					$newAccount->setName(1);
-					$newAccount->setPassword($newpass); // setPassword encrypt it to ots encryption
+					$newAccount->setPassword($newpass);
 					$newAccount->setMail(rand(0,999999) . '@gmail.com');
 					$newAccount->setPageAccess(3);
-					$newAccount->setGroupID(1);
-					$newAccount->setFlag('unknown');
+					$newAccount->setFlag('pl');
 					$newAccount->setCreateIP(Visitor::getIP());
 					$newAccount->setCreateDate(time());
 				}

@@ -8,7 +8,7 @@ class Player extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_ACCOUNT_ID = 'account_id';
 	public static $table = 'players';
-	public $data = array('name' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'skull' => null, 'skulltime' => null, 'lastlogout' => null, 'blessings' => null, 'balance' => null, 'stamina' => null, 'skill_fist' => null, 'skill_fist_tries' => null, 'skill_club' => null, 'skill_club_tries' => null, 'skill_sword' => null, 'skill_sword_tries' => null, 'skill_axe' => null, 'skill_axe_tries' => null, 'skill_dist' => null, 'skill_dist_tries' => null, 'skill_shielding' => null, 'skill_shielding_tries' => null, 'skill_fishing' => null, 'skill_fishing_tries' => null , 'deleted' => null, 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null);
+	public $data = array('name' => null, 'group_id' => 1, 'account_id' => null, 'level' => 1, 'vocation' => 0, 'health' => 1, 'healthmax' => 1, 'experience' => 0, 'lookbody' => 0, 'lookfeet' => 0, 'lookhead' => 0, 'looklegs' => 0, 'looktype' => 128, 'lookaddons' => 0, 'maglevel' => 0, 'mana' => 0, 'manamax' => 0, 'manaspent' => 0, 'soul' => 0, 'town_id' => 0, 'posx' => 0, 'posy' => 0, 'posz' => 0, 'conditions' => null, 'cap' => 0, 'sex' => 0, 'lastlogin' => 0, 'lastip' => 0, 'save' => 1, 'skull' => 0, 'skulltime' => 0, 'lastlogout' => 0, 'blessings' => 0, 'balance' => 0, 'stamina' => 0, 'skill_fist' => 10, 'skill_fist_tries' => 0, 'skill_club' => 10, 'skill_club_tries' => 0, 'skill_sword' => 10, 'skill_sword_tries' => 0, 'skill_axe' => 10, 'skill_axe_tries' => 0, 'skill_dist' => 10, 'skill_dist_tries' => 0, 'skill_shielding' => 10, 'skill_shielding_tries' => 0, 'skill_fishing' => 10, 'skill_fishing_tries' => 0 , 'deleted' => 0, 'create_ip' => 0, 'create_date' => 0, 'comment' => '', 'hide_char' => 0);
 	public static $fields = array('id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'skull', 'skulltime', 'lastlogout', 'blessings', 'balance', 'stamina', 'skill_fist', 'skill_fist_tries', 'skill_club', 'skill_club_tries', 'skill_sword', 'skill_sword_tries', 'skill_axe', 'skill_axe_tries', 'skill_dist', 'skill_dist_tries', 'skill_shielding', 'skill_shielding_tries', 'skill_fishing', 'skill_fishing_tries', 'deleted', 'create_ip', 'create_date', 'comment', 'hide_char');
 	public static $skillNames = array('fist', 'club', 'sword', 'axe', 'dist', 'shielding', 'fishing');
 	public $items;
@@ -183,7 +183,7 @@ class Player extends ObjectData
 			new Error_Critic('', 'Player::getSkillCount() - Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
-	public function setSkillCount($id, $count)
+	public function setSkillCount($id, $value)
 	{
 		if(isset(self::$skillNames[$id]))
 			$this->data['skill_' . self::$skillNames[$id] . '_tries'] = $value;
