@@ -1,6 +1,6 @@
 <?PHP
 # Account Maker Config
-$config['site']['serverPath'] = "C:/otsy/tfs100/";
+$config['site']['serverPath'] = "C:/ots/realots77/";
 $config['site']['useServerConfigCache'] = false;
 $config['site']['server_name'] = 'Forgotten';
 $towns_list = array(2 => 'Thais', 1 => 'Venore', 4 => 'Carlin');
