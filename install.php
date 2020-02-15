@@ -24,7 +24,7 @@ function autoLoadClass($className)
 		if(file_exists('./classes/' . strtolower($className) . '.php'))
 			include_once('./classes/' . strtolower($className) . '.php');
 		else
-			new Error_Critic('#E-7', 'Cannot load class <b>' . $className . '</b>, file <b>./classes/class.' . strtolower($className) . '.php</b> doesn\'t exist');
+			throw new RuntimeException('#E-7 -Cannot load class <b>' . $className . '</b>, file <b>./classes/class.' . strtolower($className) . '.php</b> doesn\'t exist');
 }
 spl_autoload_register('autoLoadClass');
 
@@ -119,29 +119,8 @@ elseif($page == 'step')
 	if($step >= 2 && $step <= 5)
 	{
 		//load server config $config['server']
-		if(Website::getWebsiteConfig()->getValue('useServerConfigCache'))
-		{
-			// use cache to make website load faster
-			if(Website::fileExists('./config/server.config.php'))
-			{
-				$tmp_php_config = new ConfigPHP('./config/server.config.php');
-				$config['server'] = $tmp_php_config->getConfig();
-			}
-			else
-			{
-				// if file isn't cache we should load .lua file and make .php cache
-				$tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
-				$config['server'] = $tmp_lua_config->getConfig();
-				$tmp_php_config = new ConfigPHP();
-				$tmp_php_config->setConfig($tmp_lua_config->getConfig());
-				$tmp_php_config->saveToFile('./config/server.config.php');
-			}
-		}
-		else
-		{
-			$tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
-			$config['server'] = $tmp_lua_config->getConfig();
-		}
+        $tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
+        $config['server'] = $tmp_lua_config->getConfig();
 		if(Website::getServerConfig()->isSetKey('mysqlHost'))
 		{
 			define('SERVERCONFIG_SQL_HOST', 'mysqlHost');
@@ -151,30 +130,29 @@ elseif($page == 'step')
 			define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
 		}
 		else
-			new Error_Critic('#E-3', 'There is no key <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
+			throw new LogicException('#E-3 There is no key <b>mysqlHost</b> in server config');
 
 		Website::setDatabaseDriver(Database::DB_MYSQL);
 		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
 			Website::getDBHandle()->setDatabaseHost(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_HOST));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
+			throw new RuntimeException('#E-7 -There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
 		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PORT))
 			Website::getDBHandle()->setDatabasePort(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PORT));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
+			throw new RuntimeException('#E-7 -There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
 		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
 			Website::getDBHandle()->setDatabaseName(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
+			throw new RuntimeException('#E-7 -There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
 		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_USER))
 			Website::getDBHandle()->setDatabaseUsername(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_USER));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
+			throw new RuntimeException('#E-7 -There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
 		if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
 			Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
 		else
-			new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
-		Website::updatePasswordEncryption();
+			throw new RuntimeException('#E-7 -There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
 		$SQL = Website::getDBHandle();
 	}
 
@@ -453,7 +431,7 @@ elseif($page == 'step')
 			}
 		}
 		else
-			new Error_Critic('', 'Character <i>Account Manager</i> does not exist. Cannot install sample characters!');
+			throw new RuntimeException('Character <i>Account Manager</i> does not exist. Cannot install sample characters!');
 	}
 	elseif($step == 5)
 	{
@@ -497,7 +475,7 @@ elseif($page == 'step')
 				$logged = TRUE;
 				echo '<h1>Admin account login: 1<br>Admin account password: '.$newpass.'</h1><br/><h3>It\'s end of installation. Installation is blocked!</h3>'; 
 				if(!unlink('install.txt'))
-					new Error_Critic('', 'Cannot remove file <i>install.txt</i>. You must remove it to disable installer. I recommend you to go to step <i>0</i> and check if any other file got problems with WRITE permission.');
+					throw new RuntimeException('Cannot remove file <i>install.txt</i>. You must remove it to disable installer. I recommend you to go to step <i>0</i> and check if any other file got problems with WRITE permission.');
 			}
 		}
 	}

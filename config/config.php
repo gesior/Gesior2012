@@ -1,7 +1,6 @@
 <?PHP
 # Account Maker Config
 $config['site']['serverPath'] = "/home/ots/";
-$config['site']['useServerConfigCache'] = false;
 $config['site']['server_name'] = 'Forgotten';
 $towns_list = array(2 => 'Thais', 1 => 'Venore', 4 => 'Carlin');
 

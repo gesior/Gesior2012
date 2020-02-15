@@ -29,7 +29,7 @@ class Player extends ObjectData
 		if(in_array($search_by, self::$fields))
 			$search_string = $this->getDatabaseHandler()->fieldName($search_by) . ' = ' . $this->getDatabaseHandler()->quote($search_text);
 		else
-			new Error_Critic('', 'Wrong Player search_by type.');
+            throw new InvalidArgumentException('Wrong Player search_by type.');
 		$fieldsArray = array();
 		foreach(self::$fields as $fieldName)
 			$fieldsArray[] = $this->getDatabaseHandler()->fieldName($fieldName);
@@ -88,7 +88,7 @@ class Player extends ObjectData
 			$this->items->save();
 		}
 		else
-			new Error_Critic('', 'Player::saveItems() - items not loaded, cannot save');
+            throw new LogicException('Items not loaded, cannot save');
 	}
 
 	public function loadStorages()
@@ -118,7 +118,7 @@ class Player extends ObjectData
 			}
 		}
 		else
-			new Error_Critic('', 'Player::saveStorages() - storages not loaded, cannot save');
+			throw new LogicException('Storages not loaded, cannot save');
 	}
 
 	public function getStorage($key)
@@ -166,7 +166,7 @@ class Player extends ObjectData
 		if(isset(self::$skillNames[$id]))
 			return $this->data['skill_' . self::$skillNames[$id]];
 		else
-			new Error_Critic('', 'Player::getSkill() - Skill ' . htmlspecialchars($id) . ' does not exist');
+			throw new InvalidArgumentException('Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
 	public function setSkill($id, $value)
@@ -180,7 +180,7 @@ class Player extends ObjectData
 		if(isset(self::$skillNames[$id]))
 			return $this->data['skill_' . self::$skillNames[$id] . '_tries'];
 		else
-			new Error_Critic('', 'Player::getSkillCount() - Skill ' . htmlspecialchars($id) . ' does not exist');
+            throw new InvalidArgumentException('Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
 	public function setSkillCount($id, $value)

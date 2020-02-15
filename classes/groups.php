@@ -12,7 +12,7 @@ class Groups implements Iterator, Countable
 	{
 		$XML = new DOMDocument();
 		if(!$XML->load($file))
-			new Error_Critic('', 'Groups::__construct - cannot load file <b>' . htmlspecialchars($file) . '</b>');
+            throw new InvalidArgumentException('Cannot load file <b>' . htmlspecialchars($file) . '</b>');
 
 		$this->XML = $XML;
 
@@ -26,7 +26,7 @@ class Groups implements Iterator, Countable
 				$this->groups[$groupData['id']] = new Group($groupData);
 			}
 			else
-				new Error_Critic('#C', 'Cannot load group. <b>id</b> or/and <b>name</b> parameter is missing');
+                throw new RuntimeException('Cannot load group. <b>id</b> or/and <b>name</b> parameter is missing');
 		}
 	}
 	/*
