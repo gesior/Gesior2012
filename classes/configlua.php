@@ -2,7 +2,8 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class ConfigLUA extends Errors // NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS PHP CODE
+// NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS PHP CODE
+class ConfigLUA
 {
 	private $config;
 
