@@ -12,7 +12,7 @@ class Vocations implements Iterator, Countable
 	{
 		$XML = new DOMDocument();
 		if(!$XML->load($file))
-			new Error_Critic('', 'Vocations::__construct - cannot load file <b>' . htmlspecialchars($file) . '</b>');
+            throw new InvalidArgumentException('Cannot load file <b>' . htmlspecialchars($file) . '</b>');
 
 		$this->XML = $XML;
 		$_tmp_vocations = array();
@@ -77,7 +77,7 @@ class Vocations implements Iterator, Countable
 				$_tmp_vocations[$vocation->getAttribute('id')] = $vocationData;
 			}
 			else
-				new Error_Critic('#C', 'Cannot load vocation. <b>id</b> or/and <b>name</b> parameter is missing');
+				throw new RuntimeException('Cannot load vocation. <b>id</b> or/and <b>name</b> parameter is missing');
 		}
 		foreach($_tmp_vocations as $_tmp_vocation)
 		{

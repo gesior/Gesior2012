@@ -64,7 +64,7 @@ class ItemsList extends DatabaseList
 			}
 		}
 		else
-			new Error_Critic('Cannot save ItemsList. Player ID not set.');
+            throw new LogicException('Cannot save ItemsList. Player ID not set.');
 	}
 
 	public function setPlayerId($value)

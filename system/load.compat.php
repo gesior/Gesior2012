@@ -17,10 +17,10 @@ if(Functions::isValidFolderName($_REQUEST['subtopic']))
 		$subtopic = $_REQUEST['subtopic'];
 	}
 	else
-		new Error_Critic('CRITICAL ERROR', 'Cannot load page <b>' . htmlspecialchars($_REQUEST['subtopic']) . '</b>, file does not exist.');
+		throw new InvalidArgumentException('Cannot load page <b>' . htmlspecialchars($_REQUEST['subtopic']) . '</b>, file does not exist.');
 }
 else
-	new Error_Critic('CRITICAL ERROR', 'Cannot load page <b>' . htmlspecialchars($_REQUEST['subtopic']) . '</b>, invalid file name [contains illegal characters].');
+    throw new InvalidArgumentException('Cannot load page <b>' . htmlspecialchars($_REQUEST['subtopic']) . '</b>, invalid file name [contains illegal characters].');
 
 // action that page should execute
 if(isset($_REQUEST['action']))
@@ -70,16 +70,6 @@ function microtime_float()
 function isPremium($premdays, $lastday)
 {
 	return Functions::isPremium($premdays, $lastday);
-}
-
-function saveconfig_ini($config)
-{
-	new Error_Critic('', 'function <i>saveconfig_ini</i> is deprecated. Do not use it.');
-}
-
-function password_ency($password, $account = null)
-{
-	new Error_Critic('', 'function <i>password_ency</i> is deprecated. Do not use it.');
 }
 
 function check_name($name)
@@ -205,11 +195,6 @@ function check_mail($email)
 	return (preg_match($ok, $email))? true: false;
 }
 
-function items_on_player($characterid, $pid)
-{
-	new Error_Critic('', 'function <i>items_on_player</i> is deprecated. Do not use it. It used too many queries!');
-}
-
 function getReason($reasonId)
 {
 	return Functions::getBanReasonName($reasonId);
@@ -228,11 +213,6 @@ function short_text($text, $chars_limit)
 function news_place()
 {
 	return '';
-}
-//set monster of week
-function logo_monster()
-{
-	new Error_Critic('', 'function <i>logo_monster</i> is deprecated. Do not use it!');
 }
 
 // we don't want to count AJAX scripts/guild images as page views, we also don't need status

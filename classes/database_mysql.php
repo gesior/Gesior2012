@@ -19,15 +19,14 @@ class Database_MySQL extends Database
 		}
 		catch(PDOException $error)
 		{
-			new Error_Critic('', 'CANNOT CONNECT TO DATABASE: ' . $error->getMessage());
-			return false;
+            throw new RuntimeException('CANNOT CONNECT TO DATABASE: ' . $error->getMessage());
 		}
 	}
 
 	public function fieldName($name)
 	{
 		if(strspn($name, "1234567890qwertyuiopasdfghjklzxcvbnm_") != strlen($name))
-			new Error_Critic('', 'Invalid field name format.');
+			throw new InvalidArgumentException('Invalid field name format.');
 
 		return '`' . $name . '`';
 	}
@@ -35,7 +34,7 @@ class Database_MySQL extends Database
 	public function tableName($name)
 	{
 		if(strspn($name, "1234567890qwertyuiopasdfghjklzxcvbnm_") != strlen($name))
-			new Error_Critic('', 'Invalid table name format.');
+            throw new InvalidArgumentException('Invalid table name format.');
 
 		return '`' . $name . '`';
 	}

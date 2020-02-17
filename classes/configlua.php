@@ -2,7 +2,8 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class ConfigLUA extends Errors // NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS PHP CODE
+// NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS PHP CODE
+class ConfigLUA
 {
 	private $config;
 
@@ -21,7 +22,7 @@ class ConfigLUA extends Errors // NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS 
 		}
 		else
 		{
-			new Error_Critic('#C-2', 'ERROR: <b>#C-2</b> : Class::ConfigLUA - LUA config file doesn\'t exist. Path: <b>' . $path . '</b>');
+			throw new InvalidArgumentException('#C-2 LUA config file doesn\'t exist. Path: <b>' . $path . '</b>');
 		}
 	}
 
@@ -56,7 +57,7 @@ class ConfigLUA extends Errors // NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS 
 							$ret = @eval("return $value;");
 							if((string) $ret == '') // = parser error
 							{
-								new Error_Critic('', 'ERROR: <b>#C-1</b> : Class::ConfigLUA - Line <b>' . ($ln + 1) . '</b> of LUA config file is not valid [key: <b>' . $key . '</b>]');
+                                throw new RuntimeException('#C-1 - Line <b>' . ($ln + 1) . '</b> of LUA config file is not valid [key: <b>' . $key . '</b>]');
 							}
 							$this->config[ $key ] = $ret;
 						}
@@ -70,7 +71,7 @@ class ConfigLUA extends Errors // NOT SAFE CLASS, LUA CONFIG CAN BE EXECUTED AS 
 		if(isset($this->config[ $key ]))
 			return $this->config[ $key ];
 		else
-			new Error_Critic('#C-3', 'ERROR: <b>#C-3</b> : Class::ConfigLUA - Key <b>' . $key . '</b> doesn\'t exist.');
+			throw new RuntimeException('#C-3 Config key <b>' . $key . '</b> doesn\'t exist.');
 	}
 
 	public function isSetKey($key)

@@ -26,7 +26,7 @@ class Account extends ObjectData
 		if(in_array($search_by, self::$fields))
 			$search_string = $this->getDatabaseHandler()->fieldName($search_by) . ' = ' . $this->getDatabaseHandler()->quote($search_text);
 		else
-			new Error_Critic('', 'Wrong Account search_by type.');
+		    throw new InvalidArgumentException('Wrong Account search_by type.');
 		$fieldsArray = array();
 		foreach(self::$fields as $fieldName)
 			$fieldsArray[$fieldName] = $this->getDatabaseHandler()->fieldName($fieldName);

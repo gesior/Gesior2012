@@ -2,22 +2,14 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class Website extends WebsiteErrors
+class Website
 {
 	public static $serverConfig;
 	public static $websiteConfig;
 	public static $vocations;
 	public static $groups;
 	public static $SQL;
-	public static $passwordsEncryptions = array(
-	'plain' => 'plain',
-	'md5' => 'md5',
-	'sha1' => 'sha1',
-	'sha256' => 'sha256',
-	'sha512' => 'sha512',
-	'vahash' => 'vahash'
-	);
-	private static $passwordsEncryption;
+	private static $passwordsEncryption = 'sha1';
 
 	public static function setDatabaseDriver($value)
 	{
@@ -36,7 +28,7 @@ class Website extends WebsiteErrors
 		if(isset(self::$SQL))
 			return self::$SQL;
 		else
-			new Error_Critic('#C-9', 'ERROR: <b>#C-9</b> : Class::Website - getDBHandle(), database driver not set.');
+			throw new RuntimeException('#C-9 Database driver not set.');
 	}	
 
 	public static function loadWebsiteConfig()
@@ -69,25 +61,12 @@ class Website extends WebsiteErrors
 		return self::$serverConfig;
 	}
 
-	public static function getConfig($fileNameArray)
-	{
-		$fileName = implode('_', $fileNameArray);
-
-		if(Functions::isValidFolderName($fileName))
-		{
-			$_config = new ConfigPHP('./config/' . $fileName . '.php');
-			return $_config;
-		}
-		else
-			new Error_Critic('', __METHOD__ . ' - invalid folder/file name <b>' . htmlspecialchars('./config/' . $fileName . '.php') . '</b>');
-	}
-
 	public static function getFileContents($path)
 	{
 		$file = file_get_contents($path);
 
 		if($file === false)
-			new Error_Critic('', __METHOD__ . ' - Cannot read from file: <b>' . htmlspecialchars($path) . '</b>');
+			throw new RuntimeException('Cannot read from file: <b>' . htmlspecialchars($path) . '</b>');
 
 		return $file;
 	}
@@ -100,7 +79,7 @@ class Website extends WebsiteErrors
 			$status = file_put_contents($path, $data);
 
 		if($status === false)
-			new Error_Critic('', __METHOD__ . ' - Cannot write to: <b>' . htmlspecialchars($path) . '</b>');
+            throw new RuntimeException('Cannot write to: <b>' . htmlspecialchars($path) . '</b>');
 
 		return $status;
 	}
@@ -115,34 +94,9 @@ class Website extends WebsiteErrors
 		return file_exists($path);
 	}
 
-	public static function updatePasswordEncryption()
-	{
-	    self::$passwordsEncryption = 'sha1';
-	}
-
-	public static function getPasswordsEncryption()
-	{
-		return self::$passwordsEncryption;
-	}
-
-	public static function validatePasswordsEncryption($encryption)
-	{
-		if(isset(self::$passwordsEncryptions[strtolower($encryption)]))
-			return true;
-		else
-			return false;
-	}
-	
 	public static function encryptPassword($password, $account = null)
 	{
-		// add SALT for 0.4
-		if(isset(self::$passwordsEncryption))
-			if(self::$passwordsEncryption == 'plain')
-				return $password;
-			else
-				return hash(self::$passwordsEncryption, $password);
-		else
-			new Error_Critic('#C-13', 'You cannot use Website::encryptPassword(\$password) when password encryption is not set.');
+		return hash(self::$passwordsEncryption, $password);
 	}
 
 	public static function loadVocations()
