@@ -2,10 +2,11 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class Database extends PDO
+class Database
 {
 	public $connectionError = '';
 	private $connected = false;
+	protected $dbh;
 	const DB_MYSQL = 1;
 
 	private $db_driver;
@@ -112,7 +113,7 @@ class Database extends PDO
 	public function beginTransaction()
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::beginTransaction();
+			return $this->dbh->beginTransaction();
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute "beginTransaction()"');
 	}
@@ -120,7 +121,7 @@ class Database extends PDO
 	public function commit()
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::commit();
+			return $this->dbh->commit();
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute "commit()"');
 	}
@@ -128,7 +129,7 @@ class Database extends PDO
 	public function errorCode()
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::errorCode();
+			return $this->dbh->errorCode();
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute "errorCode()"');
 	}
@@ -136,7 +137,7 @@ class Database extends PDO
 	public function errorInfo()
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::errorInfo();
+			return $this->dbh->errorInfo();
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute errorInfo()');
 	}
@@ -144,7 +145,7 @@ class Database extends PDO
 	public function exec($statement)
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::exec($statement);
+			return $this->dbh->exec($statement);
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute exec($statement)');
 	}
@@ -152,7 +153,7 @@ class Database extends PDO
 	public function getAttribute($attribute)
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::getAttribute($attribute);
+			return $this->dbh->getAttribute($attribute);
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute getAttribute($attribute)');
 	}
@@ -160,7 +161,7 @@ class Database extends PDO
 	public function inTransaction()
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::inTransaction();
+			return $this->dbh->inTransaction();
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute inTransaction()');
 	}
@@ -168,7 +169,7 @@ class Database extends PDO
 	public function lastInsertId($name = NULL)
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::lastInsertId($name);
+			return $this->dbh->lastInsertId($name);
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute ');
 	}
@@ -176,7 +177,7 @@ class Database extends PDO
 	public function prepare($statement, $driver_options = array())
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::prepare($statement, $driver_options);
+			return $this->dbh->prepare($statement, $driver_options);
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute lastInsertId($name)');
 	}
@@ -188,7 +189,7 @@ class Database extends PDO
 		//echo'<br />' . $statement . '<br />';
 		if($this->isConnected() || $this->connect())
 		{
-			$ret = parent::query($statement);
+			$ret = $this->dbh->query($statement);
 			if($this->printQueries)
 			{
 				$_errorInfo = $this->errorInfo();
@@ -208,7 +209,7 @@ class Database extends PDO
 	public function quote($string, $parameter_type = PDO::PARAM_STR)
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::quote($string, $parameter_type);
+			return $this->dbh->quote($string, $parameter_type);
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute quote($string, $parameter_type)');
 	}
@@ -216,7 +217,7 @@ class Database extends PDO
 	public function rollBack()
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::rollBack();
+			return $this->dbh->rollBack();
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute rollBack()');
 	}
@@ -224,7 +225,7 @@ class Database extends PDO
 	public function setAttribute($attribute, $value)
 	{
 		if($this->isConnected() || $this->connect())
-			return parent::setAttribute($attribute, $value);
+			return $this->dbh->setAttribute($attribute, $value);
 		else
 			throw new RuntimeException('Website is not connected to database. Cannot execute setAttribute($attribute, $value)');
 	}
