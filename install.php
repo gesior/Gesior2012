@@ -304,24 +304,33 @@ elseif($page == 'step')
 		    if (isset($column[5]) && $column[5]) {
                 $unsignedSql = ' UNSIGNED';
             }
-			if($column[4] === NULL) {
-                if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . $unsignedSql . '  NULL DEFAULT NULL'))
-                    echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-                else
-                    echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
-			} else {
-			    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . $unsignedSql . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
-                    echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-                else
-                    echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+            try {
+                if($column[4] === NULL) {
+                    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . $unsignedSql . '  NULL DEFAULT NULL'))
+                        echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                    else
+                        echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+                } else {
+                    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . $unsignedSql . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
+                        echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                    else
+                        echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+                }
+            } catch (PDOException $e) {
+                echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
             }
 		}
 		foreach($tables[$SQL->getDatabaseDriver()] as $tableName => $tableQuery)
 		{
-			if($SQL->query($tableQuery) !== false)
-				echo "<span style=\"color:green\">Table <b>" . $tableName . "</b> created.</span><br />";
-			else
-				echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+		    try {
+                if ($SQL->query($tableQuery) !== false) {
+                    echo "<span style=\"color:green\">Table <b>" . $tableName . "</b> created.</span><br />";
+                } else {
+                    echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+                }
+            } catch (PDOException $e) {
+                echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+            }
 		}
 		echo 'Tables and columns added to database.<br>Go to <a href="install.php?page=step&step=4">STEP 4 - Add samples</a>';
 	}

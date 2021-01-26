@@ -4,10 +4,10 @@ $config['site']['serverPath'] = "/home/ots/";
 $config['site']['server_name'] = 'Forgotten';
 $towns_list = array(2 => 'Thais', 1 => 'Venore', 4 => 'Carlin');
 
-$config['site']['outfit_images_url'] = 'http://outfit-images.ots.me/outfit.php';
-$config['site']['item_images_url'] = 'http://item-images.ots.me/960/';
+$config['site']['outfit_images_url'] = 'https://outfit-images.ots.me/idleOutfits1092/outfit.php';
+$config['site']['item_images_url'] = 'https://item-images.ots.me/1092/';
 $config['site']['item_images_extension'] = '.gif';
-$config['site']['flag_images_url'] = 'http://flag-images.ots.me/';
+$config['site']['flag_images_url'] = 'https://flag-images.ots.me/';
 $config['site']['flag_images_extension'] = '.png';
 
 # Create Account Options
