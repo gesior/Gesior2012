@@ -9,6 +9,7 @@ Tested on PHP 7.0-7.4 and 8.0 with MariaDB.
 
 PHP extensions required:
 ```
+bcmath
 dom
 gd
 xml
