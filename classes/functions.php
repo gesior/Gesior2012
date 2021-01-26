@@ -23,11 +23,6 @@ class Functions
 		return (filter_var($email, FILTER_VALIDATE_EMAIL) != false);
 	}
 
-	public static function isPremium($premdays, $lastday)
-	{
-		return ($premdays - (date("z", time()) + (365 * (date("Y", time()) - date("Y", $lastday))) - date("z", $lastday)) > 0);
-	}
-
 	public function getBanReasonName($reasonId)
 	{
 		switch($reasonId)

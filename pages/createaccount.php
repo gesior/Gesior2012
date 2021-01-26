@@ -325,8 +325,7 @@ if($action == "saveaccount")
 		}
 		if(isset($config['site']['newaccount_premdays']) && $config['site']['newaccount_premdays'] > 0)
 		{
-			$reg_account->set("premdays", $config['site']['newaccount_premdays']);
-			$reg_account->set("lastday", time());
+			$reg_account->setPremiumEndsAt(time() + 86400 * $config['site']['newaccount_premdays']);
 		}
 		$reg_account->save();
 		//show information about registration

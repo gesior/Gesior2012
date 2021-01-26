@@ -54,12 +54,18 @@ class ConfigLUA
 						{
 							foreach($this->config as $tmp_key => $tmp_value) // load values definied by other keys, like: dailyFragsToBlackSkull = dailyFragsToRedSkull
 								$value = str_replace($tmp_key, $tmp_value, $value);
-							$ret = @eval("return $value;");
-							if((string) $ret == '') // = parser error
-							{
-                                throw new RuntimeException('#C-1 - Line <b>' . ($ln + 1) . '</b> of LUA config file is not valid [key: <b>' . $key . '</b>]');
-							}
-							$this->config[ $key ] = $ret;
+							try {
+                                $ret = @eval("return $value;");
+                                if ((string)$ret == '') // = parser error
+                                {
+                                    throw new RuntimeException(
+                                        '#C-1 - Line <b>' . ($ln + 1) . '</b> of LUA config file is not valid [key: <b>' . $key . '</b>]'
+                                    );
+                                }
+                                $this->config[$key] = $ret;
+                            } catch(ParseError $e) {
+							    // skip LUA table errors
+                            }
 						}
 					}
 				}

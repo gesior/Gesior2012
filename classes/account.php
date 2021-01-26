@@ -8,11 +8,9 @@ class Account extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('name' => null, 'password' => null, 'premdays' => 0, 'lastday' => 0, 'email' => '', 'key' => '', 'create_ip' => 0, 'creation' => 0, 'premium_points' => 0, 'page_access' => 0, 'location' => '', 'rlname' => '', 'email_new' => '', 'email_new_time' => 0, 'email_code' => '', 'next_email' => 0, 'last_post' => 0, 'flag' => 'pl');
-	public static $fields = array('id', 'name', 'password', 'premdays', 'lastday', 'email', 'key', 'create_ip', 'creation', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
+	public $data = array('name' => null, 'password' => null, 'premium_ends_at' => 0, 'email' => '', 'key' => '', 'create_ip' => 0, 'creation' => 0, 'premium_points' => 0, 'page_access' => 0, 'location' => '', 'rlname' => '', 'email_new' => '', 'email_new_time' => 0, 'email_code' => '', 'next_email' => 0, 'last_post' => 0, 'flag' => 'pl');
+	public static $fields = array('id', 'name', 'password', 'premium_ends_at', 'email', 'key', 'create_ip', 'creation', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
 	public $players;
-	public $playerRanks;
-	public $guildAccess;
 	public $bans;
 
     public function __construct($search_text = null, $search_by = self::LOADTYPE_ID)
@@ -83,52 +81,7 @@ class Account extends ObjectData
 		}
 		return $this->players;
 	}
-/*
-	public function getGuildRanks($forceReload = false)
-	{
-		if(!isset($this->playerRanks) || $forceReload)
-		{
-			$this->playerRanks = new DatabaseList('AccountGuildRank');
-			$filterAccount = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, $this->getID());
-			$filterPlayer1 = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'guild_membership'));
-			$filterPlayer2 = new SQL_Filter(new SQL_Field('rank_id', 'guild_membership'), SQL_Filter::EQUAL, new SQL_Field('id', 'guild_ranks'));
-			$filterGuild = new SQL_Filter(new SQL_Field('guild_id', 'guild_ranks'), SQL_Filter::EQUAL, new SQL_Field('id', 'guilds'));
-			$filter = new SQL_Filter($filterAccount, SQL_Filter::CRITERIUM_AND, $filterPlayer1);
-			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterPlayer2);
-			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterGuild);
-			$this->playerRanks->setFilter($filter);
-		}
-		return $this->playerRanks;
-	}
 
-	public function loadGuildAccess($forceReload = false)
-	{
-		if(!isset($this->guildAccess) || $forceReload)
-		{
-			$this->guildAccess = array();
-			foreach($this->getGuildRanks($forceReload) as $rank)
-				if($rank->getOwnerID() == $rank->getPlayerID())
-					$this->guildAccess[$rank->getGuildID()] = Guild::LEVEL_OWNER;
-				elseif(!isset($this->guildAccess[$rank->getGuildID()]) || $rank->getLevel() > $this->guildAccess[$rank->getGuildID()])
-					$this->guildAccess[$rank->getGuildID()] = $rank->getLevel();
-		}
-	}
-
-	public function isInGuild($guildId, $forceReload = false)
-	{
-		$this->loadGuildAccess($forceReload);
-		return isset($this->guildAccess[$guildId]);
-	}
-
-	public function getGuildLevel($guildId, $forceReload = false)
-	{
-		$this->loadGuildAccess($forceReload);
-		if(isset($this->guildAccess[$guildId]))
-			return $this->guildAccess[$guildId];
-		else
-			return 0;
-	}
-*/
 	public function unban()
 	{
         $this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName('account_bans') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('account_id') . ' = ' . $this->getDatabaseHandler()->quote($this->data['id']));
@@ -156,7 +109,7 @@ class Account extends ObjectData
 	{
 		$this->loadBans($forceReload);
 		$lastExpires = 0;
-		foreach($bans as $ban)
+		foreach($this->bans as $ban)
 		{
 			if($ban->getExpiresAt() <= 0)
 			{
@@ -185,10 +138,8 @@ class Account extends ObjectData
 		$this->data['password'] = Website::encryptPassword($value, $this);
 	}
 	public function getPassword(){return $this->data['password'];}
-	public function setPremDays($value){$this->data['premdays'] = $value;}
-	public function getPremDays(){return $this->data['premdays'] - (date("z", time()) + (365 * (date("Y", time()) - date("Y", $this->data['lastday']))) - date("z", $this->data['lastday']));}
-	public function setLastDay($value){$this->data['lastday'] = $value;}
-	public function getLastDay(){return $this->data['lastday'];}
+    public function setPremiumEndsAt($value){$this->data['premium_ends_at'] = $value;}
+    public function getPremiumEndsAt(){return $this->data['premium_ends_at'];}
 	public function setMail($value){$this->data['email'] = $value;}
 	public function getMail(){return $this->data['email'];}
 	public function setKey($value){$this->data['key'] = $value;}
@@ -222,7 +173,6 @@ class Account extends ObjectData
 	public function getEMail(){return $this->getMail();}
 	public function setEMail($value){$this->setMail($value);}
 	public function getPlayersList(){return $this->getPlayers();}
-	public function getGuildAccess($guildID){return $this->getGuildLevel($guildID);}
 
 	public function isValidPassword($password)
 	{
@@ -231,6 +181,10 @@ class Account extends ObjectData
 
 	public function find($name){$this->loadByName($name);}
 	public function findByEmail($email){$this->loadByEmail($email);}
-	public function isPremium(){return ($this->getPremDays() > 0);}
-	public function getLastLogin(){return $this->getLastDay();}
+    public function isPremium(){return ($this->getPremiumEndsAt() > time());}
+	public function getLastLogin(){return 0;}
+    public function getPremDays()
+    {
+        return max(0, ceil(($this->getPremiumEndsAt() - time()) / 86400));
+    }
 }

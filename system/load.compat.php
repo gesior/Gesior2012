@@ -67,11 +67,6 @@ function microtime_float()
 	return microtime(true);
 }
 
-function isPremium($premdays, $lastday)
-{
-	return Functions::isPremium($premdays, $lastday);
-}
-
 function check_name($name)
 {
 	$name = (string) $name;

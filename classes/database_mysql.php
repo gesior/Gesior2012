@@ -13,7 +13,7 @@ class Database_MySQL extends Database
 	{
 		try
 		{
-			parent::__construct('mysql:host=' . $this->getDatabaseHost() . ';port=' . $this->getDatabasePort() . ';dbname=' . $this->getDatabaseName(), $this->getDatabaseUsername(), $this->getDatabasePassword());
+            $this->dbh = new PDO('mysql:host=' . $this->getDatabaseHost() . ';port=' . $this->getDatabasePort() . ';dbname=' . $this->getDatabaseName(), $this->getDatabaseUsername(), $this->getDatabasePassword());
 			$this->setConnected(true);
 			return true;
 		}

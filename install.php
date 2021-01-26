@@ -141,7 +141,7 @@ elseif($page == 'step')
 		echo '<h1>STEP '.$step.'</h1>Informations<br>';
 		echo 'Welcome to Gesior Account Maker installer. <b>After 5 simple steps account maker will be ready to use!</b><br />';
 		// check access to write files
-		$writeable = array('config/config.php', 'cache', 'cache/flags', 'cache/signatures', 'cache/usercounter.txt', 'cache/serverstatus.txt');
+		$writeable = array('config/config.php', 'cache', 'cache/flags', 'cache/signatures', 'cache/usercounter.txt', 'cache/serverstatus.txt', './');
 		foreach($writeable as $fileToWrite)
 		{
 		    if(!file_exists($fileToWrite))
@@ -220,19 +220,19 @@ elseif($page == 'step')
 		$columns[] = array('accounts', 'next_email', 'INT', '11', '0');
 		$columns[] = array('accounts', 'premium_points', 'INT', '11', '0');
 		$columns[] = array('accounts', 'create_date', 'INT', '11', '0');
-		$columns[] = array('accounts', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('accounts', 'create_ip', 'INT', '11', '0', true);
 		$columns[] = array('accounts', 'last_post', 'INT', '11', '0');
 		$columns[] = array('accounts', 'flag', 'VARCHAR', '80', '');
 
 		$columns[] = array('guilds', 'description', 'TEXT', '', NULL);
 		$columns[] = array('guilds', 'guild_logo', 'MEDIUMBLOB', '', NULL);
-		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0', true);
 		$columns[] = array('guilds', 'balance', 'BIGINT UNSIGNED', '', '0');
 
 		$columns[] = array('players', 'deleted', 'TINYINT', '1', '0');
 		$columns[] = array('players', 'description', 'VARCHAR', '255', '');
 		$columns[] = array('players', 'comment', 'TEXT', '', NULL);
-		$columns[] = array('players', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('players', 'create_ip', 'INT', '11', '0', true);
 		$columns[] = array('players', 'create_date', 'INT', '11', '0');
 		$columns[] = array('players', 'hide_char', 'INT', '11', '0');
 
@@ -300,24 +300,37 @@ elseif($page == 'step')
 		
 		foreach($columns as $column)
 		{
-			if($column[4] === NULL) {
-                if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '  NULL DEFAULT NULL'))
-                    echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-                else
-                    echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
-			} else {
-			    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
-                    echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-                else
-                    echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+		    $unsignedSql = '';
+		    if (isset($column[5]) && $column[5]) {
+                $unsignedSql = ' UNSIGNED';
+            }
+            try {
+                if($column[4] === NULL) {
+                    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . $unsignedSql . '  NULL DEFAULT NULL'))
+                        echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                    else
+                        echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+                } else {
+                    if($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . $unsignedSql . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
+                        echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                    else
+                        echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+                }
+            } catch (PDOException $e) {
+                echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
             }
 		}
 		foreach($tables[$SQL->getDatabaseDriver()] as $tableName => $tableQuery)
 		{
-			if($SQL->query($tableQuery) !== false)
-				echo "<span style=\"color:green\">Table <b>" . $tableName . "</b> created.</span><br />";
-			else
-				echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+		    try {
+                if ($SQL->query($tableQuery) !== false) {
+                    echo "<span style=\"color:green\">Table <b>" . $tableName . "</b> created.</span><br />";
+                } else {
+                    echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+                }
+            } catch (PDOException $e) {
+                echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+            }
 		}
 		echo 'Tables and columns added to database.<br>Go to <a href="install.php?page=step&step=4">STEP 4 - Add samples</a>';
 	}
@@ -455,7 +468,7 @@ elseif($page == 'step')
 				$logged = TRUE;
 				echo '<h1>Admin account login: 1<br>Admin account password: '.$newpass.'</h1><br/><h3>It\'s end of installation. Installation is blocked!</h3>'; 
 				if(!unlink('install.txt'))
-					throw new RuntimeException('Cannot remove file <i>install.txt</i>. You must remove it to disable installer. I recommend you to go to step <i>0</i> and check if any other file got problems with WRITE permission.');
+					echo '<span style="color:red;font-size:24px">Cannot remove file <b>install.txt</b> - You must remove it manually to disable installer.</span>';
 			}
 		}
 	}
