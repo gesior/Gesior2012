@@ -12,5 +12,9 @@ PHP extensions required:
 bcmath
 dom
 gd
+json
+mbstring
+mysql
+pdo
 xml
 ```

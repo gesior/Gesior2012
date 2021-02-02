@@ -14,6 +14,10 @@ $config['site']['flag_images_extension'] = '.png';
 $config['site']['one_email'] = false;
 $config['site']['create_account_verify_mail'] = false;
 $config['site']['verify_code'] = true;
+// generate keys on https://www.google.com/recaptcha/admin with version 'v2' and type 'im not a robot'
+$config['site']['recaptcha'] = false;
+$config['site']['recaptcha_site_key'] = '';
+$config['site']['recaptcha_secret_key'] = '';
 $config['site']['email_days_to_change'] = 3;
 $config['site']['newaccount_premdays'] = 999;
 $config['site']['send_register_email'] = false;
