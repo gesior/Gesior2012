@@ -2,6 +2,35 @@
 if(!defined('INITIALIZED'))
 	exit;
 
+function verifyRecaptchaV2()
+{
+    global $config;
+    if (!$config['site']['recaptcha'])
+        return true;
+
+    if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response'])) {
+        return false;
+    }
+
+    $url = 'https://www.google.com/recaptcha/api/siteverify';
+    $data = array(
+        'secret' => $config['site']['recaptcha_secret_key'],
+        'response' => $_POST['g-recaptcha-response']
+    );
+    $options = array(
+        'http' => array(
+            'method' => 'POST',
+            'content' => http_build_query($data)
+        )
+    );
+    $context = stream_context_create($options);
+
+    $verify = file_get_contents($url, false, $context);
+    $captcha_success = json_decode($verify);
+
+    return $captcha_success->success;
+}
+
 //CREATE ACCOUNT FORM PAGE
 if($action == "")
 {
@@ -188,6 +217,8 @@ function EmailStateChanged()
 						  <TR><TD width="150" valign="top"><B>Verification Code: </B></TD><TD colspan="2"><INPUT id="verify" NAME="reg_code" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Here write verification code from picture)</font></TD></TR>';
 	else
 		$main_content .= '<script type="text/javascript">var verifya=0;</script>';
+	if($config['site']['recaptcha'])
+        $main_content .= '<TR><TD width="150"><B>reCaptcha: </B></TD><TD colspan="2"><div class="g-recaptcha" data-sitekey="' . $config['site']['recaptcha_site_key'] . '"></div></TD></TR>';
 	$main_content .= '</TABLE>
 					  </TD></TR>
 					  <TR><TD>
@@ -276,6 +307,12 @@ if($action == "saveaccount")
 			}
 		}
 	}
+    if($config['site']['recaptcha'])
+    {
+        if(!verifyRecaptchaV2())
+            $reg_form_errors[] = "reCaptcha validation failed.";
+    }
+
 	//check password
 	if(empty($reg_password) && !$config['site']['create_account_verify_mail'])
 		$reg_form_errors[] = "Please enter password to your new account.";
@@ -450,3 +487,4 @@ if($action == "saveaccount")
 		</CENTER>';
 	}
 }
+$main_content .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
