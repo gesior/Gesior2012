@@ -8,7 +8,14 @@ require_once('./custom_scripts/paypal/config.php');
  * https://ppmts.custhelp.com/app/answers/detail/a_id/92
  * search: notify.paypal.com (IPN delivery) 
 */
-if(!in_array($_SERVER['REMOTE_ADDR'], array('173.0.81.1','173.0.81.33','66.211.170.66')))
+$paypalServerIps = [
+    '64.4.240.0/21',
+    '64.4.248.0/22',
+    '66.211.168.0/22',
+    '91.243.72.0/23',
+    '173.0.80.0/20',
+];
+if(!Website::isIpInRanges($_SERVER['REMOTE_ADDR'], $paypalServerIps))
 {
 	echo 'wrong IP';
 	exit;
