@@ -175,4 +175,31 @@ class Website
 		}
 		return $lastCountryCode;
 	}
+
+	public static function isIpInRanges($ip, $ranges): bool
+    {
+        if (is_numeric($ip)) {
+            $ip_dec = $ip;
+        } else {
+            $ip_dec = ip2long($ip);
+        }
+        foreach ($ranges as $range) {
+            if (strpos($range, '/') === false) {
+                $range .= '/32';
+            }
+            list($range, $netmask) = explode('/', $range, 2);
+            $x = explode('.', $range);
+            while (count($x) < 4) {
+                $x[] = '0';
+            }
+            $range = sprintf("%u.%u.%u.%u", $x[0], $x[1], $x[2], $x[3]);
+            $range_dec = ip2long($range);
+            $wildcard_dec = pow(2, (32 - $netmask)) - 1;
+            $netmask_dec = ~$wildcard_dec;
+            if (($ip_dec & $netmask_dec) == ($range_dec & $netmask_dec)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
