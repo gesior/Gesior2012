@@ -28,7 +28,7 @@ class Player extends ObjectData
 		if(in_array($search_by, self::$fields))
 			$search_string = $this->getDatabaseHandler()->fieldName($search_by) . ' = ' . $this->getDatabaseHandler()->quote($search_text);
 		else
-			new Error_Critic('', 'Wrong Player search_by type.');
+			throw new RuntimeException('Wrong Player search_by type.');
 		$fieldsArray = array();
 		foreach(self::$fields as $fieldName)
 			$fieldsArray[] = $this->getDatabaseHandler()->fieldName($fieldName);
@@ -87,7 +87,7 @@ class Player extends ObjectData
 			$this->items->save();
 		}
 		else
-			new Error_Critic('', 'Player::saveItems() - items not loaded, cannot save');
+			throw new RuntimeException('Player::saveItems() - items not loaded, cannot save');
 	}
 
 	public function loadStorages()
@@ -117,7 +117,7 @@ class Player extends ObjectData
 			}
 		}
 		else
-			new Error_Critic('', 'Player::saveStorages() - storages not loaded, cannot save');
+			throw new RuntimeException('Player::saveStorages() - storages not loaded, cannot save');
 	}
 
 	public function getStorage($key)
@@ -188,7 +188,7 @@ class Player extends ObjectData
 		if(isset($this->skills[$id]))
 			return $this->skills[$id]['value'];
 		else
-			new Error_Critic('', 'Player::getSkill() - Skill ' . htmlspecialchars($id) . ' does not exist');
+			throw new RuntimeException('Player::getSkill() - Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
 	public function setSkill($id, $value)
@@ -204,7 +204,7 @@ class Player extends ObjectData
 		if(isset($this->skills[$id]))
 			return $this->skills[$id]['count'];
 		else
-			new Error_Critic('', 'Player::getSkillCount() - Skill ' . htmlspecialchars($id) . ' does not exist');
+			throw new RuntimeException('Player::getSkillCount() - Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
 	public function setSkillCount($id, $count)
@@ -238,7 +238,7 @@ class Player extends ObjectData
 			}
 		}
 		else
-			new Error_Critic('', 'Player::saveSkills() - skills not loaded, cannot save');
+			throw new RuntimeException('Player::saveSkills() - skills not loaded, cannot save');
 	}
 
 	public function loadAccount()

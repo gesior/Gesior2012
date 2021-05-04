@@ -30,7 +30,7 @@ class Guild extends ObjectData
 		if(in_array($search_by, self::$fields))
 			$search_string = $this->getDatabaseHandler()->fieldName($search_by) . ' = ' . $this->getDatabaseHandler()->quote($search_text);
 		else
-			new Error_Critic('', 'Wrong guild search_by type.');
+			throw new RuntimeException('Wrong guild search_by type.');
 		$fieldsArray = array();
 		foreach(self::$fields as $fieldName)
 			$fieldsArray[] = $this->getDatabaseHandler()->fieldName($fieldName);
@@ -89,7 +89,7 @@ class Guild extends ObjectData
 			unset($_tmp);
 		}
 		else
-			new Error_Critic('', __METHOD__ . '() - cannot delete, guild not loaded');
+			throw new RuntimeException(__METHOD__ . '() - cannot delete, guild not loaded');
 	}
 
 	public function kickPlayer($playerId)
@@ -233,7 +233,7 @@ class Guild extends ObjectData
 			$player->removeGuildInvitations();
 		}
 		else
-			new Error_Critic('', 'There is no rank in guild <b>' . htmlspecialchars($guild->getName()) . '</b>, cannot add player <b>' . htmlspecialchars($player->getName()) . '</b> to guild.');
+			throw new RuntimeException('There is no rank in guild <b>' . htmlspecialchars($this->getName()) . '</b>, cannot add player <b>' . htmlspecialchars($player->getName()) . '</b> to guild.');
 	}
 	public function find($name){$this->loadByName($name);}
 	public function getWorld(){return $this->data['world_id'];}

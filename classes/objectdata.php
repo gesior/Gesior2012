@@ -36,7 +36,7 @@ class ObjectData extends DatabaseHandler
 		if(isset($this->data[$fieldName]))
 			return $this->data[$fieldName];
 		else
-			new Error_Critic(__METHOD__ . ' - Field ' . htmlspecialchars($fieldName) . ' does not exist in data / is not loaded.');
+			throw new RuntimeException(__METHOD__ . ' - Field ' . htmlspecialchars($fieldName) . ' does not exist in data / is not loaded.');
 	}
 
 	public function set($fieldName, $value)
@@ -49,7 +49,7 @@ class ObjectData extends DatabaseHandler
 		if(isset($this->data[$fieldName]))
 			return $this->data[$fieldName];
 		else
-			new Error_Critic(__METHOD__ . ' - Field ' . htmlspecialchars($fieldName) . ' does not exist in data / is not loaded.');
+			throw new RuntimeException(__METHOD__ . ' - Field ' . htmlspecialchars($fieldName) . ' does not exist in data / is not loaded.');
 	}
 
 	public function setCustomField($fieldName, $value)
@@ -60,7 +60,7 @@ class ObjectData extends DatabaseHandler
 			$this->save();
 		}
 		else
-			new Error_Critic(__METHOD__ . ' - Field ' . htmlspecialchars($fieldName) . ' does not exist in data / is not loaded. Cannot save it.');
+			throw new RuntimeException(__METHOD__ . ' - Field ' . htmlspecialchars($fieldName) . ' does not exist in data / is not loaded. Cannot save it.');
 	}
 /*
  * for compability with old scripts

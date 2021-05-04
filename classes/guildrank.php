@@ -71,7 +71,7 @@ class GuildRank extends ObjectData
 			unset($_tmp);
 		}
 		else
-			new Error_Critic('', __METHOD__ . '() - cannot delete, guild rank not loaded');
+			throw new LogicException(__METHOD__ . '() - cannot delete, guild rank not loaded');
 	}
 
 	public function getMembers($forceReload = false)

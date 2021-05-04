@@ -2,7 +2,7 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class Website extends WebsiteErrors
+class Website
 {
 	public static $serverConfig;
 	public static $websiteConfig;
@@ -28,9 +28,6 @@ class Website extends WebsiteErrors
 			case Database::DB_MYSQL:
 				self::$SQL = new Database_MySQL();
 				break;
-			case Database::DB_SQLITE:
-				self::$SQL = new Database_SQLite();
-				break;
 		}
 	}
 
@@ -39,7 +36,7 @@ class Website extends WebsiteErrors
 		if(isset(self::$SQL))
 			return self::$SQL;
 		else
-			new Error_Critic('#C-9', 'ERROR: <b>#C-9</b> : Class::Website - getDBHandle(), database driver not set.');
+			exit('ERROR: <b>#C-9</b> : Class::Website - getDBHandle(), database driver not set.');
 	}	
 
 	public static function loadWebsiteConfig()
@@ -82,7 +79,7 @@ class Website extends WebsiteErrors
 			return $_config;
 		}
 		else
-			new Error_Critic('', __METHOD__ . ' - invalid folder/file name <b>' . htmlspecialchars('./config/' . $fileName . '.php') . '</b>');
+			throw new RuntimeException(__METHOD__ . ' - invalid folder/file name <b>' . htmlspecialchars('./config/' . $fileName . '.php') . '</b>');
 	}
 
 	public static function getFileContents($path)
@@ -90,7 +87,7 @@ class Website extends WebsiteErrors
 		$file = file_get_contents($path);
 
 		if($file === false)
-			new Error_Critic('', __METHOD__ . ' - Cannot read from file: <b>' . htmlspecialchars($path) . '</b>');
+			throw new RuntimeException(__METHOD__ . ' - Cannot read from file: <b>' . htmlspecialchars($path) . '</b>');
 
 		return $file;
 	}
@@ -103,7 +100,7 @@ class Website extends WebsiteErrors
 			$status = file_put_contents($path, $data);
 
 		if($status === false)
-			new Error_Critic('', __METHOD__ . ' - Cannot write to: <b>' . htmlspecialchars($path) . '</b>');
+			throw new RuntimeException(__METHOD__ . ' - Cannot write to: <b>' . htmlspecialchars($path) . '</b>');
 
 		return $status;
 	}
@@ -123,7 +120,7 @@ class Website extends WebsiteErrors
 		if(isset(self::$passwordsEncryptions[strtolower($encryption)]))
 			self::$passwordsEncryption = strtolower($encryption);
 		else
-			new Error_Critic('#C-12', 'Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
+			exit('Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
 	}
 	
 	public static function getPasswordsEncryption()
@@ -151,10 +148,10 @@ class Website extends WebsiteErrors
 					return hash(self::$passwordsEncryption, $account->getSalt() . $password);
 			}
 			else
-				new Error_Critic('', 'Website::encryptPassword($password, $account = null) - $account not set, it\'s required for TFS 0.4');
+				throw new RuntimeException('Website::encryptPassword($password, $account = null) - $account not set, it\'s required for TFS 0.4');
 		}
 		else
-			new Error_Critic('#C-13', 'You cannot use Website::encryptPassword(\$password) when password encryption is not set.');
+			exit('You cannot use Website::encryptPassword(\$password) when password encryption is not set.');
 	}
 
 	public static function loadVocations()
@@ -233,4 +230,31 @@ class Website extends WebsiteErrors
 		}
 		return $lastCountryCode;
 	}
+
+    public static function isIpInRanges($ip, $ranges): bool
+    {
+        if (is_numeric($ip)) {
+            $ip_dec = $ip;
+        } else {
+            $ip_dec = ip2long($ip);
+        }
+        foreach ($ranges as $range) {
+            if (strpos($range, '/') === false) {
+                $range .= '/32';
+            }
+            list($range, $netmask) = explode('/', $range, 2);
+            $x = explode('.', $range);
+            while (count($x) < 4) {
+                $x[] = '0';
+            }
+            $range = sprintf("%u.%u.%u.%u", $x[0], $x[1], $x[2], $x[3]);
+            $range_dec = ip2long($range);
+            $wildcard_dec = pow(2, (32 - $netmask)) - 1;
+            $netmask_dec = ~$wildcard_dec;
+            if (($ip_dec & $netmask_dec) == ($range_dec & $netmask_dec)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,7 +1,6 @@
 <?PHP
 # Account Maker Config
 $config['site']['serverPath'] = "C:/ots/";
-$config['site']['useServerConfigCache'] = false;
 $config['site']['worlds'] = array(0 => 'Acc. Maker Test World');
 $towns_list[0] = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
 

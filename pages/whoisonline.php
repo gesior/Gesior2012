@@ -57,10 +57,7 @@ foreach($players_online_data as $player)
 
 	$players_rows .= '<TR BGCOLOR='.$bgcolor.'><TD WIDTH=5%><img src="' . $config['site']['outfit_images_url'] . '?id=' . $player['looktype'] . '&addons=' . $player['lookaddons'] . '&head=' . $player['lookhead'] . '&body=' . $player['lookbody'] . '&legs=' . $player['looklegs'] . '&feet=' . $player['lookfeet'] . '" alt="" /></td><TD WIDTH=65%><A HREF="?subtopic=characters&name='.urlencode($player['name']).'">'.htmlspecialchars($player['name']).$skull.'<img src="' . $config['site']['flag_images_url'] . $player['flag'] . $config['site']['flag_images_extension'] . '" title="Country: ' . $player['flag'] . '" alt="' . $player['flag'] . '" /></A></TD><TD WIDTH=10%>'.$player['level'].'</TD><TD WIDTH=20%>'.htmlspecialchars($vocation_name[$player['promotion']][$player['vocation']]).'</TD></TR>';
 }		
-if($config['site']['private-servlist.com_server_id'] > 0)
-{
-	$main_content.= '<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD WIDTH=10% CLASS=white><center><B>Players Online Chart</B></TD></TR></TABLE><table align="center"><tr><td><img src="http://private-servlist.com/server-chart/' . $config['site']['private-servlist.com_server_id'] . '.png" width="500px" /></td></tr></table>';
-}
+
 if($number_of_players_online == 0)
 {
 	//server status - server empty

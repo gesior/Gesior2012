@@ -7,10 +7,6 @@ $config['site']['serverPath'] = "C:/ots/";
 That line definies where are OTS files. It loads from there config.lua [database password etc.], data/XML/groups.xml [groups names], data/XML/vocations.xml [vocations names].
 Format: string, MUST ENDS WITH /
 
-$config['site']['useServerConfigCache'] = false;
-It definies if you want use server config cache. If it's 'true' then after first open of website it will load informations from config.lua and save to './config/server.config.php' file.
-Format: true / false
-
 [EXAMPLE] Multiworld enabled:
 $config['site']['worlds'] = array(0 => 'Acc. Maker Test World 1', 1 => 'Acc. Maker Test World 2');
 [EXAMPLE] Multiworld disabled [when you run just one OTS]:

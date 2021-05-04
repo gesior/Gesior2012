@@ -301,7 +301,7 @@ else
 					$new_rec_key = NULL;
 					// 10 = number of chars in generated key
 					for($i=0; $i < 10; $i++) {
-						$cnum[$i] = $acceptedChars{mt_rand(0, $max)};
+						$cnum[$i] = $acceptedChars[mt_rand(0, $max)];
 						$new_rec_key .= $cnum[$i];
 					}
 					$account_logged->set("key", $new_rec_key);
@@ -383,7 +383,7 @@ else
 							$new_rec_key = NULL;
 							// 10 = number of chars in generated key
 							for($i=0; $i < 10; $i++) {
-								$cnum[$i] = $acceptedChars{mt_rand(0, $max)};
+								$cnum[$i] = $acceptedChars[mt_rand(0, $max)];
 								$new_rec_key .= $cnum[$i];
 							}
 							$main_content .= '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Account Registered</div>        <span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><ul>';

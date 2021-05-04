@@ -22,7 +22,7 @@ function autoLoadClass($className)
 		if(file_exists('./classes/' . strtolower($className) . '.php'))
 			include_once('./classes/' . strtolower($className) . '.php');
 		else
-			new Error_Critic('#E-7', 'Cannot load class <b>' . $className . '</b>, file <b>./classes/class.' . strtolower($className) . '.php</b> doesn\'t exist');
+            exit('Cannot load class <b>' . $className . '</b>, file <b>./classes/class.' . strtolower($className) . '.php</b> doesn\'t exist');
 }
 spl_autoload_register('autoLoadClass');
 
@@ -116,30 +116,9 @@ elseif($page == 'step')
 {
 	if($step >= 2 && $step <= 5)
 	{
-		//load server config $config['server']
-		if(Website::getWebsiteConfig()->getValue('useServerConfigCache'))
-		{
-			// use cache to make website load faster
-			if(Website::fileExists('./config/server.config.php'))
-			{
-				$tmp_php_config = new ConfigPHP('./config/server.config.php');
-				$config['server'] = $tmp_php_config->getConfig();
-			}
-			else
-			{
-				// if file isn't cache we should load .lua file and make .php cache
-				$tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
-				$config['server'] = $tmp_lua_config->getConfig();
-				$tmp_php_config = new ConfigPHP();
-				$tmp_php_config->setConfig($tmp_lua_config->getConfig());
-				$tmp_php_config->saveToFile('./config/server.config.php');
-			}
-		}
-		else
-		{
-			$tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
-			$config['server'] = $tmp_lua_config->getConfig();
-		}
+	    $tmp_lua_config = new ConfigLUA(Website::getWebsiteConfig()->getValue('serverPath') . 'config.lua');
+	    $config['server'] = $tmp_lua_config->getConfig();
+
 		if(Website::getServerConfig()->isSetKey('mysqlHost'))
 		{
 			define('SERVERCONFIG_SQL_TYPE', 'sqlType');
@@ -148,7 +127,6 @@ elseif($page == 'step')
 			define('SERVERCONFIG_SQL_USER', 'mysqlUser');
 			define('SERVERCONFIG_SQL_PASS', 'mysqlPass');
 			define('SERVERCONFIG_SQL_DATABASE', 'mysqlDatabase');
-			define('SERVERCONFIG_SQLITE_FILE', 'sqlFile');
 		}
 		elseif(Website::getServerConfig()->isSetKey('sqlHost'))
 		{
@@ -158,65 +136,35 @@ elseif($page == 'step')
 			define('SERVERCONFIG_SQL_USER', 'sqlUser');
 			define('SERVERCONFIG_SQL_PASS', 'sqlPass');
 			define('SERVERCONFIG_SQL_DATABASE', 'sqlDatabase');
-			define('SERVERCONFIG_SQLITE_FILE', 'sqlFile');
 		}
 		else
-			new Error_Critic('#E-3', 'There is no key <b>sqlHost</b> or <b>mysqlHost</b> in server config', array(new Error('INFO', 'use server config cache: <b>' . (Website::getWebsiteConfig()->getValue('useServerConfigCache') ? 'true' : 'false') . '</b>')));
+            exit('There is no key <b>sqlHost</b> or <b>mysqlHost</b> in server config');
 		if(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) == 'mysql')
 		{
 			Website::setDatabaseDriver(Database::DB_MYSQL);
 			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
 				Website::getDBHandle()->setDatabaseHost(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_HOST));
 			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
+				exit('There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
 			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PORT))
 				Website::getDBHandle()->setDatabasePort(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PORT));
 			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
+				exit('There is no key <b>' . SERVERCONFIG_SQL_PORT . '</b> in server config file.');
 			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
 				Website::getDBHandle()->setDatabaseName(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
 			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
+				exit('There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
 			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_USER))
 				Website::getDBHandle()->setDatabaseUsername(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_USER));
 			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
+				exit('There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
 			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
 				Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
 			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
-		}
-		elseif(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) == 'sqlite')
-		{
-			Website::setDatabaseDriver(Database::DB_SQLITE);
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQLITE_FILE))
-				Website::getDBHandle()->setDatabaseFile(Website::getServerConfig()->getValue(SERVERCONFIG_SQLITE_FILE));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQLITE_FILE . '</b> in server config file.');
-		}
-		elseif(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) == 'pgsql')
-		{
-			// does pgsql use 'port' parameter? I don't know
-			Website::setDatabaseDriver(Database::DB_PGSQL);
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_HOST))
-				Website::getDBHandle()->setDatabaseHost(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_HOST));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_HOST . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_DATABASE))
-				Website::getDBHandle()->setDatabaseName(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_DATABASE));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_DATABASE . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_USER))
-				Website::getDBHandle()->setDatabaseUsername(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_USER));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_USER . '</b> in server config file.');
-			if(Website::getServerConfig()->isSetKey(SERVERCONFIG_SQL_PASS))
-				Website::getDBHandle()->setDatabasePassword(Website::getServerConfig()->getValue(SERVERCONFIG_SQL_PASS));
-			else
-				new Error_Critic('#E-7', 'There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
+				exit('There is no key <b>' . SERVERCONFIG_SQL_PASS . '</b> in server config file.');
 		}
 		else
-			new Error_Critic('#E-6', 'Database error. Unknown database type in <b>server config</b> . Must be equal to: "<b>mysql</b>", "<b>sqlite</b>" or "<b>pgsql</b>" . Now is: "<b>' . Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) . '</b>"');
+            exit('Database error. Unknown database type in <b>server config</b> . Must be equal to: "<b>mysql</b>" . Now is: "<b>' . Website::getServerConfig()->getValue(SERVERCONFIG_SQL_TYPE) . '</b>"');
 		Website::setPasswordsEncryption(Website::getServerConfig()->getValue('encryptionType'));
 		$SQL = Website::getDBHandle();
 	}
@@ -226,7 +174,7 @@ elseif($page == 'step')
 		echo '<h1>STEP '.$step.'</h1>Informations<br>';
 		echo 'Welcome to Gesior Account Maker installer. <b>After 5 simple steps account maker will be ready to use!</b><br />';
 		// check access to write files
-		$writeable = array('config/config.php', 'cache', 'cache/flags', 'cache/DONT_EDIT_usercounter.txt', 'cache/DONT_EDIT_serverstatus.txt', 'custom_scripts', 'install.txt');
+		$writeable = array('config/config.php', 'cache', 'cache/flags', 'cache/signatures', 'cache/DONT_EDIT_usercounter.txt', 'cache/DONT_EDIT_serverstatus.txt', 'custom_scripts', './');
 		foreach($writeable as $fileToWrite)
 		{
 			if(is_writable($fileToWrite))
@@ -234,6 +182,18 @@ elseif($page == 'step')
 			else
 				echo '<span style="color:red">CANNOT WRITE TO FILE: <b>' . $fileToWrite . '</b> - edit file access for PHP [on linux: chmod]</span><br />';
 		}
+        $executable = array('cache', 'cache/flags', 'cache/signatures', './');
+        foreach($executable as $file)
+        {
+            if(!file_exists($file))
+            {
+                echo '<span style="color:red">DOES NOT EXIST: <b>' . $file . '</b> </span><br />';
+            }
+            elseif(is_executable($file))
+                echo '<span style="color:green">CAN EXECUTE FILE/DIR: <b>' . $file . '</b></span><br />';
+            else
+                echo '<span style="color:red">CANNOT EXECUTE FILE/DIR: <b>' . $file . '</b> - edit file access for PHP</span><br />';
+        }
 	}
 	elseif($step == 1)
 	{
@@ -286,20 +246,20 @@ elseif($page == 'step')
 		$columns[] = array('accounts', 'next_email', 'INT', '11', '0');
 		$columns[] = array('accounts', 'premium_points', 'INT', '11', '0');
 		$columns[] = array('accounts', 'create_date', 'INT', '11', '0');
-		$columns[] = array('accounts', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('accounts', 'create_ip', 'INT', '11', '0', true);
 		$columns[] = array('accounts', 'last_post', 'INT', '11', '0');
 		$columns[] = array('accounts', 'flag', 'VARCHAR', '80', '');
 
-		$columns[] = array('guilds', 'description', 'TEXT', '', '');
+		$columns[] = array('guilds', 'description', 'TEXT', '', NULL);
 		$columns[] = array('guilds', 'guild_logo', 'MEDIUMBLOB', '', NULL);
-		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('guilds', 'create_ip', 'INT', '11', '0', true);
 		$columns[] = array('guilds', 'balance', 'BIGINT UNSIGNED', '', '0');
 		$columns[] = array('killers', 'war', 'INT', '11', '0');
 
 		$columns[] = array('players', 'deleted', 'TINYINT', '1', '0');
 		$columns[] = array('players', 'description', 'VARCHAR', '255', '');
-		$columns[] = array('players', 'comment', 'TEXT', '', '');
-		$columns[] = array('players', 'create_ip', 'INT', '11', '0');
+		$columns[] = array('players', 'comment', 'TEXT', '', NULL);
+		$columns[] = array('players', 'create_ip', 'INT', '11', '0', true);
 		$columns[] = array('players', 'create_date', 'INT', '11', '0');
 		$columns[] = array('players', 'hide_char', 'INT', '11', '0');
 
@@ -393,72 +353,48 @@ elseif($page == 'step')
 							  ADD CONSTRAINT `guild_kills_ibfk_1` FOREIGN KEY (`war_id`) REFERENCES `guild_wars` (`id`) ON DELETE CASCADE,
 							  ADD CONSTRAINT `guild_kills_ibfk_2` FOREIGN KEY (`death_id`) REFERENCES `player_deaths` (`id`) ON DELETE CASCADE,
 							  ADD CONSTRAINT `guild_kills_ibfk_3` FOREIGN KEY (`guild_id`) REFERENCES `guilds` (`id`) ON DELETE CASCADE;";
-		// sqlite tables
-		$tables[Database::DB_SQLITE]['z_ots_comunication'] = 'CREATE TABLE "z_ots_comunication" (
-							  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-							  "name" varchar(255) NOT NULL,
-							  "type" varchar(255) NOT NULL,
-							  "action" varchar(255) NOT NULL,
-							  "param1" varchar(255) NOT NULL,
-							  "param2" varchar(255) NOT NULL,
-							  "param3" varchar(255) NOT NULL,
-							  "param4" varchar(255) NOT NULL,
-							  "param5" varchar(255) NOT NULL,
-							  "param6" varchar(255) NOT NULL,
-							  "param7" varchar(255) NOT NULL,
-							  "delete_it" int(2) NOT NULL default 1);';
-		$tables[Database::DB_SQLITE]['z_shop_offer'] = 'CREATE TABLE "z_shop_offer" (
-							  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-							  "points" int(11) NOT NULL default 0,
-							  "itemid1" int(11) NOT NULL default 0,
-							  "count1" int(11) NOT NULL default 0,
-							  "itemid2" int(11) NOT NULL default 0,
-							  "count2" int(11) NOT NULL default 0,
-							  "offer_type" varchar(255) default NULL,
-							  "offer_description" text NOT NULL,
-							  "offer_name" varchar(255) NOT NULL);';
-		$tables[Database::DB_SQLITE]['z_shop_history_item'] = 'CREATE TABLE "z_shop_history_item" (
-							  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-							  "to_name" varchar(255) NOT NULL default 0,
-							  "to_account" int(11) NOT NULL default 0,
-							  "from_nick" varchar(255) NOT NULL,
-							  "from_account" int(11) NOT NULL default 0,
-							  "price" int(11) NOT NULL default 0,
-							  "offer_id" varchar(255) NOT NULL default "",
-							  "trans_state" varchar(255) NOT NULL,
-							  "trans_start" int(11) NOT NULL default 0,
-							  "trans_real" int(11) NOT NULL default 0);';
-		$tables[Database::DB_SQLITE]['z_forum'] = 'CREATE TABLE "z_forum" (
-								"id" INTEGER PRIMARY KEY AUTOINCREMENT,
-								"first_post" int(11) NOT NULL default 0,
-								"last_post" int(11) NOT NULL default 0,
-								"section" int(3) NOT NULL default 0,
-								"replies" int(20) NOT NULL default 0,
-								"views" int(20) NOT NULL default 0,
-								"author_aid" int(20) NOT NULL default 0,
-								"author_guid" int(20) NOT NULL default 0,
-								"post_text" text NOT NULL,
-								"post_topic" varchar(255) NOT NULL,
-								"post_smile" tinyint(1) NOT NULL default 0,
-								"post_date" int(20) NOT NULL default 0,
-								"last_edit_aid" int(20) NOT NULL default 0,
-								"edit_date" int(20) NOT NULL default 0,
-								"post_ip" varchar(15) NOT NULL default "0.0.0.0");';
-		foreach($columns as $column)
-		{
-			if($column[4] === NULL && $SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '  NULL DEFAULT NULL') !== false)
-				echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-			elseif($SQL->query('ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName($column[1]) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . ' NOT NULL DEFAULT \'' . $column[4] . '\'') !== false)
-				echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
-			else
-				echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
-		}
+		foreach($columns as $column) {
+            $unsignedSql = '';
+            if (isset($column[5]) && $column[5]) {
+                $unsignedSql = ' UNSIGNED';
+            }
+            try {
+                if ($column[4] === null) {
+                    if ($SQL->query(
+                        'ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName(
+                            $column[1]
+                        ) . ' ' . $column[2] . $unsignedSql . '  NULL DEFAULT NULL'
+                    )) {
+                        echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                    } else {
+                        echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+                    }
+                } else {
+                    if ($SQL->query(
+                            'ALTER TABLE ' . $SQL->tableName($column[0]) . ' ADD ' . $SQL->fieldName(
+                                $column[1]
+                            ) . ' ' . $column[2] . '' . (($column[3] == '') ? '' : '(' . $column[3] . ')') . $unsignedSql . ' NOT NULL DEFAULT \'' . $column[4] . '\''
+                        ) !== false) {
+                        echo "<span style=\"color:green\">Column <b>" . $column[1] . "</b> added to table <b>" . $column[0] . "</b>.</span><br />";
+                    } else {
+                        echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+                    }
+                }
+            } catch (PDOException $e) {
+                echo "Could not add column <b>" . $column[1] . "</b> to table <b>" . $column[0] . "</b>. Already exist?<br />";
+            }
+        }
 		foreach($tables[$SQL->getDatabaseDriver()] as $tableName => $tableQuery)
 		{
-			if($SQL->query($tableQuery) !== false)
-				echo "<span style=\"color:green\">Table <b>" . $tableName . "</b> created.</span><br />";
-			else
-				echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+            try {
+                if ($SQL->query($tableQuery) !== false) {
+                    echo "<span style=\"color:green\">Table <b>" . $tableName . "</b> created.</span><br />";
+                } else {
+                    echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+                }
+            } catch (PDOException $e) {
+                echo "Could not create table <b>" . $tableName . "</b>. Already exist?<br />";
+            }
 		}
 		echo 'Tables and columns added to database.<br>Go to <a href="install.php?page=step&step=4">STEP 4 - Add samples</a>';
 	}
@@ -494,7 +430,7 @@ elseif($page == 'step')
 			}
 		}
 		else
-			new Error_Critic('', 'Character <i>Account Manager</i> does not exist. Cannot install sample characters!');
+            exit('Character <i>Account Manager</i> does not exist. Cannot install sample characters!');
 	}
 	elseif($step == 5)
 	{
@@ -533,13 +469,14 @@ elseif($page == 'step')
 					$newAccount->setFlag('unknown');
 					$newAccount->setCreateIP(Visitor::getIP());
 					$newAccount->setCreateDate(time());
+                    $newAccount->save();
 				}
 				$_SESSION['account'] = 1;
 				$_SESSION['password'] = $newpass;
 				$logged = TRUE;
 				echo '<h1>Admin account login: 1<br>Admin account password: '.$newpass.'</h1><br/><h3>It\'s end of installation. Installation is blocked!</h3>'; 
 				if(!unlink('install.txt'))
-					new Error_Critic('', 'Cannot remove file <i>install.txt</i>. You must remove it to disable installer. I recommend you to go to step <i>0</i> and check if any other file got problems with WRITE permission.');
+					echo '<span style="color:red;font-size:32px">Cannot remove file <i>install.txt</i>. You must remove it to disable installer. I recommend you to go to step <i>0</i> and check if any other file got problems with WRITE permission.</span>';
 			}
 		}
 	}

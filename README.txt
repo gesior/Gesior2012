@@ -1,5 +1,5 @@
 ##### CREDITS #####
-Version 1.0.3 for TFS 0.4 revision 3703+
+Version 1.0.4 for TFS 0.4 revision 3703+
 Acc. script:
 *Gesior - e-mail: phoowned@wp.pl
 Layouts:

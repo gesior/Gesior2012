@@ -8,7 +8,7 @@ class Account extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('name' => null, 'password' => null, 'salt' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null);
+	public $data = array('name' => null, 'password' => null, 'salt' => null, 'premdays' => 0, 'lastday' => 0, 'email' => null, 'key' => null, 'group_id' => 0, 'create_ip' => 0, 'create_date' => 0, 'premium_points' => 0, 'page_access' => 0, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => 0, 'last_post' => 0, 'flag' => null);
 	public static $fields = array('id', 'name', 'password', 'salt', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
 	public $players;
 	public $playerRanks;
@@ -26,7 +26,7 @@ class Account extends ObjectData
 		if(in_array($search_by, self::$fields))
 			$search_string = $this->getDatabaseHandler()->fieldName($search_by) . ' = ' . $this->getDatabaseHandler()->quote($search_text);
 		else
-			new Error_Critic('', 'Wrong Account search_by type.');
+			throw new RuntimeException('Wrong Account search_by type.');
 		$fieldsArray = array();
 		foreach(self::$fields as $fieldName)
 			$fieldsArray[$fieldName] = $this->getDatabaseHandler()->fieldName($fieldName);
@@ -173,7 +173,7 @@ class Account extends ObjectData
 	{
 		$this->loadBans($forceReload);
 		$lastExpires = 0;
-		foreach($bans as $ban)
+		foreach($this->bans as $ban)
 		{
 			if($ban->getExpires() <= 0)
 			{

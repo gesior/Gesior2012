@@ -12,7 +12,7 @@ class Vocations implements Iterator, Countable
 	{
 		$XML = new DOMDocument();
 		if(!$XML->load($file))
-			new Error_Critic('', 'Vocations::__construct - cannot load file <b>' . htmlspecialchars($file) . '</b>');
+			throw new RuntimeException('Vocations::__construct - cannot load file <b>' . htmlspecialchars($file) . '</b>');
 
 		$this->XML = $XML;
 		$_tmp_vocations = array();
@@ -77,7 +77,7 @@ class Vocations implements Iterator, Countable
 				$_tmp_vocations[$vocation->getAttribute('id')] = $vocationData;
 			}
 			else
-				new Error_Critic('#C', 'Cannot load vocation. <b>id</b> or/and <b>name</b> parameter is missing');
+				exit('Cannot load vocation. <b>id</b> or/and <b>name</b> parameter is missing');
 		}
 		/*
 		 * Set promotion level and base vocation id

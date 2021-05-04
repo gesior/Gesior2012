@@ -46,7 +46,7 @@ class Highscores extends DatabaseList
 				$this->loadLevel();
 				break;
 			default;
-				new Error_Critic('', __METHOD__ . '(), unknown type: ' . htmlspecialchars($type));
+				throw new RuntimeException(__METHOD__ . '(), unknown type: ' . htmlspecialchars($type));
 				break;
 		}
 	}

@@ -152,6 +152,7 @@ function showPost($topic, $text, $smile)
 if(!$logged)
     $main_content .=  'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> to post on the forum.<br /><br />';
 
+$errors = [];
 if($action == '')
 {
     $main_content .= '<b>Boards</b>';

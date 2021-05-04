@@ -2,7 +2,7 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class ConfigPHP extends Errors
+class ConfigPHP
 {
 	private $config;
 	private $loadedFromPath = '';
@@ -25,7 +25,7 @@ class ConfigPHP extends Errors
 			$this->loadFromString(implode("\n", $lines));
 		}
 		else
-			WebsiteErrors::addError('#C-4', 'ERROR: <b>#C-4</b> : Class::ConfigPHP - PHP config file doesn\'t exist. Path: <b>' . $path . '</b>');
+			throw new RuntimeException('ERROR: <b>#C-4</b> : Class::ConfigPHP - PHP config file doesn\'t exist. Path: <b>' . $path . '</b>');
 	}
 
 	public function fileExists($path)
@@ -39,12 +39,7 @@ class ConfigPHP extends Errors
 		if($ret === false)
 		{
 			$error = error_get_last();
-			new Error_Critic('',  ' - cannot load PHP config from string', array(
-			new Error('MESSAGE', $error['message']),
-			new Error('FILE', $error['file']),
-			new Error('LINE', $error['line']),
-			new Error('FILE PATH', $this->loadedFromPath)
-			));
+			throw new RuntimeException( ' - cannot load PHP config from string');
 		}
 		$this->config = $_web_config;
 		unset($_web_config);
@@ -93,7 +88,7 @@ class ConfigPHP extends Errors
 		if(isset($this->config[ $key ]))
 			return $this->config[ $key ];
 		else
-			new Error_Critic('#C-5', 'ERROR: <b>#C-5</b> : Class::ConfigPHP - Key <b>' . $key . '</b> doesn\'t exist.');
+            throw new RuntimeException('ERROR: <b>#C-5</b> : Class::ConfigPHP - Key <b>' . $key . '</b> doesn\'t exist.');
 	}
 
 	public function setValue($key, $value)

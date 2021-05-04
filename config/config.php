@@ -1,14 +1,13 @@
 <?PHP
 # Account Maker Config
-$config['site']['serverPath'] = "C:/ots/";
-$config['site']['useServerConfigCache'] = false;
+$config['site']['serverPath'] = "/home/ots/";
 $config['site']['worlds'] = array(0 => 'Acc. Maker Test World');
 $towns_list[0] = array(1 => 'Thais', 2 => 'Venore', 5 => 'Carlin');
 
-$config['site']['outfit_images_url'] = 'http://outfit-images.ots.me/outfit.php';
-$config['site']['item_images_url'] = 'http://item-images.ots.me/960/';
+$config['site']['outfit_images_url'] = 'https://outfit-images.ots.me/outfit.php';
+$config['site']['item_images_url'] = 'https://item-images.ots.me/960/';
 $config['site']['item_images_extension'] = '.gif';
-$config['site']['flag_images_url'] = 'http://flag-images.ots.me/';
+$config['site']['flag_images_url'] = 'https://flag-images.ots.me/';
 $config['site']['flag_images_extension'] = '.png';
 
 # Create Account Options
@@ -26,14 +25,15 @@ $config['site']['max_players_per_account'] = 7;
 
 
 # Emails Config
+# to use Gmail as mailer, you must enable not secure apps access: https://myaccount.google.com/lesssecureapps
 $config['site']['send_emails'] = false;
-$config['site']['mail_address'] = "xxxx@gmx.com";
+$config['site']['mail_address'] = "youraccount@gmail.com";
 $config['site']['smtp_enabled'] = true;
-$config['site']['smtp_host'] = "mail.gmx.com";
-$config['site']['smtp_port'] = 25;
-$config['site']['smtp_auth'] = false;
-$config['site']['smtp_user'] = "xxx@gmx.com";
-$config['site']['smtp_pass'] = "xxxx";
+$config['site']['smtp_host'] = "smtp.gmail.com";
+$config['site']['smtp_port'] = 587;
+$config['site']['smtp_auth'] = true;
+$config['site']['smtp_user'] = "youraccount@gmail.com";
+$config['site']['smtp_pass'] = "yourpassword";
 
 # PAGE: whoisonline.php
 $config['site']['private-servlist.com_server_id'] = 1;
