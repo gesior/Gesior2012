@@ -29,14 +29,15 @@ $config['site']['newchar_towns'] = array(2);
 $config['site']['max_players_per_account'] = 7;
 
 # Emails Config
+# to use Gmail as mailer, you must enable not secure apps access: https://myaccount.google.com/lesssecureapps
 $config['site']['send_emails'] = false;
-$config['site']['mail_address'] = "xxxx@gmx.com";
+$config['site']['mail_address'] = "youraccount@gmail.com";
 $config['site']['smtp_enabled'] = true;
-$config['site']['smtp_host'] = "mail.gmx.com";
-$config['site']['smtp_port'] = 25;
-$config['site']['smtp_auth'] = false;
-$config['site']['smtp_user'] = "xxx@gmx.com";
-$config['site']['smtp_pass'] = "xxxx";
+$config['site']['smtp_host'] = "smtp.gmail.com";
+$config['site']['smtp_port'] = 587;
+$config['site']['smtp_auth'] = true;
+$config['site']['smtp_user'] = "youraccount@gmail.com";
+$config['site']['smtp_pass'] = "yourpassword";
 
 # PAGE: whoisonline.php
 $config['site']['private-servlist.com_server_id'] = 0;
