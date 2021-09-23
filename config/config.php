@@ -95,3 +95,12 @@ $config['site']['darkborder'] = '#D4C0A1';
 $config['site']['lightborder'] = '#F1E0C6';
 $config['site']['download_page'] = false;
 $config['site']['serverinfo_page'] = true;
+
+# character trade
+$config['site']['trade_player_create_require_recovery_key'] = false;
+$config['site']['trade_player_minimum_price'] = 100;
+$config['site']['trade_player_minimum_level'] = 30;
+$config['site']['trade_player_public_commission_fixed'] = 10;
+$config['site']['trade_player_public_commission_percent'] = 10;
+$config['site']['trade_player_private_commission_fixed'] = 0;
+$config['site']['trade_player_private_commission_percent'] = 20;

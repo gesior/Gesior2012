@@ -12,6 +12,10 @@ class Account extends ObjectData
 	public static $fields = array('id', 'name', 'password', 'premium_ends_at', 'email', 'key', 'create_ip', 'creation', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
 	public $players;
 	public $bans;
+    /**
+     * @var DatabaseList|PlayerTrade[]
+     */
+    private $playerTrades;
 
     public function __construct($search_text = null, $search_by = self::LOADTYPE_ID)
     {
@@ -121,6 +125,17 @@ class Account extends ObjectData
 		}
 		return $lastExpires;
 	}
+
+    public function getPlayerTrades($forceReload = false)
+    {
+        if (!isset($this->playerTrades) || $forceReload) {
+            $this->playerTrades = new DatabaseList('PlayerTrade');
+            $filter = new SQL_Filter(new SQL_Field('account_seller_id'), SQL_Filter::EQUAL, $this->getID());
+            $this->playerTrades->setFilter($filter);
+            $this->playerTrades->addOrder(new SQL_Order(new SQL_Field('status')));
+        }
+        return $this->playerTrades;
+    }
 
     public function delete()
     {
