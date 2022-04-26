@@ -338,7 +338,7 @@ if($action == 'changerank')
 				else
 				{
 					$player_in_guild = FALSE;
-					if($guild->getName() == $player_to_change->getRank()->getGuild()->getName() || $guild_leader)
+					if($guild->getName() == $player_to_change->getRank()->getGuild()->getName())
 					{
 						$player_in_guild = TRUE;
 						$player_has_lower_rank = FALSE;
