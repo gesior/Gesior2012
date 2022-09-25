@@ -2,6 +2,8 @@
 if(!defined('INITIALIZED'))
 	exit;
 
+require_once('./custom_scripts/coinbase/config.php');
+
 ####################       CONFIG      ###################################################
 # activate dotpay and paypa: true / false
 # making something active/not active here doesn't mean that people can somehow abuse X system to buy points
@@ -180,4 +182,6 @@ else
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=buypoints&system=dotpay"><h2>For Polish players - Dotpay.pl</h2><h3>Po co przepłacać? Kup punkty w promocyjnej cenie specjalnie dla polaków!</h3><h2>KLIKNIJ TU</h2></a></center></div>';
 	if($config['paypal_active'])
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=paypal"><h2>PayPal</h2><h3>Cheapest points! Send us money from your PayPal account or credit card.</h3><h2>PRESS HERE!</h2></a></center></div>';
+    if($coinbaseEnabled)
+        $main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=coinbase"><h2>Coinbase - crypto</h2><h3>Buy points using crypto money.</h3><h2>PRESS HERE!</h2></a></center></div>';
 }

@@ -297,6 +297,24 @@ elseif($page == 'step')
 							  PRIMARY KEY  (`id`),
 							  KEY `section` (`section`)
 							) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+        $tables[Database::DB_MYSQL]['coinbase_payments'] = "CREATE TABLE `coinbase_payments` (
+                          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                          `account_id` int(11) NOT NULL,
+                          `code` varchar(180) NOT NULL,
+                          `amount` varchar(10) NOT NULL,
+                          `currency` varchar(10) NOT NULL,
+                          `created_at` int(10) NOT NULL,
+                          `updated_at` int(10) NOT NULL,
+                          `expires_at` int(10) NOT NULL,
+                          `payment_url` varchar(180) NOT NULL,
+                          `payment_data` text NOT NULL,
+                          `payment_timeline` text DEFAULT NULL,
+                          `points` int(10) NOT NULL,
+                          `points_delivered` int(10) NOT NULL,
+                          `status` varchar(100) NOT NULL,
+                          PRIMARY KEY (`id`),
+                          UNIQUE KEY `coinbase_payments_UN` (`code`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		
 		foreach($columns as $column)
 		{
