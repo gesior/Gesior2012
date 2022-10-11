@@ -24,7 +24,10 @@ $code = $json['event']['data']['code'];
 $coinbasePayment = new CoinbasePayment($code, CoinbasePayment::LOADTYPE_CODE);
 if (!$coinbasePayment->isLoaded()) {
     error_log("[Coinbase::report] Invalid payment code: " . $code);
-    http_response_code(400);
+    // all payments to your coinbase account are reported to all 'webhooks', even these not created using API (donates)
+    // 'webhooks' that return status other than 200 too often, gets blocked automatically
+    // if you install 1 coinbase account on 2 websites, every payment will be reported to both websites,
+    // only 1 should add points, but both must return status 200
     exit('Invalid payment code: ' . htmlspecialchars($code));
 }
 

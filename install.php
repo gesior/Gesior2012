@@ -313,7 +313,8 @@ elseif($page == 'step')
                           `points_delivered` int(10) NOT NULL,
                           `status` varchar(100) NOT NULL,
                           PRIMARY KEY (`id`),
-                          UNIQUE KEY `coinbase_payments_UN` (`code`)
+                          UNIQUE KEY `coinbase_payments_UN` (`code`),
+                          KEY `coinbase_payments_account_id_IDX` (`account_id`)
                         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		
 		foreach($columns as $column)

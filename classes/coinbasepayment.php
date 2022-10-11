@@ -5,22 +5,25 @@ if (!defined('INITIALIZED')) {
 }
 
 /*
-CREATE TABLE IF NOT EXISTS coinbase_payments (
-    `id` INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `account_id` INT(11) NOT NULL,
-    `code` VARCHAR(180) NOT NULL,
-    `amount` VARCHAR(10) NOT NULL,
-    `currency` VARCHAR(10) NOT NULL,
-    `created_at` INT(10) NOT NULL,
-    `updated_at` INT(10) NOT NULL,
-    `expires_at` INT(10) NOT NULL,
-    `payment_url` VARCHAR(180) NOT NULL,
-    `payment_data` TEXT NOT NULL,
-    `payment_timeline` TEXT NOT NULL,
-    `points` INT(10) NOT NULL,
-    `points_delivered` INT(10) NOT NULL,
-    `status` VARCHAR(100) NOT NULL
-)
+CREATE TABLE `coinbase_payments` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) NOT NULL,
+  `code` varchar(180) NOT NULL,
+  `amount` varchar(10) NOT NULL,
+  `currency` varchar(10) NOT NULL,
+  `created_at` int(10) NOT NULL,
+  `updated_at` int(10) NOT NULL,
+  `expires_at` int(10) NOT NULL,
+  `payment_url` varchar(180) NOT NULL,
+  `payment_data` text NOT NULL,
+  `payment_timeline` text DEFAULT NULL,
+  `points` int(10) NOT NULL,
+  `points_delivered` int(10) NOT NULL,
+  `status` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `coinbase_payments_UN` (`code`),
+  KEY `coinbase_payments_account_id_IDX` (`account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 
 class CoinbasePayment extends ObjectData

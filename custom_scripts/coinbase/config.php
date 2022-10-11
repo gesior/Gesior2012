@@ -12,7 +12,7 @@
  */
 
 // it only disables possibility to create new payments, old payments will still add points
-$coinbaseEnabled = true;
+$coinbaseEnabled = false;
 
 // API key: https://beta.commerce.coinbase.com/settings/security (click 'New API key')
 $coinbaseApiKey = '';
