@@ -3,6 +3,7 @@ if(!defined('INITIALIZED'))
 	exit;
 
 require_once('./custom_scripts/stripe/config.php');
+require_once('./custom_scripts/coinbase/config.php');
 
 ####################       CONFIG      ###################################################
 # activate dotpay and paypa: true / false
@@ -184,4 +185,6 @@ else
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=paypal"><h2>PayPal</h2><h3>Cheapest points! Send us money from your PayPal account or credit card.</h3><h2>PRESS HERE!</h2></a></center></div>';
     if($stripe_active)
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=stripe"><h2>Stripe.com</h2><h3>Credit card payments</h3><h2>CLICK HERE!</h2></a></center></div>';
+    if($coinbaseEnabled)
+        $main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=coinbase"><h2>Coinbase - crypto</h2><h3>Buy points using crypto money.</h3><h2>PRESS HERE!</h2></a></center></div>';
 }
