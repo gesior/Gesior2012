@@ -2,6 +2,8 @@
 if(!defined('INITIALIZED'))
 	exit;
 
+require_once('./custom_scripts/stripe/config.php');
+
 ####################       CONFIG      ###################################################
 # activate dotpay and paypa: true / false
 # making something active/not active here doesn't mean that people can somehow abuse X system to buy points
@@ -17,7 +19,7 @@ $config['paypal_active'] = true; // config is in './custom_scripts/paypal/'
 */
 
 $config['dotpay'] = array();
-$config['dotpay_active'] = true; #active dotpay system?
+$config['dotpay_active'] = false; #active dotpay system?
 $config['dotpay_active_sms'] = true; #active dotpay SMS system?
 $config['dotpay_active_transfer'] = false; #active dotpay bank transfers [type=C1] system?
 # przykladowy konfig dla SMS
@@ -180,4 +182,6 @@ else
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=buypoints&system=dotpay"><h2>For Polish players - Dotpay.pl</h2><h3>Po co przepłacać? Kup punkty w promocyjnej cenie specjalnie dla polaków!</h3><h2>KLIKNIJ TU</h2></a></center></div>';
 	if($config['paypal_active'])
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=paypal"><h2>PayPal</h2><h3>Cheapest points! Send us money from your PayPal account or credit card.</h3><h2>PRESS HERE!</h2></a></center></div>';
+    if($stripe_active)
+		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=stripe"><h2>Stripe.com</h2><h3>Credit card payments</h3><h2>CLICK HERE!</h2></a></center></div>';
 }
