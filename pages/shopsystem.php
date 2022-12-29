@@ -47,6 +47,7 @@ if($config['site']['shop_system'])
 		$offer_list = $GLOBALS['SQL']->query('SELECT * FROM '.$GLOBALS['SQL']->tableName('z_shop_offer').';');
 		$i_item = 0;
 		$i_container = 0;
+        $offer_array = ['item' => [], 'container' => []];
 		while($data = $offer_list->fetch())
 		{
 			if($data['offer_type'] == 'item')
