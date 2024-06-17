@@ -4,6 +4,7 @@ if(!defined('INITIALIZED'))
 
 require_once('./custom_scripts/stripe/config.php');
 require_once('./custom_scripts/coinbase/config.php');
+require_once('./custom_scripts/hotpay/config.php');
 
 ####################       CONFIG      ###################################################
 # activate dotpay and paypa: true / false
