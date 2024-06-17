@@ -187,4 +187,6 @@ else
 		$main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=stripe"><h2>Stripe.com</h2><h3>Credit card payments</h3><h2>CLICK HERE!</h2></a></center></div>';
     if($coinbaseEnabled)
         $main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=coinbase"><h2>Coinbase - crypto</h2><h3>Buy points using crypto money.</h3><h2>PRESS HERE!</h2></a></center></div>';
+    if($hotpayEnabled)
+        $main_content .= '<br /><br /><div style="background-color:gray;padding:20px 20px 20px 20px"><center><a href="?subtopic=hotpay"><h2>For Polish players - HotPay.pl</h2><h3>BLIK i szybkie przelewy bankowe</h3><h2>PRESS HERE!</h2></a></center></div>';
 }
