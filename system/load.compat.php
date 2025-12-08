@@ -61,6 +61,17 @@ $layout_ini = parse_ini_file($layout_name.'/layout_config.ini');
 foreach($layout_ini as $key => $value)
 	$config['site'][$key] = $value;
 
+//###################### REFERRAL SYSTEM ######################
+// Handle referral parameter and save to cookie
+if (isset($_GET['ref']) && !empty($_GET['ref'])) {
+    $ref = trim($_GET['ref']);
+    // Validate: only alphanumeric characters and less than 30 characters
+    if (preg_match('/^[a-zA-Z0-9]+$/', $ref) && strlen($ref) < 30) {
+        // Set cookie for 30 days
+        setcookie('referral_code', $ref, time() + (30 * 24 * 60 * 60), '/');
+    }
+}
+
 //###################### FUNCTIONS ######################
 function microtime_float()
 {

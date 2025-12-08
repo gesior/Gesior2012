@@ -8,8 +8,8 @@ class Account extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('name' => null, 'password' => null, 'premium_ends_at' => 0, 'email' => '', 'key' => '', 'create_ip' => 0, 'creation' => 0, 'premium_points' => 0, 'page_access' => 0, 'location' => '', 'rlname' => '', 'email_new' => '', 'email_new_time' => 0, 'email_code' => '', 'next_email' => 0, 'last_post' => 0, 'flag' => 'pl');
-	public static $fields = array('id', 'name', 'password', 'premium_ends_at', 'email', 'key', 'create_ip', 'creation', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag');
+	public $data = array('name' => null, 'password' => null, 'premium_ends_at' => 0, 'email' => '', 'key' => '', 'create_ip' => 0, 'creation' => 0, 'premium_points' => 0, 'page_access' => 0, 'location' => '', 'rlname' => '', 'email_new' => '', 'email_new_time' => 0, 'email_code' => '', 'next_email' => 0, 'last_post' => 0, 'flag' => 'pl', 'referral' => '');
+	public static $fields = array('id', 'name', 'password', 'premium_ends_at', 'email', 'key', 'create_ip', 'creation', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag', 'referral');
 	public $players;
 	public $bans;
 
@@ -167,6 +167,8 @@ class Account extends ObjectData
 	public function getRLName(){return $this->data['rlname'];}
 	public function setFlag($value){$this->data['flag'] = $value;}
 	public function getFlag(){return $this->data['flag'];}
+	public function setReferral($value){$this->data['referral'] = $value;}
+	public function getReferral(){return $this->data['referral'];}
 /*
  * for compability with old scripts
 */

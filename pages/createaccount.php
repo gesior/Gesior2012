@@ -360,6 +360,14 @@ if($action == "saveaccount")
 		} else {
 			$reg_account->setFlag(Website::getCountryCode(long2ip(Visitor::getIP())));
 		}
+		// Save referral code from cookie if exists
+		if (isset($_COOKIE['referral_code']) && !empty($_COOKIE['referral_code'])) {
+			$referral_code = trim($_COOKIE['referral_code']);
+			// Validate referral code one more time
+			if (preg_match('/^[a-zA-Z0-9]+$/', $referral_code) && strlen($referral_code) < 30) {
+				$reg_account->setReferral($referral_code);
+			}
+		}
 		if(isset($config['site']['newaccount_premdays']) && $config['site']['newaccount_premdays'] > 0)
 		{
 			$reg_account->setPremiumEndsAt(time() + 86400 * $config['site']['newaccount_premdays']);

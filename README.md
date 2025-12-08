@@ -1,3 +1,11 @@
+## Referral system branch
+
+Execute in MySQL:
+```
+ALTER TABLE `accounts` ADD COLUMN `referral` VARCHAR(180) DEFAULT '' AFTER `flag`;
+```
+
+
 Gesior2012
 ==========
 
