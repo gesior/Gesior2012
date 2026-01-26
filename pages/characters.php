@@ -2,6 +2,11 @@
 if(!defined('INITIALIZED'))
 	exit;
 
+if(!empty($_POST['name'])){
+    header("Location: /?subtopic=characters&name=".rawurlencode((string)$_POST['name']), true, 303);
+    die();
+}
+
 $name = '';
 if(isset($_REQUEST['name']))
 	$name = (string) $_REQUEST['name'];
